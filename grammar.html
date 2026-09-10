@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>معمل القواعد والتراكيب اللغوية | مداد AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Rakkas&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  body{ background:#F7F5F0; color:#2C302E; font-family:'IBM Plex Sans Arabic', sans-serif; padding:20px; margin:0; line-height:1.9; }
+  .wrapper{ max-width:1100px; margin:0 auto; }
+  
+  nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 12px 24px; border-bottom: 1px solid #E2DDD5; display: flex; justify-content: center; gap: 8px; margin-bottom: 35px; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); flex-wrap: wrap; position: sticky; top: 15px; z-index: 100; }
+  nav a { display: flex; align-items: center; gap: 6px; text-decoration: none; color: #5A605C; font-weight: 500; font-size: 13px; padding: 8px 14px; border-radius: 10px; transition: all 0.25s ease; background: #FAF9F6; border: 1px solid #EAE5D9; }
+  nav a:hover, nav a.active { background: #F4EFE6; border-color: #C5A059; color: #C5A059; transform: translateY(-1px); font-weight: 600; }
+
+  .card{ background:#FFFFFF; padding:40px; border-radius:18px; border:1px solid #E2DDD5; box-shadow:0 6px 25px rgba(0,0,0,0.03); margin-bottom:30px; }
+  h2{ font-family:'Rakkas',serif; color:#C5A059; font-size:28px; margin-bottom:15px; margin-top:0; }
+  .field{ margin-bottom:20px; }
+  label{ display:block; margin-bottom:8px; color:#5A605C; font-size:14px; font-weight:600; }
+  input, select, textarea{ width:100%; background:#FAF9F6; border:1px solid #D6D0C4; color:#2C302E; padding:12px 16px; border-radius:12px; font-family:inherit; box-sizing:border-box; font-size:15px; transition:0.3s; }
+  input:focus, select:focus, textarea:focus{ outline:none; border-color:#C5A059; background:#FFF; box-shadow:0 0 0 4px rgba(197,160,89,0.1); }
+  
+  button{ background:#007A78; color:#FFF; padding:12px 28px; border:none; border-radius:12px; font-weight:600; cursor:pointer; font-size:15px; transition:0.3s; box-shadow:0 4px 15px rgba(0,122,120,0.25); }
+  button:hover{ background:#005F5D; transform: translateY(-1px); }
+  
+  .output{ margin-top:25px; padding:25px; background:#FAF9F6; border:1px solid #E2DDD5; border-radius:12px; display:none; line-height:2.2; white-space:pre-wrap; }
+
+  .tabs-container { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; border-bottom: 2px solid #E2DDD5; padding-bottom: 15px; }
+  .tab-btn { background: #FAF9F6; border: 1px solid #D6D0C4; color: #5A605C; padding: 12px 22px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 15px; flex: 1; text-align: center; }
+  .tab-btn.active { background: #007A78; color: #FFF; border-color: #007A78; }
+  
+  .section-panel { display: none; }
+  .section-panel.active { display: block; }
+  
+  .parsing-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #FAF9F6; border-radius: 12px; overflow: hidden; border: 1px solid #E2DDD5; }
+  .parsing-table th, .parsing-table td { padding: 14px 18px; text-align: right; border-bottom: 1px solid #E2DDD5; font-size: 14px; }
+  .parsing-table th { background: #F4EFE6; color: #007A78; font-weight: 700; font-family: 'Rakkas', serif; font-size: 18px; }
+  .parsing-table tr:last-child td { border-bottom: none; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  
+  <!-- الهيدر الموحد الشامل -->
+  <nav>
+    <a href="index.html"><span>🏠</span> الرئيسية</a>
+    <a href="workspace.html"><span>🎯</span> الدروس</a>
+    <a href="curriculum.html"><span>📚</span> المناهج</a>
+    <a href="generator.html"><span>⚡</span> مختبر التوليد</a>
+    <a href="assessments.html"><span>📝</span> التقويم</a>
+    <a href="review.html"><span>✍️</span> المراجعة</a>
+    <a href="ocr.html"><span>🖼️</span> تحويل صورة</a>
+    <a href="vocabulary.html"><span>📖</span> المفردات</a>
+    <a href="grammar.html" class="active" style="color: #007A78; background: #E6F2F2; border-color: #B2D8D8; font-weight: 600;"><span>📐</span> القواعد</a>
+    <a href="student.html"><span>🎓</span> بوابة الطالب</a>
+    <a href="memory.html"><span>🧠</span> الذاكرة</a>
+    <a href="analysis.html"><span>📊</span> التحليل</a>
+    <a href="supervisor.html"><span>👔</span> الإشراف</a>
+  </nav>
+
+  <div class="card">
+    <h2>📐 معمل القواعد والتراكيب اللغوية</h2>
+    <p style="color: #6B6759; margin-bottom: 25px;">معمل متكامل لبناء المناهج اللغوية، وشرح القواعد، واستعراض جدول الإعراب المبسط والإضاءات القواعدية.</p>
+
+    <!-- التبويبات الرئيسية الأربعة مع جعل الإعراب والإضاءة في الأخير -->
+    <div class="tabs-container">
+      <button class="tab-btn active" onclick="switchGrammarTab('explain', event)">📐 أولاً: شرح الاستقراء</button>
+      <button class="tab-btn" onclick="switchGrammarTab('generate', event)">✨ ثانياً: توليد سياقي</button>
+      <button class="tab-btn" onclick="switchGrammarTab('parsing', event)">🔍 ثالثاً: جدول الإعراب</button>
+      <button class="tab-btn" onclick="switchGrammarTab('spotlight', event)">🌟 رابعاً: إضاءة قواعدية وتفاعلية</button>
+    </div>
+
+    <!-- 1. قسم شرح واستنباط القاعدة -->
+    <div id="tab-explain" class="section-panel active">
+      <h3 style="font-family:'Rakkas',serif; color:#007A78; font-size:22px; margin-bottom:15px;">منهجية الملاحظة والاستنباط</h3>
+      <div class="field">
+        <label>اسم القاعدة أو الظاهرة النحوية</label>
+        <input id="grammarName" type="text" placeholder="مثال: أسلوب النداء...">
+      </div>
+      <div class="field">
+        <label>المستوى اللغوي المستهدف</label>
+        <input id="grammarLevel" type="text" value="مستوى متوسط لغير الناطقين بالعربية">
+      </div>
+      <button onclick="processGrammarAction('explain')">بناء وشرح القاعدة</button>
+      <div id="loading-explain" style="display:none; color:#007A78; margin-top:15px; font-weight:600;">جاري التحليل...</div>
+      <div id="output-explain" class="output"></div>
+    </div>
+
+    <!-- 2. التوليد السياقي المطبق -->
+    <div id="tab-generate" class="section-panel">
+      <h3 style="font-family:'Rakkas',serif; color:#007A78; font-size:22px; margin-bottom:15px;">توليد نصوص وحوارات توظف القاعدة</h3>
+      <div class="field">
+        <label>اسم القاعدة أو التركيب</label>
+        <input id="targetGrammar" type="text" placeholder="مثال: جملة الحال...">
+      </div>
+      <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 220px;" class="field">
+          <label>نوع المخرج</label>
+          <select id="grammarOutputType">
+            <option value="جمل">جمل تطبيقية</option>
+            <option value="حوار">حوار تفاعلي</option>
+            <option value="فقرة">فقرة سردية</option>
+          </select>
+        </div>
+        <div style="flex: 1; min-width: 220px;" class="field">
+          <label>المستوى</label>
+          <input id="targetLevel" type="text" value="متوسط">
+        </div>
+      </div>
+      <button onclick="processGrammarAction('generate')">توليد المحتوى</button>
+      <div id="loading-generate" style="display:none; color:#007A78; margin-top:15px; font-weight:600;">جاري الصياغة...</div>
+      <div id="output-generate" class="output"></div>
+    </div>
+
+    <!-- 3. جدول الإعراب المبسط (الكلمة : إعرابها) -->
+    <div id="tab-parsing" class="section-panel">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 2px solid #F4EFE6; padding-bottom: 15px;">
+        <span style="font-size: 28px;">📐</span>
+        <div>
+          <h3 style="font-family: 'Rakkas', serif; color: #007A78; font-size: 24px; margin: 0;">جدول الإعراب المباشر</h3>
+          <p style="color: #6B6759; font-size: 13px; margin: 5px 0 0 0;">عرض الإعراب في جدول بسيط بصيغة (الكلمة : إعرابها) فقط.</p>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 280px; position: relative;">
+          <input type="text" id="parsingQueryInput" placeholder="أدخل الجملة للإعراب (مثال: كان رسول الله قرآنا)...">
+          <span style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #C5A059;">🔍</span>
+        </div>
+        <button onclick="searchParsingBank()">إعراب مباشر ⚡</button>
+      </div>
+
+      <div id="parsingResultsContainer">
+        <div style="background: #FAF9F6; border: 1px dashed #E2DDD5; border-radius: 12px; padding: 20px; text-align: center; color: #7A807C; font-size: 14px;">
+          ✨ أدخل الجملة في حقل البحث أعلاه لعرض الجدول (الكلمة : إعرابها).
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. إضاءة قواعدية وتفاعلية (شرح القاعدة ثم أمثلة تطبيقية مباشرة) -->
+    <div id="tab-spotlight" class="section-panel">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 2px solid #F4EFE6; padding-bottom: 15px;">
+        <span style="font-size: 28px;">🌟</span>
+        <div>
+          <h3 style="font-family: 'Rakkas', serif; color: #007A78; font-size: 24px; margin: 0;">شرح القاعدة والأمثلة التطبيقية</h3>
+          <p style="color: #6B6759; font-size: 13px; margin: 5px 0 0 0;">عرض مختصر ومباشر يشمل شرح القاعدة متبوعاً بالأمثلة التطبيقية.</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>اسم القاعدة النحوية أو الاستفسار</label>
+        <input id="spotlightRuleName" type="text" placeholder="مثال: المبتدأ والخبر، الحال...">
+      </div>
+
+      <button onclick="loadRuleSpotlight()">عرض الشرح والأمثلة 💡</button>
+      <div id="loading-spotlight" style="display:none; color:#007A78; margin-top:15px; font-weight:600;">جاري إعداد الشرح والأمثلة...</div>
+      <div id="output-spotlight" class="output"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function switchGrammarTab(tabName, event) {
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    
+    if(tabName === 'explain') document.getElementById('tab-explain').classList.add('active');
+    else if(tabName === 'generate') document.getElementById('tab-generate').classList.add('active');
+    else if(tabName === 'parsing') document.getElementById('tab-parsing').classList.add('active');
+    else if(tabName === 'spotlight') document.getElementById('tab-spotlight').classList.add('active');
+    
+    if(event && event.currentTarget) event.currentTarget.classList.add('active');
+}
+
+async function searchParsingBank() {
+    const query = document.getElementById('parsingQueryInput').value.trim();
+    const container = document.getElementById('parsingResultsContainer');
+    
+    if (!query) {
+        container.innerHTML = `<div style="background: #FFF5F5; border: 1px solid #FEB2B2; border-radius: 12px; padding: 15px; text-align: center; color: #C53030; font-size: 14px;">⚠️ يرجى إدخال الجملة للإعراب.</div>`;
+        return;
+    }
+
+    container.innerHTML = `<div style="background: #FAF9F6; border: 1px solid #EAE5D9; border-radius: 12px; padding: 20px; text-align: center; color: #007A78; font-size: 14px;">⏳ جاري تجهيز جدول الإعراب (الكلمة : إعرابها)...</div>`;
+
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/grammar/parse', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: query })
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success' && data.results && data.results.length > 0) {
+            let item = data.results[0];
+            let rowsHtml = '';
+            
+            let lines = item.parsing.split('\n').filter(l => l.trim() !== '');
+            lines.forEach(line => {
+                let parts = line.split(':');
+                if(parts.length >= 2) {
+                    let word = parts[0].trim();
+                    let parsing = parts.slice(1).join(':').trim();
+                    rowsHtml += `<tr><td style="font-weight: 600; color: #007A78; width: 30%;">${word}</td><td style="width: 70%;">${parsing}</td></tr>`;
+                } else {
+                    rowsHtml += `<tr><td colspan="2">${line}</td></tr>`;
+                }
+            });
+
+            let html = `
+                <div style="background: #FFFFFF; border: 1px solid #EAE5D9; border-radius: 16px; padding: 25px;">
+                  <div style="margin-bottom: 12px; font-weight: 700; color: #C5A059;">🎯 النص: ${item.target}</div>
+                  <table class="parsing-table">
+                    <thead>
+                      <tr>
+                        <th>الكلمة</th>
+                        <th>إعرابها</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${rowsHtml || `<tr><td colspan="2">${item.parsing}</td></tr>`}
+                    </tbody>
+                  </table>
+                </div>
+            `;
+            container.innerHTML = html;
+        } else {
+            container.innerHTML = `<div style="background: #FFFAF0; border: 1px solid #FEEBC8; border-radius: 12px; padding: 15px; text-align: center; color: #C05621; font-size: 14px;">🔍 لم يتم العثور على مطابقة مباشرة.</div>`;
+        }
+    } catch (err) {
+        container.innerHTML = `<div style="background: #FFF5F5; border: 1px solid #FEB2B2; border-radius: 12px; padding: 15px; text-align: center; color: #C53030; font-size: 14px;">❌ خطأ في الاتصال بالخادم.</div>`;
+    }
+}
+
+async function loadRuleSpotlight() {
+    let ruleName = document.getElementById('spotlightRuleName').value.trim();
+    let loadingEl = document.getElementById('loading-spotlight');
+    let outputEl = document.getElementById('output-spotlight');
+    
+    if(!ruleName) { alert('الرجاء إدخال اسم القاعدة.'); return; }
+
+    let promptText = `اشرح القاعدة التالية باختصار شديد وبدون أي مقدمات ترحيبية أو حشو: (${ruleName})، بحيث تكون الإجابة مكونة حصراً من قسمين:
+1. شرح القاعدة: (شرح مبسط ومباشر).
+2. أمثلة تطبيقية: (أمثلة واضحة ومباشرة بدون مقدمات).`;
+
+    loadingEl.style.display = 'block';
+    outputEl.style.display = 'none';
+
+    try {
+        const res = await fetch('http://127.0.0.1:8000/api/generate-from-source', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                source_type: 'شرح القاعدة وأمثلة تطبيقية',
+                source_content: promptText,
+                output_type: 'فقرة',
+                details: ruleName,
+                generation_mode: 'madad'
+            })
+        });
+        const data = await res.json();
+        loadingEl.style.display = 'none';
+        if(data.status === 'success') {
+            outputEl.textContent = data.output;
+            outputEl.style.display = 'block';
+        }
+    } catch(err) {
+        loadingEl.style.display = 'none';
+        alert('حدث خطأ في الاتصال بالخادم.');
+    }
+}
+
+async function processGrammarAction(type) {
+    let payload = {};
+    let loadingEl = document.getElementById(`loading-${type}`);
+    let outputEl = document.getElementById(`output-${type}`);
+    
+    let generationMode = document.getElementById('generationMode') ? document.getElementById('generationMode').value : 'madad';
+    
+    if(type === 'explain') {
+        let name = document.getElementById('grammarName').value;
+        let level = document.getElementById('grammarLevel').value;
+        if(!name.trim()) { alert('الرجاء إدخال اسم القاعدة أولاً.'); return; }
+        
+        let promptText = `اشرح القاعدة التالية: (${name}) للمستوى (${level}) بأسلوب استقرائي مبسط.`;
+        payload = { source_type: 'شرح قاعدة', source_content: promptText, output_type: 'فقرة', details: name, generation_mode: generationMode };
+    } else if(type === 'generate') {
+        let grammar = document.getElementById('targetGrammar').value;
+        let outType = document.getElementById('grammarOutputType').value;
+        let level = document.getElementById('targetLevel').value;
+        if(!grammar.trim()) { alert('الرجاء إدخال القاعدة.'); return; }
+
+        let promptText = `قم بتوليد (${outType}) للمستوى (${level}) متضمنة القاعدة: (${grammar}).`;
+        payload = { source_type: 'توليد مطبق', source_content: promptText, output_type: outType, details: grammar, generation_mode: generationMode };
+    }
+
+    loadingEl.style.display = 'block';
+    outputEl.style.display = 'none';
+
+    try {
+        const res = await fetch('http://127.0.0.1:8000/api/generate-from-source', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        loadingEl.style.display = 'none';
+        if(data.status === 'success') {
+            outputEl.textContent = data.output;
+            outputEl.style.display = 'block';
+        }
+    } catch(err) {
+        loadingEl.style.display = 'none';
+        alert('حدث خطأ في الاتصال بالخادم.');
+    }
+}
+</script>
+</body>
+</html>

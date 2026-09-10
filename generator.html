@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المولد السياقي المتقدم من مصادر التغذية | مداد AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Rakkas&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  body{ background:#F7F5F0; color:#2C302E; font-family:'IBM Plex Sans Arabic', sans-serif; padding:20px; margin:0; line-height:1.9; }
+  .wrapper{ max-width:1100px; margin:0 auto; }
+  
+  nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 12px 24px; border-bottom: 1px solid #E2DDD5; display: flex; justify-content: center; gap: 8px; margin-bottom: 35px; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); flex-wrap: wrap; position: sticky; top: 15px; z-index: 100; }
+  nav a { display: flex; align-items: center; gap: 6px; text-decoration: none; color: #5A605C; font-weight: 500; font-size: 13px; padding: 8px 14px; border-radius: 10px; transition: all 0.25s ease; background: #FAF9F6; border: 1px solid #EAE5D9; }
+  nav a:hover, nav a.active { background: #F4EFE6; border-color: #C5A059; color: #C5A059; transform: translateY(-1px); font-weight: 600; }
+
+  .card{ background:#FFFFFF; padding:40px; border-radius:18px; border:1px solid #E2DDD5; box-shadow:0 6px 25px rgba(0,0,0,0.03); margin-bottom:30px; }
+  h2{ font-family:'Rakkas',serif; color:#C5A059; font-size:28px; margin-bottom:15px; margin-top:0; }
+  .field{ margin-bottom:20px; }
+  label{ display:block; margin-bottom:8px; color:#5A605C; font-size:14px; font-weight:600; }
+  input, select, textarea{ width:100%; background:#FAF9F6; border:1px solid #D6D0C4; color:#2C302E; padding:12px 16px; border-radius:12px; font-family:inherit; box-sizing:border-box; font-size:15px; transition:0.3s; }
+  input:focus, select:focus, textarea:focus{ outline:none; border-color:#C5A059; background:#FFF; box-shadow:0 0 0 4px rgba(197,160,89,0.1); }
+  
+  button{ background:#C5A059; color:#FFF; padding:14px 32px; border:none; border-radius:12px; font-weight:600; cursor:pointer; font-size:16px; transition:0.3s; box-shadow:0 4px 15px rgba(197,160,89,0.25); }
+  button:hover{ background:#B38F4E; transform: translateY(-1px); }
+  
+  .output{ margin-top:30px; padding:30px; background:#FAF9F6; border:1px solid #E2DDD5; border-radius:14px; display:none; line-height:2.2; white-space:pre-wrap; font-size:15px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  
+  <nav>
+    <a href="index.html"><span>🏠</span> الرئيسية</a>
+    <a href="workspace.html"><span>🎯</span> الدروس</a>
+    <a href="curriculum.html"><span>📚</span> المناهج</a>
+    <a href="assessments.html"><span>📝</span> التقويم</a>
+    <a href="review.html"><span>✍️</span> المراجعة</a>
+    <a href="ocr.html"><span>🖼️</span> تحويل صورة</a>
+    <a href="vocabulary.html"><span>📖</span> المفردات</a>
+    <a href="generator.html" class="active"><span>⚡</span> المولد السياقي</a>
+    <a href="memory.html"><span>🧠</span> الذاكرة</a>
+    <a href="sentences.html"><span>💬</span> الجمل</a>
+    <a href="analysis.html"><span>📊</span> التحليل</a>
+    <a href="supervisor.html"><span>👔</span> الإشراف</a>
+  </nav>
+
+  <div class="card">
+    <h2>⚡ مختبر التوليد السياقي المتقدم من مصادر التغذية</h2>
+    <p style="color: #6B6759; margin-bottom: 25px;">قم بتغذية النظام بمصدر تعليمي محدد، واستخرج منه جمل، حوارات، فقرات، أو اختبارات مطابقة بدقة وبحسب التوصيف المطلوب.</p>
+    
+    <!-- تحديد المادة الدراسية أو المجال -->
+    <div class="field" style="background: #F4EFE6; padding: 18px; border-radius: 14px; border: 1px solid #E2DDD5;">
+      <label style="color: #C5A059; font-size: 15px; margin-bottom: 10px;">📖 تحديد المادة الدراسية / المجال المستهدف</label>
+      <select id="subjectDomain">
+        <option value="اللغة العربية - غير الناطقين" selected>اللغة العربية (غير الناطقين بها)</option>
+        <option value="اللغة العربية - العرب">اللغة العربية (الناطقون بها - العرب)</option>
+        <option value="القرآن الكريم">القرآن الكريم</option>
+        <option value="التربية الإسلامية">التربية الإسلامية</option>
+        <option value="الدراسات الاجتماعية">الدراسات الاجتماعية والوطنية</option>
+      </select>
+    </div>
+
+    <!-- خيارات مستويات التوليد -->
+    <div class="field" style="background: #FAF9F6; padding: 18px; border-radius: 14px; border: 1px solid #E2DDD5;">
+      <label style="color: #C5A059; font-size: 15px; margin-bottom: 10px;">🌟 مستوى وتوجيه التوليد الذكي</label>
+      <select id="generationMode" onchange="toggleModeInputs()">
+        <option value="madad" selected>التوليد المبني على معايير وخبرة مداد الرسمية</option>
+        <option value="arabic_natives">التوليد المبني على معايير اللغة العربية للناطقين بها</option>
+        <option value="free">التوليد الحر المفتوح</option>
+        <option value="custom">التوليد المبني على مصادر خاصة للمؤسسة أو المعلم</option>
+      </select>
+    </div>
+
+    <!-- حقل اختيار الصف -->
+    <div class="field" id="gradeGroup">
+      <label>الصف الدراسي المستهدف</label>
+      <select id="targetGrade">
+        <option value="الصف الأول">الصف الأول</option>
+        <option value="الصف الثاني">الصف الثاني</option>
+        <option value="الصف الثالث">الصف الثالث</option>
+        <option value="الصف الرابع">الصف الرابع</option>
+        <option value="الصف الخامس">الصف الخامس</option>
+        <option value="الصف السادس">الصف السادس</option>
+        <option value="الصف السابع">الصف السابع</option>
+        <option value="الصف الثامن">الصف الثامن</option>
+        <option value="الصف التاسع">الصف التاسع</option>
+        <option value="الصف العاشر">الصف العاشر</option>
+        <option value="الصف الحادي عشر">الصف الحادي عشر</option>
+        <option value="الثاني عشر">الثاني عشر</option>
+      </select>
+    </div>
+
+    <!-- حقل المصدر الخاص -->
+    <div class="field" id="customSourceGroup" style="display:none;">
+      <label>المصدر الخاص للمؤسسة أو المعلم (نصوص، كتب، أو وثائق إثرائية)</label>
+      <textarea id="customSourceText" rows="3" placeholder="أدخل محتوى المصدر الخاص بك هنا ليتم اعتماده حصرياً..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>1. اختر مصدر التغذية الأساسي</label>
+      <select id="sourceType">
+        <option value="خطة درس">خطة درس</option>
+        <option value="قائمة مفردات">قائمة مفردات</option>
+        <option value="درس كامل">درس كامل (نص أو محتوى)</option>
+        <option value="قواعد وتراكيب">قواعد وتراكيب لغوية</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>2. محتوى مصدر التغذية (أدخل النصوص، المفردات، أو عناصر الخطة)</label>
+      <textarea id="sourceContent" rows="4" placeholder="أدخل محتوى المصدر أو الكلمات أو القواعد هنا..."></textarea>
+    </div>
+
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+      <div style="flex: 1; min-width: 220px;" class="field">
+        <label>3. المخرج المطلوب</label>
+        <select id="outputType" onchange="toggleOutputOptions()">
+          <option value="جملة">جملة (بسيطة / مركبة)</option>
+          <option value="حوار">حوار (تحديد الأشخاص والطول)</option>
+          <option value="فقرة">فقرة (قصيرة / وسط / طويلة)</option>
+          <option value="اختبار">اختبار قياس وتقويم</option>
+        </select>
+      </div>
+
+      <div style="flex: 1; min-width: 220px;" class="field" id="optGroupSentence">
+        <label>توصيف الجملة</label>
+        <select id="sentenceSub">
+          <option value="بسيطة">جملة بسيطة</option>
+          <option value="مركبة">جملة مركبة</option>
+        </select>
+      </div>
+
+      <div style="flex: 1; min-width: 220px;" class="field" id="optGroupDialogue" style="display:none;">
+        <label>توصيف الحوار (الأشخاص والطول)</label>
+        <input id="dialogueSub" type="text" placeholder="مثال: شخصان (ذكر وأنثى)، الطول: قصير">
+      </div>
+
+      <div style="flex: 1; min-width: 220px;" class="field" id="optGroupParagraph" style="display:none;">
+        <label>طول الفقرة</label>
+        <select id="paragraphSub">
+          <option value="قصيرة">قصيرة</option>
+          <option value="وسط">وسط (عادي)</option>
+          <option value="طويلة">طويلة</option>
+        </select>
+      </div>
+    </div>
+
+    <button id="genBtn" onclick="generateFromSource()">توليد المحتوى عبر عقل مداد AI</button>
+    <div id="loading" style="display:none; color:#C5A059; margin-top:18px; font-weight:600;">جاري معالجة مصدر التغذية وتوليد المخرجات السياقية للمادة...</div>
+    <div id="output" class="output"></div>
+  </div>
+
+</div>
+
+<script>
+function toggleOutputOptions() {
+    let type = document.getElementById('outputType').value;
+    document.getElementById('optGroupSentence').style.display = (type === 'جملة') ? 'block' : 'none';
+    document.getElementById('optGroupDialogue').style.display = (type === 'حوار') ? 'block' : 'none';
+    document.getElementById('optGroupParagraph').style.display = (type === 'فقرة') ? 'block' : 'none';
+}
+
+function toggleModeInputs() {
+    let mode = document.getElementById('generationMode').value;
+    document.getElementById('gradeGroup').style.display = (mode === 'madad' || mode === 'arabic_natives') ? 'block' : 'none';
+    document.getElementById('customSourceGroup').style.display = (mode === 'custom') ? 'block' : 'none';
+}
+
+async function generateFromSource() {
+    const btn = document.getElementById('genBtn'), loading = document.getElementById('loading'), output = document.getElementById('output');
+    const sourceType = document.getElementById('sourceType').value;
+    const sourceContent = document.getElementById('sourceContent').value;
+    const outputType = document.getElementById('outputType').value;
+    const generationMode = document.getElementById('generationMode').value;
+    const targetGrade = document.getElementById('targetGrade').value;
+    const subjectDomain = document.getElementById('subjectDomain').value;
+    const customSourceText = document.getElementById('customSourceText').value;
+    
+    if(!sourceContent.trim()) { alert('الرجاء إدخال محتوى مصدر التغذية أولاً.'); return; }
+
+    let details = '';
+    if(outputType === 'جملة') details = `نوع الجملة: ${document.getElementById('sentenceSub').value}`;
+    if(outputType === 'حوار') details = `مواصفات الحوار: ${document.getElementById('dialogueSub').value}`;
+    if(outputType === 'فقرة') details = `طول الفقرة: ${document.getElementById('paragraphSub').value}`;
+
+    btn.disabled = true; loading.style.display = 'block'; output.style.display = 'none';
+
+    try {
+        const res = await fetch('http://127.0.0.1:8000/api/generate-from-source', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                source_type: sourceType,
+                source_content: sourceContent + " [المجال/المادة: " + subjectDomain + "]",
+                output_type: outputType,
+                details: details,
+                generation_mode: generationMode,
+                class_name: targetGrade,
+                custom_source: customSourceText
+            })
+        });
+        const data = await res.json();
+        loading.style.display = 'none'; btn.disabled = false;
+        if(data.status === 'success') {
+            output.textContent = data.output;
+            output.style.display = 'block';
+        }
+    } catch(err) {
+        loading.style.display = 'none'; btn.disabled = false;
+        alert('خطأ في الاتصال بالخادم.');
+    }
+}
+</script>
+</body>
+</html>
+```[cite: 5, 9]

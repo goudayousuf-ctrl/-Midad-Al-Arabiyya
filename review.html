@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قسم المراجعة العلمية واللغوية ومعجم الصواب | مداد AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Rakkas&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  body{ background:#F7F5F0; color:#2C302E; font-family:'IBM Plex Sans Arabic', sans-serif; padding:30px; margin:0; line-height:1.9; }
+  .wrapper{ max-width:900px; margin:0 auto; }
+  nav { background:#FFFFFF; padding:20px; border-bottom:2px solid #E2DDD5; display:flex; justify-content:center; gap:12px; margin-bottom:35px; border-radius:16px; box-shadow:0 6px 25px rgba(0,0,0,0.04); flex-wrap:wrap; }
+  nav a { display:flex; flex-direction:column; align-items:center; text-decoration:none; color:#5A605C; font-weight:600; font-size:12px; padding:8px 14px; border-radius:12px; transition:0.3s; background:#FAF9F6; border:1px solid #EAE5D9; }
+  nav a:hover { background:#F4EFE6; transform: translateY(-2px); border-color:#C5A059; color:#C5A059; }
+  nav a.active { background:#F4EFE6; border-color:#C5A059; color:#C5A059; font-weight:700; }
+  .card{ background:#FFFFFF; padding:45px; border-radius:18px; border:1px solid #E2DDD5; box-shadow:0 6px 25px rgba(0,0,0,0.03); margin-bottom:30px; }
+  h2{ font-family:'Rakkas',serif; color:#C5A059; font-size:30px; margin-bottom:15px; margin-top:0; }
+  h3{ font-family:'Rakkas',serif; color:#800000; font-size:22px; margin-bottom:12px; }
+  .field{ margin-bottom:20px; }
+  label{ display:block; margin-bottom:8px; color:#5A605C; font-size:14px; font-weight:600; }
+  input, select, textarea{ width:100%; background:#FAF9F6; border:1px solid #D6D0C4; color:#2C302E; padding:12px 16px; border-radius:12px; font-family:inherit; box-sizing:border-box; font-size:15px; transition:0.3s; }
+  input:focus, select:focus, textarea:focus{ outline:none; border-color:#C5A059; background:#FFF; box-shadow:0 0 0 4px rgba(197,160,89,0.1); }
+  button{ background:#C5A059; color:#FFF; padding:15px 35px; border:none; border-radius:12px; font-weight:600; cursor:pointer; font-size:16px; transition:0.3s; box-shadow:0 4px 15px rgba(197,160,89,0.25); }
+  button:hover{ background:#B38F4E; transform: translateY(-1px); }
+  .btn-secondary { background:#800000; box-shadow:0 4px 15px rgba(128,0,0,0.2); }
+  .btn-secondary:hover { background:#600000; }
+  .output{ margin-top:30px; padding:30px; background:#FAF9F6; border:1px solid #E2DDD5; border-radius:14px; display:none; white-space:pre-wrap; line-height:2.2; }
+  .sawab-results { margin-top:20px; max-height:350px; overflow-y:auto; display:none; border:1px solid #E2DDD5; border-radius:12px; background:#FAF9F6; padding:15px; }
+  .sawab-item { background:#FFFFFF; padding:12px 16px; border-radius:8px; border:1px solid #EAE5D9; margin-bottom:10px; }
+  .sawab-title { font-weight:700; color:#800000; margin-bottom:5px; }
+  .sawab-desc { font-size:14px; color:#5A605C; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <nav>
+    <a href="index.html">🏠 الرئيسية</a>
+    <a href="workspace.html">🎯 الدروس</a>
+    <a href="curriculum.html">📚 المناهج</a>
+    <a href="review.html" class="active">✍️ المراجعة</a>
+    <a href="assessments.html">📝 التقويم</a>
+    <a href="ocr.html">🖼️ تحويل صورة</a>
+    <a href="vocabulary.html">📖 مفردات</a>
+    <a href="sentences.html">💬 الجمل</a>
+    <a href="analysis.html">📊 التحليل</a>
+    <a href="supervisor.html">👔 الإشراف</a>
+  </nav>
+
+  <!-- بطاقة البحث السريع في معجم الصواب اللغوي -->
+  <div class="card" style="border-top: 4px solid #800000;">
+    <h3>📖 استعلام الفوري في معجم الصواب اللغوي (أحمد مختار عمر)</h3>
+    <div class="field">
+      <label>ابحث عن كلمة، خطأ شائع، أو قضية لغوية:</label>
+      <div style="display:flex; gap:10px;">
+        <input type="text" id="sawabQuery" placeholder="مثال: لغاية الآن، أبناء، أجازة...">
+        <button class="btn-secondary" onclick="searchSawab()">بحث بالمعجم</button>
+      </div>
+    </div>
+    <div id="sawabResults" class="sawab-results"></div>
+  </div>
+
+  <!-- بطاقة المراجعة الشاملة -->
+  <div class="card">
+    <h2>✍️ قسم المراجعة العلمية واللغوية (الباحث الشرعي واللغوي)</h2>
+    <div class="field"><label>الصق النص أو المحتوى المراد مراجعته لغوياً وعلمياً / شرعياً</label><textarea id="textContent" rows="5" placeholder="أدخل النصوص أو الأحاديث أو الأحداث التاريخية المراد تدقيقها..."></textarea></div>
+    <div class="field"><label>نوع المراجعة المطلوبة</label><select id="reviewType"><option value="شرعي ولغوي شامل">مراجعة شرعية ولغوية شاملة (تخريج، صحة أحداث، تدقيق نحوي وبلاغي)</option><option value="لغوي ونحوي فقط">تدقيق لغوي ونحوي وصرفي فقط</option><option value="توثيق وعلمي فقط">مراجعة صحة الأحداث والمصادر العلمية والشرعية فقط</option></select></div>
+    <button id="genBtn" onclick="reviewText()">بدء المراجعة والتدقيق الشامل</button>
+    <div id="loading" style="display:none; color:#C5A059; margin-top:18px; font-weight:600;">جاري الفحص اللغوي والشرعي عبر عقل مداد...</div>
+    <div id="output" class="output"></div>
+  </div>
+</div>
+
+<script>
+  async function reviewText() {
+    const btn = document.getElementById('genBtn'), loading = document.getElementById('loading'), output = document.getElementById('output');
+    btn.disabled = true; loading.style.display = 'block'; output.style.display = 'none';
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/review-text', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: document.getElementById('textContent').value,
+          review_type: document.getElementById('reviewType').value
+        })
+      });
+      const data = await res.json();
+      loading.style.display = 'none'; btn.disabled = false;
+      if(data.status === 'success') { output.textContent = data.output; output.style.display = 'block'; }
+    } catch(err) { loading.style.display = 'none'; btn.disabled = false; alert('خطأ في الاتصال بالخادم.'); }
+  }
+
+  async function searchSawab() {
+    const q = document.getElementById('sawabQuery').value.trim();
+    const resultsContainer = document.getElementById('sawabResults');
+    resultsContainer.style.display = 'none';
+    resultsContainer.innerHTML = '';
+    
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/linguistic/correctness?q=${encodeURIComponent(q)}&limit=15`);
+      const data = await res.json();
+      if(data.status === 'success' && data.data.length > 0) {
+        data.data.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'sawab-item';
+          div.innerHTML = `<div class="sawab-title">🔸 ${item.common_error}</div><div class="sawab-desc"><strong>التصحيح والرتبة:</strong> ${item.correct_form}<br><strong>الشرح والتفصيل:</strong> ${item.explanation.substring(0, 250)}...</div>`;
+          resultsContainer.appendChild(div);
+        });
+        resultsContainer.style.display = 'block';
+      } else {
+        resultsContainer.innerHTML = '<div style="padding:10px; text-align:center; color:#5A605C;">لا توجد نتائج مطابقة في معجم الصواب اللغوي.</div>';
+        resultsContainer.style.display = 'block';
+      }
+    } catch(err) {
+      alert('خطأ في الاتصال بقاعدة بيانات المعجم.');
+    }
+  }
+</script>
+</body>
+</html>

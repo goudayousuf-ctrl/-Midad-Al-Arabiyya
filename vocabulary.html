@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بنك المفردات والتوليد السياقي المتقدم | مداد AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Rakkas&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  body{ background:#F7F5F0; color:#2C302E; font-family:'IBM Plex Sans Arabic', sans-serif; padding:20px; margin:0; line-height:1.9; }
+  .wrapper{ max-width:1100px; margin:0 auto; }
+  
+  nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 12px 24px; border-bottom: 1px solid #E2DDD5; display: flex; justify-content: center; gap: 8px; margin-bottom: 35px; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); flex-wrap: wrap; position: sticky; top: 15px; z-index: 100; }
+  nav a { display: flex; align-items: center; gap: 6px; text-decoration: none; color: #5A605C; font-weight: 500; font-size: 13px; padding: 8px 14px; border-radius: 10px; transition: all 0.25s ease; background: #FAF9F6; border: 1px solid #EAE5D9; }
+  nav a:hover, nav a.active { background: #F4EFE6; border-color: #C5A059; color: #C5A059; transform: translateY(-1px); font-weight: 600; }
+
+  .card{ background:#FFFFFF; padding:40px; border-radius:18px; border:1px solid #E2DDD5; box-shadow:0 6px 25px rgba(0,0,0,0.03); margin-bottom:30px; }
+  h2{ font-family:'Rakkas',serif; color:#C5A059; font-size:28px; margin-bottom:15px; margin-top:0; }
+  .field{ margin-bottom:20px; }
+  label{ display:block; margin-bottom:8px; color:#5A605C; font-size:14px; font-weight:600; }
+  input, select, textarea{ width:100%; background:#FAF9F6; border:1px solid #D6D0C4; color:#2C302E; padding:12px 16px; border-radius:12px; font-family:inherit; box-sizing:border-box; font-size:15px; transition:0.3s; }
+  input:focus, select:focus, textarea:focus{ outline:none; border-color:#C5A059; background:#FFF; box-shadow:0 0 0 4px rgba(197,160,89,0.1); }
+  
+  button{ background:#C5A059; color:#FFF; padding:12px 28px; border:none; border-radius:12px; font-weight:600; cursor:pointer; font-size:15px; transition:0.3s; box-shadow:0 4px 15px rgba(197,160,89,0.25); }
+  button:hover{ background:#B38F4E; transform: translateY(-1px); }
+
+  .mode-switch { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #E2DDD5; padding-bottom: 15px; }
+  .mode-btn { background: #FAF9F6; border: 1px solid #D6D0C4; color: #5A605C; padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+  .mode-btn.active { background: #C5A059; color: #FFF; border-color: #C5A059; }
+
+  .alphabet-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; background: #FAF9F6; padding: 12px; border-radius: 12px; border: 1px solid #EAE5D9; }
+  .alpha-btn { background: #FFFFFF; border: 1px solid #D6D0C4; color: #2C302E; width: 36px; height: 36px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+  .alpha-btn:hover, .alpha-btn.active { background: #007A78; color: #FFF; border-color: #007A78; }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 15px; }
+  .flip-card { background-color: transparent; width: 100%; height: 260px; perspective: 1000px; cursor: pointer; }
+  .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-radius: 14px; }
+  .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+  .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 14px; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; border: 1px solid #E2DDD5; box-sizing: border-box; }
+  .flip-card-front { background-color: #FFFFFF; color: #2C302E; justify-content: center; align-items: center; }
+  .flip-card-back { background-color: #2C221E; color: #F7F4EF; transform: rotateY(180deg); justify-content: space-between; align-items: center; text-align: center; }
+  .card-arabic-text { font-weight: 700; font-size: 1.8rem; color: #007A78; font-family: 'Cairo', sans-serif; margin-bottom: 6px; }
+  .audio-btn { background: #007A78; color: #FFF; border: none; padding: 6px 14px; border-radius: 8px; font-size: 12px; cursor: pointer; font-family: 'Cairo', sans-serif; margin-top: 8px; display: inline-flex; align-items: center; gap: 5px; }
+  .audio-btn:hover { background: #005F5D; }
+  
+  .generator-box { background: #FAF9F6; border: 1px solid #E2DDD5; padding: 25px; border-radius: 14px; margin-top: 25px; }
+  .grammar-badge { background: #F4EFE6; border: 1px solid #C5A059; color: #5A4A28; padding: 10px 15px; border-radius: 10px; font-size: 13px; margin-bottom: 15px; display: none; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  
+  <!-- الهيدر الموحد الشامل -->
+  <nav>
+    <a href="index.html"><span>🏠</span> الرئيسية</a>
+    <a href="workspace.html"><span>🎯</span> الدروس</a>
+    <a href="curriculum.html"><span>📚</span> المناهج</a>
+    <a href="assessments.html"><span>📝</span> التقويم</a>
+    <a href="review.html"><span>✍️</span> المراجعة</a>
+    <a href="ocr.html"><span>🖼️</span> تحويل صورة</a>
+    <a href="vocabulary.html" class="active"><span>📖</span> المفردات</a>
+    <a href="memory.html"><span>🧠</span> الذاكرة</a>
+    <a href="sentences.html"><span>💬</span> الجمل</a>
+    <a href="analysis.html"><span>📊</span> التحليل</a>
+    <a href="supervisor.html"><span>👔</span> الإشراف</a>
+  </nav>
+
+  <!-- القسم الأول: بنك المفردات والمجالات -->
+  <div class="card" style="margin-bottom: 30px;">
+    <h2>📖 بنك المفردات المعجمي للمتخصصين</h2>
+    <p style="color: #6B6759; margin-bottom: 20px;">استعراض المعجم الشائع المعتمد وفق الحقول الدلالية أو الترتيب الألفبائي لإعداد المواد الإثرائية.</p>
+    
+    <div class="mode-switch">
+      <button id="btnDomainMode" class="mode-btn active" onclick="setMode('domain')">🗂️ استعراض وفق الحقول الدلالية (المجالات)</button>
+      <button id="btnAlphaMode" class="mode-btn" onclick="setMode('alpha')">🔤 استعراض وفق الترتيب الألفبائي</button>
+    </div>
+
+    <div id="domainFilterSection" style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+      <div style="flex: 2; min-width: 220px;" class="field">
+        <label>بحث حر بالكلمة</label>
+        <input id="searchQuery" type="text" placeholder="اكتب كلمة للبحث..." oninput="fetchVocabBank()">
+      </div>
+      <div style="flex: 1.5; min-width: 220px;" class="field">
+        <label>الحقل الدلالي / المجال</label>
+        <select id="domainFilter" onchange="fetchVocabBank()">
+          <option value="">جميع الحقول الدلالية والمجالات</option>
+        </select>
+      </div>
+      <div style="flex: 1; min-width: 180px;" class="field">
+        <label>المصدر المعتمد</label>
+        <select id="sourceFilter" onchange="loadDomainsAndFetch();">
+          <option value="">جميع المصادر</option>
+          <option value="قائمة د. رشدي طعيمة">قائمة د. رشدي طعيمة</option>
+          <option value="قائمة مكة">قائمة مكة</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="alphaFilterSection" style="display: none; margin-bottom: 20px;">
+      <label style="margin-bottom: 8px; color: #5A605C; font-size: 14px; font-weight: 600;">اختر الحرف الألفبائي للاستعراض</label>
+      <div class="alphabet-bar" id="alphabetBar"></div>
+    </div>
+    
+    <div id="bankLoading" style="color:#C5A059; font-weight:600; display:none;">جاري استعراض المفردات...</div>
+    <div id="vocabBankGrid" class="cards-grid"></div>
+  </div>
+
+  <!-- القسم الثاني: التوليد المقيد بالبنك مع مستويات التوليد -->
+  <div class="card" style="margin-bottom: 30px;">
+    <h2>🎯 التوليد السياقي المقيد لبنك المفردات (مُراعاة التيسير لغير العرب)</h2>
+    <p style="color: #6B6759; margin-bottom: 20px;">اختر الكلمات وحدد نمط ومستوى التوليد المؤسسي لتجهيز محتوى معتمد متدرج:</p>
+    
+    <div class="generator-box">
+      <!-- مستويات التوليد -->
+      <div class="field" style="background: #F4EFE6; padding: 16px; border-radius: 12px; border: 1px solid #E2DDD5;">
+        <label style="color: #C5A059; font-size: 14px; margin-bottom: 8px;">🌟 مستوى وتوجيه التوليد الذكي</label>
+        <select id="genModeBank">
+          <option value="madad" selected>التوليد المبني على معايير وخبرة مداد الرسمية</option>
+          <option value="free">التوليد الحر المفتوح</option>
+          <option value="custom">التوليد المبني على مصادر خاصة للمؤسسة أو المعلم</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>الصف الدراسي / المستوى (لمعايير التدرج لغير العرب)</label>
+        <select id="gradeBank">
+          <option value="الصف الأول (مبتدئ)">الصف الأول (مبتدئ - جمل قصيرة ومفردات حسية)</option>
+          <option value="الصف الثاني (مبتدئ)">الصف الثاني (مبتدئ متقدم)</option>
+          <option value="الصف الثالث (متوسط)">الصف الثالث (متوسط - تراكيب ميسرة وحوارات)</option>
+          <option value="الصف الرابع (متوسط)">الصف الرابع (متوسط)</option>
+          <option value="الصف الخامس (متقدم)">الصف الخامس (متقدم)</option>
+          <option value="الصف السادس وما فوق">الصف السادس وما فوق</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>الكلمات المختارة (مفصولة بفواصل)</label>
+        <input id="selectedWords" type="text" placeholder="مثال: أستاذ، منزل، تكلَّمَ، كتاب">
+      </div>
+
+      <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 220px;" class="field">
+          <label>المستوى المستهدف (نوع المحتوى)</label>
+          <select id="genLevel" onchange="toggleOpts('genLevel', 'optGroup1', 'optGroup2', 'optGroup3')">
+            <option value="جملة">1. جملة (بسيطة أم مركبة)</option>
+            <option value="حوار">2. حوار (تحديد عدد الأشخاص والأجناس)</option>
+            <option value="فقرة">3. فقرة (قصيرة، وسط، طويلة)</option>
+          </select>
+        </div>
+
+        <div style="flex: 1; min-width: 220px;" class="field" id="optGroup1">
+          <label>توصيف الجملة (اختياري)</label>
+          <select id="sentenceType">
+            <option value="غير محدد">غير محدد</option>
+            <option value="بسيطة">جملة بسيطة (موصى بها للمبتدئين)</option>
+            <option value="مركبة">جملة مركبة</option>
+          </select>
+        </div>
+
+        <div style="flex: 1; min-width: 220px;" class="field" id="optGroup2" style="display:none;">
+          <label>توصيف الحوار (اختياري)</label>
+          <input id="dialogueDetails" type="text" placeholder="مثال: شخصان، الطول: قصير">
+        </div>
+
+        <div style="flex: 1; min-width: 220px;" class="field" id="optGroup3" style="display:none;">
+          <label>طول الفقرة (اختياري)</label>
+          <select id="paragraphLength">
+            <option value="وسط">طول عادي (وسط)</option>
+            <option value="قصيرة">قصيرة (مناسبة للمبتدئين)</option>
+            <option value="طويلة">طويلة</option>
+          </select>
+        </div>
+      </div>
+
+      <button id="genContextBtn" onclick="generateFromBank()" style="margin-top: 15px;">إنشاء المحتوى المقيد عبر عقل مداد AI</button>
+      <div id="genLoading" style="display:none; color:#C5A059; margin-top:18px; font-weight:600;">جاري صياغة المحتوى المتخصص مع مراعاة التيسير لغير العرب...</div>
+      <div id="genGrammarBadge" class="grammar-badge"></div>
+      <div id="genOutput" style="margin-top:25px; padding:25px; background:#FFFFFF; border:1px solid #E2DDD5; border-radius:12px; display:none; line-height:2.2; white-space:pre-wrap;"></div>
+    </div>
+  </div>
+
+  <!-- القسم الثالث: التوليد الحر المتقدم للمتخصصين -->
+  <div class="card">
+    <h2>✨ التوليد الحر المتقدم للمتخصصين والمطورين</h2>
+    <p style="color: #6B6759; margin-bottom: 20px;">إعداد مواد لغوية متقدمة بناءً على موضوعات أو نصوص حرة:</p>
+    
+    <div class="generator-box" style="background: #F4EFE6; border-color: #D6D0C4;">
+      <!-- مستويات التوليد -->
+      <div class="field" style="background: #FFFFFF; padding: 16px; border-radius: 12px; border: 1px solid #E2DDD5;">
+        <label style="color: #C5A059; font-size: 14px; margin-bottom: 8px;">🌟 مستوى وتوجيه التوليد الحر</label>
+        <select id="freeMode">
+          <option value="madad" selected>التوليد المبني على معايير وخبرة مداد الرسمية</option>
+          <option value="free">التوليد الحر المفتوح</option>
+          <option value="custom">التوليد المبني على مصادر خاصة للمؤسسة أو المعلم</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>الصف الدراسي / المستوى</label>
+        <select id="freeGrade">
+          <option value="الصف الأول (مبتدئ)">الصف الأول (مبتدئ)</option>
+          <option value="الصف الثاني (مبتدئ)">الصف الثاني (مبتدئ متقدم)</option>
+          <option value="الصف الثالث (متوسط)">الصف الثالث (متوسط)</option>
+          <option value="الصف الرابع (متوسط)">الصف الرابع (متوسط)</option>
+          <option value="الصف الخامس (متقدم)">الصف الخامس (متقدم)</option>
+          <option value="الصف السادس وما فوق">الصف السادس وما فوق</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>أدخل الكلمات أو الموضوع الحر</label>
+        <input id="freeWords" type="text" placeholder="مثال: التسوق في السوبرماركت، السفر بالقطار...">
+      </div>
+
+      <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 220px;" class="field">
+          <label>المستوى المستهدف (نوع المحتوى)</label>
+          <select id="freeLevel" onchange="toggleOpts('freeLevel', 'freeOpt1', 'freeOpt2', 'freeOpt3')">
+            <option value="جملة">1. جملة (بسيطة أم مركبة)</option>
+            <option value="حوار">2. حوار (تحديد عدد الأشخاص والأجناس)</option>
+            <option value="فقرة">3. فقرة (قصيرة، وسط، طويلة)</option>
+          </select>
+        </div>
+
+        <div style="flex: 1; min-width: 220px;" class="field" id="freeOpt1">
+          <label>توصيف الجملة (اختياري)</label>
+          <select id="freeSentenceType">
+            <option value="غير محدد">غير محدد</option>
+            <option value="بسيطة">جملة بسيطة</option>
+            <option value="مركبة">جملة مركبة</option>
+          </select>
+        </div>
+
+        <div style="flex: 1; min-width: 220px;" class="field" id="freeOpt2" style="display:none;">
+          <label>توصيف الحوار (اختياري)</label>
+          <input id="freeDialogueDetails" type="text" placeholder="مثال: 3 أشخاص، الطول: متوسط">
+        </div>
+
+        <div style="flex: 1; min-width: 220px;" class="field" id="freeOpt3" style="display:none;">
+          <label>طول الفقرة (اختياري)</label>
+          <select id="freeParagraphLength">
+            <option value="وسط">طول عادي (وسط)</option>
+            <option value="قصيرة">قصيرة</option>
+            <option value="طويلة">طويلة</option>
+          </select>
+        </div>
+      </div>
+
+      <button id="freeGenBtn" onclick="generateFreeContent()" style="margin-top: 15px; background: #007A78;">بدء التوليد المتقدم عبر مداد AI</button>
+      <div id="freeLoading" style="display:none; color:#007A78; margin-top:18px; font-weight:600;">جاري إعداد المحتوى المتقدم مع مراعاة التيسير لغير العرب...</div>
+      <div id="freeGrammarBadge" class="grammar-badge"></div>
+      <div id="freeOutput" style="margin-top:25px; padding:25px; background:#FFFFFF; border:1px solid #E2DDD5; border-radius:12px; display:none; line-height:2.2; white-space:pre-wrap;"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentMode = 'domain';
+let selectedLetter = '';
+const arabicLetters = ['أ', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ك', 'ل', 'م', 'ن', 'هـ', 'و', 'ي'];
+
+function buildAlphabetBar() {
+    const bar = document.getElementById('alphabetBar');
+    bar.innerHTML = '<button class="alpha-btn active" onclick="filterByLetter(\'\', this)">الكل</button>';
+    arabicLetters.forEach(letter => {
+        bar.innerHTML += `<button class="alpha-btn" onclick="filterByLetter('${letter}', this)">${letter}</button>`;
+    });
+}
+
+function setMode(mode) {
+    currentMode = mode;
+    document.getElementById('btnDomainMode').classList.toggle('active', mode === 'domain');
+    document.getElementById('btnAlphaMode').classList.toggle('active', mode === 'alpha');
+    if(mode === 'domain') {
+        document.getElementById('domainFilterSection').style.display = 'flex';
+        document.getElementById('alphaFilterSection').style.display = 'none';
+        selectedLetter = '';
+    } else {
+        document.getElementById('domainFilterSection').style.display = 'none';
+        document.getElementById('alphaFilterSection').style.display = 'block';
+    }
+    fetchVocabBank();
+}
+
+function filterByLetter(letter, btn) {
+    selectedLetter = letter;
+    document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    fetchVocabBank();
+}
+
+function speakText(text) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    let utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ar-SA';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+}
+
+async function loadDomains() {
+    const source = document.getElementById('sourceFilter').value;
+    const domainSelect = document.getElementById('domainFilter');
+    try {
+        const res = await fetch(`http://127.0.0.1:8000/api/vocab/domains?source=${encodeURIComponent(source)}`);
+        const data = await res.json();
+        if(data.status === 'success') {
+            domainSelect.innerHTML = '<option value="">جميع الحقول الدلالية والمجالات</option>';
+            data.domains.forEach(d => {
+                domainSelect.innerHTML += `<option value="${d}">${d}</option>`;
+            });
+        }
+    } catch(err) { console.error(err); }
+}
+
+async function loadDomainsAndFetch() {
+    await loadDomains();
+    fetchVocabBank();
+}
+
+async function fetchVocabBank() {
+    const grid = document.getElementById('vocabBankGrid');
+    const loading = document.getElementById('bankLoading');
+    loading.style.display = 'block';
+    let url = `http://127.0.0.1:8000/api/vocab/bank?limit=36`;
+    if (currentMode === 'domain') {
+        const q = document.getElementById('searchQuery').value;
+        const source = document.getElementById('sourceFilter').value;
+        const domain = document.getElementById('domainFilter').value;
+        url += `&q=${encodeURIComponent(q)}&source=${encodeURIComponent(source)}&domain=${encodeURIComponent(domain)}`;
+    } else {
+        if (selectedLetter) { url += `&q=${encodeURIComponent(selectedLetter)}`; }
+    }
+    
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      loading.style.display = 'none';
+      if(data.status === 'success') {
+        grid.innerHTML = '';
+        if(data.data.length === 0) {
+          grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #888;">لا توجد مفردات مطابقة.</p>';
+          return;
+        }
+        data.data.forEach(item => {
+          let cleanWord = item.word.replace(/'/g, "\\'");
+          grid.innerHTML += `
+            <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div>
+                            <div class="card-arabic-text">${item.word}</div>
+                            <button class="audio-btn" onclick="event.stopPropagation(); speakText('${cleanWord}')">🔊 استماع</button>
+                        </div>
+                        <p style="font-size: 0.75rem; color: #888;">انقر لقلب البطاقة</p>
+                    </div>
+                    <div class="flip-card-back" style="justify-content: center;">
+                        <div style="width:100%;">
+                            <div style="color: #C5A059; font-size: 1.1rem; font-weight:bold; font-family:'Cairo',sans-serif; margin-bottom: 6px;">الحقل: ${item.domain || 'عام'}</div>
+                            <div style="font-size: 0.85rem; opacity: 0.9;">التصنيف: ${item.category || 'معجمي'}</div>
+                        </div>
+                        <p style="font-size: 0.75rem; opacity: 0.6; margin-top: 15px;">المصدر: ${item.source}</p>
+                    </div>
+                </div>
+            </div>
+          `;
+        });
+      }
+    } catch(err) {
+      loading.style.display = 'none';
+    }
+}
+
+// دالة تفعيل واستجابة القائمة المنسدلة لعرض الخيارات الإضافية بدقة
+function toggleOpts(levelId, g1, g2, g3) {
+    let val = document.getElementById(levelId).value;
+    document.getElementById(g1).style.display = (val === 'جملة') ? 'block' : 'none';
+    document.getElementById(g2).style.display = (val === 'حوار') ? 'block' : 'none';
+    document.getElementById(g3).style.display = (val === 'فقرة') ? 'block' : 'none';
+}
+
+async function generateFromBank() {
+    const words = document.getElementById('selectedWords').value;
+    const level = document.getElementById('genLevel').value;
+    const genMode = document.getElementById('genModeBank').value;
+    const targetGrade = document.getElementById('gradeBank').value;
+    const btn = document.getElementById('genContextBtn');
+    const loading = document.getElementById('genLoading');
+    const output = document.getElementById('genOutput');
+    const badge = document.getElementById('genGrammarBadge');
+
+    if(!words.trim()) { alert('الرجاء كتابة أو اختيار كلمات من بنك المفردات أولاً.'); return; }
+
+    let extraDetails = '';
+    if(level === 'جملة') extraDetails = `نوع الجملة: ${document.getElementById('sentenceType').value}`;
+    if(level === 'حوار') extraDetails = `تفاصيل الحوار: ${document.getElementById('dialogueDetails').value}`;
+    if(level === 'فقرة') extraDetails = `طول الفقرة: ${document.getElementById('paragraphLength').value}`;
+
+    btn.disabled = true; loading.style.display = 'block'; output.style.display = 'none'; badge.style.display = 'none';
+
+    try {
+        const res = await fetch('http://127.0.0.1:8000/api/prepare-vocabulary', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                vocab_list: `[سياسة التيسير والتدرج لغير العرب - المستوى: ${targetGrade}]\nاستخدم حصراً المفردات التالية: (${words}). والمستوى المطلوب: (${level}). توصيفات: (${extraDetails}). راعي التيسير واختيار المفردات الشائعة المباشرة دون تكلف.`,
+                target_level: level,
+                generation_mode: genMode,
+                custom_source: targetGrade
+            })
+        });
+        const data = await res.json();
+        loading.style.display = 'none'; btn.disabled = false;
+        if(data.status === 'success') {
+            output.textContent = data.vocab_output;
+            output.style.display = 'block';
+            badge.innerHTML = `⚖️ <strong>الضبط النحوي والتيسير:</strong> تمت الصياغة بمعايير "التطبيق النحوي" مع مراعاة التيسير والتدرج للمستوى (${targetGrade}).`;
+            badge.style.display = 'block';
+        }
+    } catch(err) {
+        loading.style.display = 'none'; btn.disabled = false;
+        alert('خطأ في الاتصال بالخادم.');
+    }
+}
+
+async function generateFreeContent() {
+    const words = document.getElementById('freeWords').value;
+    const level = document.getElementById('freeLevel').value;
+    const genMode = document.getElementById('freeMode').value;
+    const targetGrade = document.getElementById('freeGrade').value;
+    const btn = document.getElementById('freeGenBtn');
+    const loading = document.getElementById('freeLoading');
+    const output = document.getElementById('freeOutput');
+    const badge = document.getElementById('freeGrammarBadge');
+
+    if(!words.trim()) { alert('الرجاء إدخال الكلمات أو الموضوع الحر أولاً.'); return; }
+
+    let extraDetails = '';
+    if(level === 'جملة') extraDetails = `نوع الجملة: ${document.getElementById('freeSentenceType').value}`;
+    if(level === 'حوار') extraDetails = `تفاصيل الحوار: ${document.getElementById('freeDialogueDetails').value}`;
+    if(level === 'فقرة') extraDetails = `طول الفقرة: ${document.getElementById('freeParagraphLength').value}`;
+
+    btn.disabled = true; loading.style.display = 'block'; output.style.display = 'none'; badge.style.display = 'none';
+
+    try {
+        const res = await fetch('http://127.0.0.1:8000/api/prepare-vocabulary', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                vocab_list: `[سياسة التيسير والتدرج لغير العرب - المستوى: ${targetGrade}]\nتوليد متقدم للمفردات والموضوعات التالية: (${words}). المستوى المطلوب: (${level}). توصيفات: (${extraDetails}). راعي التيسير واختيار الألفاظ الشائعة المباشرة المناسبة للمتعلم غير العربي.`,
+                target_level: level,
+                generation_mode: genMode,
+                custom_source: targetGrade
+            })
+        });
+        const data = await res.json();
+        loading.style.display = 'none'; btn.disabled = false;
+        if(data.status === 'success') {
+            output.textContent = data.vocab_output;
+            output.style.display = 'block';
+            badge.innerHTML = `⚖️ <strong>الضبط النحوي والتيسير:</strong> تمت الصياغة بمعايير "التطبيق النحوي" مع مراعاة التيسير والتدرج للمستوى (${targetGrade}).`;
+            badge.style.display = 'block';
+        }
+    } catch(err) {
+        loading.style.display = 'none'; btn.disabled = false;
+        alert('خطأ في الاتصال بالخادم.');
+    }
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+    buildAlphabetBar();
+    await loadDomains();
+    fetchVocabBank();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">أكاديمية رُبى العربية الذكية | مسارات البرامج والمهارات والأقسام (مَدَاد)</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=Reem+Kufi:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+    --ink:#1B3A5C;
+    --ink-deep:#12283F;
+    --parchment:#F6F2E6;
+    --parchment-soft:#FCFAF4;
+    --gold:#C6A050;
+    --gold-bright:#DEC07C;
+    --rust:#6E7A3F;
+    --charcoal:#24211B;
+    --line:rgba(198,160,80,0.32);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+    background:var(--parchment);
+    color:var(--charcoal);
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+    line-height:1.8;
+}
+h1,h2,h3, .display{ font-family:'Fraunces', serif; font-weight:600; }
+.arabic{ font-family:'Amiri', serif; }
+a{color:inherit; text-decoration:none;}
+
+/* ===== Header & Lang Toggle ===== */
+header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(244,234,210,0.95);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+}
+.nav-wrap{
+    max-width:1180px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px; flex-wrap:wrap; gap:15px;
+}
+.logo{display:flex; align-items:center; gap:10px;}
+.logo-mark{
+    width:42px; height:42px; border-radius:50%;
+    background:var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--gold-bright); font-family:'Amiri',serif; font-weight:700; font-size:19px;
+}
+.logo-text{display:flex; flex-direction:column; line-height:1.15;}
+.logo-text b{font-family:'Fraunces',serif; font-size:17px; color:var(--ink); font-weight:600;}
+.logo-text span{font-size:10px; letter-spacing:0.04em; color:var(--rust); font-family:'Amiri',serif;}
+
+nav ul{list-style:none; display:flex; gap:20px; align-items:center; flex-wrap:wrap;}
+nav a{font-size:14px; font-weight:500; color:var(--ink); position:relative; padding:4px 0;}
+nav a:hover{color:var(--gold);}
+.lang-btn{
+    background:var(--ink); color:var(--gold-bright); border:1px solid var(--gold);
+    padding:6px 14px; border-radius:4px; font-size:13px; font-weight:600; cursor:pointer; transition:0.2s;
+}
+.lang-btn:hover{background:var(--ink-deep);}
+
+/* ===== Hero ===== */
+.hero{
+    position:relative; padding:70px 28px 60px;
+    background: radial-gradient(circle at 18% 22%, rgba(198,160,80,0.14), transparent 45%), var(--parchment);
+    border-bottom:1px solid var(--line);
+}
+.hero-inner{
+    max-width:1180px; margin:0 auto; width:100%;
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:50px; align-items:center;
+}
+.eyebrow{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:'Reem Kufi',sans-serif; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--rust); margin-bottom:18px;
+}
+.eyebrow::before{content:''; width:26px; height:1px; background:var(--rust);}
+.hero h1{ font-size:clamp(32px, 4.2vw, 52px); line-height:1.25; color:var(--ink); margin-bottom:18px; }
+.hero h1 .accent{color:var(--rust); font-style:italic; font-weight:500;}
+.hero p.lead{ font-size:17px; line-height:1.8; color:#4a4238; max-width:520px; margin-bottom:28px; }
+
+/* ===== Programs Section (Matching image source exactly) ===== */
+section{padding:80px 28px;}
+.section-inner{max-width:1180px; margin:0 auto;}
+.section-head{max-width:680px; margin-bottom:48px;}
+.section-head h2{font-size:clamp(28px,3.4vw,42px); color:var(--ink); line-height:1.25; margin-bottom:14px;}
+.section-head p{font-size:15px; line-height:1.8; color:#5b5346;}
+
+.programs-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:18px;}
+.program-card{
+    background:var(--ink); color:var(--parchment-soft); border-radius:6px;
+    padding:30px 20px; text-align:center; position:relative;
+    transition:transform .3s, box-shadow .3s;
+}
+.program-card:hover{transform:translateY(-6px); box-shadow:0 20px 36px -16px rgba(18,46,56,0.4);}
+.program-icon{
+    width:48px; height:48px; margin:0 auto 16px; border-radius:50%;
+    background:rgba(244,234,210,0.1); border:1px solid var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Amiri',serif; font-size:20px; color:var(--gold-bright);
+}
+.program-card h3{font-family:'Fraunces',serif; font-size:15.5px; margin-bottom:4px; font-weight:600;}
+.program-card .ar{font-family:'Amiri',serif; font-size:14px; color:var(--gold-bright); margin-bottom:12px;}
+.program-card p{font-size:12.5px; line-height:1.75; color:rgba(244,234,210,0.72);}
+
+/* ===== Interactive Cards (Skills, Stories & Midad Services) ===== */
+.card{
+    background:var(--parchment-soft); border:1px solid var(--line); border-radius:6px;
+    padding:38px 34px; box-shadow:0 20px 44px -20px rgba(18,46,56,0.15); margin-bottom:30px;
+}
+.card h2{font-size:24px; color:var(--ink); margin-bottom:12px;}
+.field{margin-bottom:18px;}
+label{display:block; font-size:13px; font-weight:600; color:var(--ink); margin-bottom:6px;}
+input, select, textarea{
+    width:100%; padding:12px 14px; border-radius:3px; border:1px solid var(--line);
+    background:#fff; font-family:'Inter',sans-serif; font-size:14px; color:var(--charcoal);
+}
+input:focus, select:focus, textarea:focus{outline:2px solid var(--gold); outline-offset:1px;}
+.btn-primary{
+    background:var(--rust); color:var(--parchment-soft);
+    padding:14px 30px; border-radius:3px; font-weight:700; font-size:14px; border:none; cursor:pointer;
+    box-shadow:0 6px 18px rgba(110,122,63,0.24); transition:transform .2s; display:inline-flex; align-items:center; gap:8px;
+}
+.btn-primary:hover{transform:translateY(-2px);}
+.output-box{
+    margin-top:20px; padding:22px; background:#fff; border:1px solid var(--line); border-radius:4px;
+    display:none; white-space:pre-wrap; line-height:2.1; font-size:14.5px;
+}
+
+.skills-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:15px; margin-bottom:20px;}
+.skill-card{
+    background:#fff; border:1px solid var(--line); padding:18px; border-radius:4px; text-align:center; cursor:pointer; transition:0.2s;
+}
+.skill-card:hover, .skill-card.active{border-color:var(--rust); background:rgba(110,122,63,0.06); font-weight:600;}
+.stories-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:15px; margin-bottom:20px;}
+.story-card{
+    background:#fff; border:1px solid var(--line); border-left:4px solid var(--gold); padding:18px; border-radius:4px; cursor:pointer; transition:0.2s;
+}
+.story-card:hover, .story-card.active{background:#f9f5eb; border-color:var(--gold);}
+
+/* Footer */
+footer{padding:40px 28px; background:var(--parchment-soft); border-top:1px solid var(--line); text-align:center; font-size:13px; color:#8a8070;}
+
+@media (max-width: 980px){
+    .hero-inner{grid-template-columns:1fr;}
+    .programs-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media (max-width: 600px){
+    .programs-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body id="bodyDir">
+
+<header>
+  <div class="nav-wrap">
+    <div class="logo">
+      <div class="logo-mark arabic">ر</div>
+      <div class="logo-text">
+        <b id="brandTitle">Roba Academy</b>
+        <span class="arabic">رُبى العربية</span>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#programs" id="navProg">Programs</a></li>
+        <li><a href="#skills" id="navSkills">Skills</a></li>
+        <li><a href="#stories" id="navStories">Stories</a></li>
+        <li><a href="#midad-services" id="navMidad">Midad Hub</a></li>
+        <li><a href="supervisor.html" id="navSup">Supervisor & Finance</a></li>
+      </ul>
+    </nav>
+    <button class="lang-btn" onclick="toggleLanguage()" id="langToggleBtn">العربية / English</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow kufi" id="heroEyebrow">Modern Standard Arabic · For Non-Native Speakers</div>
+      <h1 id="heroTitle">Arabic is a language, <span class="accent">a culture</span>, a story worth discovering</h1>
+      <p class="lead" id="heroLead">Roba Academy guides you from your very first letter to reading, writing, and speaking Arabic with confidence — backed by Midad AI tools.</p>
+    </div>
+    <div class="card" style="margin:0; transform:rotate(-1deg);">
+      <div class="kufi" style="font-size:11px; color:var(--rust); text-align:center; margin-bottom:12px;" id="heroBoxTop">Midad AI Engine &amp; Roba Academy</div>
+      <div class="arabic" style="font-size:46px; text-align:center; color:var(--ink);">مَرْحَبًا</div>
+      <p style="text-align:center; font-size:13.5px; color:#5b5346; margin-top:12px;" id="heroBoxDesc">Fully vocalized TPRS stories, structured curriculum, and direct audio generation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROGRAMS SECTION (Matching Provided Image) ===== -->
+<section id="programs">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="eyebrow kufi" id="progEyebrow">OUR PROGRAMS</div>
+      <h2 id="progTitle">A track built for who you are</h2>
+      <p id="progDesc">Whatever brought you to Arabic — school, work, faith, or curiosity — there's a program shaped around your goal, not a one-size-fits-all course.</p>
+    </div>
+    <div class="programs-grid">
+      <div class="program-card">
+        <div class="program-icon">ط</div>
+        <h3 id="p1Name">School Students</h3>
+        <div class="ar">لطلاب المدارس</div>
+        <p id="p1Desc">Specialized programs that strengthen Arabic fundamentals for students across school stages.</p>
+      </div>
+      <div class="program-card">
+        <div class="program-icon">ب</div>
+        <h3 id="p2Name">Adults</h3>
+        <div class="ar">للبالغين</div>
+        <p id="p2Desc">Flexible courses focused on conversation and practical needs, for daily life and work.</p>
+      </div>
+      <div class="program-card">
+        <div class="program-icon">خ</div>
+        <h3 id="p3Name">Special Programs</h3>
+        <div class="ar">برامج خاصة</div>
+        <p id="p3Desc">Custom learning tracks for individual goals or specialized fields, such as diplomatic Arabic.</p>
+      </div>
+      <div class="program-card">
+        <div class="program-icon">ق</div>
+        <h3 id="p4Name">Quran &amp; Tajweed</h3>
+        <div class="ar">القرآن والتجويد</div>
+        <p id="p4Desc">Learn to read the Holy Quran correctly while mastering the rules of Tajweed for proper pronunciation.</p>
+      </div>
+      <div class="program-card">
+        <div class="program-icon">د</div>
+        <h3 id="p5Name">Islamic Studies</h3>
+        <div class="ar">الدراسات الإسلامية</div>
+        <p id="p5Desc">Understand creed, jurisprudence (Fiqh), and the Prophetic Biography in Arabic, deepening religious awareness.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-inner" style="padding-top:0;">
+  
+  <!-- 1. مسارات تطوير المهارات الأربع -->
+  <div class="card" id="skills">
+    <h2 id="skillsHeading">🎧 رُبى لتطوير المهارات الأربع المتدرجة</h2>
+    <p style="color:#5b5346; font-size:14px; margin-bottom:20px;" id="skillsSub">اختر المهارة المطلوبة لتوليد جلسة تدريبية ذكية وموجهة:</p>
+    
+    <div class="skills-grid">
+      <div class="skill-card active" onclick="selectSkillTrack('استماع', this)">
+        <h4 style="color:var(--ink); margin-bottom:4px;" id="sk1Title">🎧 الاستماع النشط</h4>
+        <p style="font-size:12px; color:#6b6255;" id="sk1Desc">تدوين كورنيل والمقاطع المبسطة</p>
+      </div>
+      <div class="skill-card" onclick="selectSkillTrack('تحدث', this)">
+        <h4 style="color:var(--ink); margin-bottom:4px;" id="sk2Title">🗣️ التحدث بطلاقة</h4>
+        <p style="font-size:12px; color:#6b6255;" id="sk2Desc">تقنية المنصة الدقيقة للإلقاء</p>
+      </div>
+      <div class="skill-card" onclick="selectSkillTrack('قراءة', this)">
+        <h4 style="color:var(--ink); margin-bottom:4px;" id="sk3Title">📖 القراءة التبادلية</h4>
+        <p style="font-size:12px; color:#6b6255;" id="sk3Desc">التنبؤ، التوضيح، والتلخيص</p>
+      </div>
+      <div class="skill-card" onclick="selectSkillTrack('كتابة', this)">
+        <h4 style="color:var(--ink); margin-bottom:4px;" id="sk4Title">✍️ الكتابة المتدرجة</h4>
+        <p style="font-size:12px; color:#6b6255;" id="sk4Desc">العصف الذهني والمسودة المراجعة</p>
+      </div>
+    </div>
+    <input type="hidden" id="selectedSkill" value="استماع">
+
+    <div class="field">
+      <label id="skillLabelCtx">السياق أو المفردات المستهدفة للمهارة:</label>
+      <input type="text" id="skillContextInput" placeholder="مثال: التسوق في السوق الشعبي، التحيات والتعارف...">
+    </div>
+
+    <button class="btn-primary" onclick="generateSkillExercise()">
+      <span id="btnSkillIcon">✨</span> <span id="btnSkillText">توليد تدريب المهارة عبر مَدَاد</span>
+    </button>
+    <div id="skillLoader" style="display:none; color:var(--rust); margin-top:15px; font-weight:600;" id="loadSkillTxt">جاري إعداد تدريب المهارة عبر محرك مَدَاد...</div>
+    <div id="skillOutputBox" class="output-box"></div>
+  </div>
+
+  <!-- 2. مسارات القصص المتدرجة -->
+  <div class="card" id="stories">
+    <h2 id="storiesHeading">📖 مسارات رُبى للقصص المتدرجة (TPRS والسير والقرآن)</h2>
+    <p style="color:#5b5346; font-size:14px; margin-bottom:20px;" id="storiesSub">اختر مسار السرد القصصي التدرجي المناسب لمتعلمي اللغات:</p>
+    
+    <div class="stories-grid">
+      <div class="story-card active" onclick="selectStoryTrack('قصص البيئة اليومية والحياة العامة', this)">
+        <h4 style="color:var(--ink); margin-bottom:4px;" id="st1Title">🏡 مسار البيئة والحياة</h4>
+        <p style="font-size:12px; color:#6b6255;" id="st1Desc">مواقف يومية مألوفة للمبتدئين (A1-A2)</p>
+      </div>
+      <div class="story-card" onclick="selectStoryTrack('قصص الصحابة والقدوات الإسلامية', this)">
+        <h4 style="color:var(--ink); margin-bottom:4px;" id="st2Title">📜 مسار الصحابة والسير</h4>
+        <p style="font-size:12px; color:#6b6255;" id="st2Desc">سرديات تاريخية تربوية مبسطة ومشكولة</p>
+      </div>
+      <div class="story-card" onclick="selectStoryTrack('قصص الأمثال والقصص القرآني الميسر', this)">
+        <h4 style="color:var(--ink); margin-bottom:4px;" id="st3Title">📖 مسار القصص القرآني</h4>
+        <p style="font-size:12px; color:#6b6255;" id="st3Desc">عبر وحِكم من البيان القرآني بلغة ميسرة</p>
+      </div>
+    </div>
+    <input type="hidden" id="selectedStoryTrack" value="قصص البيئة اليومية والحياة العامة">
+
+    <div class="field">
+      <label id="storyLabelPrompt">عنوان القصة أو تفاصيل إضافية:</label>
+      <input type="text" id="storyPromptInput" placeholder="مثال: رحلة في الواحة، الكرم والضيافة، قصة مصعب بن عمير...">
+    </div>
+
+    <button class="btn-primary" onclick="generateStoryTrackContent()">
+      <span>🌙</span> <span id="btnStoryText">توليد القصة المتدرجة مشكولة بالكامل عبر مَدَاد</span>
+    </button>
+    <div id="storyLoader" style="display:none; color:var(--rust); margin-top:15px; font-weight:600;">جاري تأليف وسرد القصة المتدرجة عبر مَدَاد...</div>
+    <div id="storyOutputBox" class="output-box"></div>
+  </div>
+
+  <!-- 3. الربط السريع بملفات مَدَاد التابعة -->
+  <div class="card" id="midad-services">
+    <h2 id="midadSecHeading">⚙️ خدمات مَدَاد العربية التابعة لأكاديمية رُبى</h2>
+    <p style="color:#5b5346; font-size:14px; margin-bottom:20px;" id="midadSecSub">انتقل مباشرة إلى الأقسام والخدمات التابعة لمنظومة مداد المخزنة معك:</p>
+    
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+      <a href="Midad Audio.html" style="background:#fff; border:1px solid var(--line); padding:15px; border-radius:4px; text-align:center; display:block; color:var(--ink); font-weight:600;" id="lnkAudio">🎙️ مِداد الصوتي والتنزيل</a>
+      <a href="quran.html" style="background:#fff; border:1px solid var(--line); padding:15px; border-radius:4px; text-align:center; display:block; color:var(--ink); font-weight:600;" id="lnkQuran">📖 قسم القرآن والسور الـ 114[cite: 3]</a>
+      <a href="grammar.html" style="background:#fff; border:1px solid var(--line); padding:15px; border-radius:4px; text-align:center; display:block; color:var(--ink); font-weight:600;" id="lnkGrammar">📐 معمل القواعد والإعراب</a>
+      <a href="review.html" style="background:#fff; border:1px solid var(--line); padding:15px; border-radius:4px; text-align:center; display:block; color:var(--ink); font-weight:600;" id="lnkReview">✍️ معجم الصواب والمراجعة</a>
+      <a href="student.html" style="background:#fff; border:1px solid var(--line); padding:15px; border-radius:4px; text-align:center; display:block; color:var(--ink); font-weight:600;" id="lnkStudent">🎓 بوابة الطالب والدروس</a>
+      <a href="supervisor.html" style="background:#fff; border:1px solid var(--line); padding:15px; border-radius:4px; text-align:center; display:block; color:var(--ink); font-weight:600;" id="lnkSup">👔 الإشراف والرواتب[cite: 2]</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p id="footerTxt1">أكاديمية رُبى العربية الذكية — تحت مظلة مَدَاد العربية للذكاء الاصطناعي.</p>
+  <p style="margin-top:8px;" id="footerTxt2">© 2026 جميع الحقوق محفوظة.</p>
+</footer>
+
+<script>
+  let currentLang = 'ar';
+
+  const translations = {
+    ar: {
+      htmlDir: 'rtl',
+      pageTitle: 'أكاديمية رُبى العربية الذكية | مسارات البرامج والمهارات والأقسام (مَدَاد)',
+      brandTitle: 'Roba Academy',
+      navProg: 'البرامج',
+      navSkills: 'المهارات',
+      navStories: 'القصص',
+      navMidad: 'مَدَاد',
+      navSup: 'الإشراف والشؤون',
+      heroEyebrow: 'العربية الفصحى المعيارية · لغير الناطقين بها',
+      heroTitle: 'العربية لغة، <span class="accent">وثقافة</span>، وقصة تستحق الاكتشاف',
+      heroLead: 'أكاديمية رُبى ترشدك من حرفك الأول حتى القراءة والكتابة والتحدث بثقة — مع دعم أدوات مَدَاد الذكية.',
+      heroBoxTop: 'محرك مَدَاد الذكي وأكاديمية رُبى',
+      heroBoxDesc: 'قصص TPRS مشكولة بالكامل، مناهج منظمة، وتوليد صوتي مباشر.',
+      progEyebrow: 'برامجنا التعليمية',
+      progTitle: 'مسار مُصمم خصيصاً ليناسب هدفك',
+      progDesc: 'مهما كان سبب تعلمك للعربية — دراسة، عمل، إيمان، أو فضول — فهناك برنامج مُصمم حول غايتك بدلاً من الدورات التقليدية العامة.',
+      p1Name: 'طلاب المدارس',
+      p1Desc: 'برامج متخصصة تقوي أساسيات اللغة العربية للطلاب عبر مختلف المراحل الدراسية.',
+      p2Name: 'للبالغين',
+      p2Desc: 'دورات مرنة تركز على المحادثة والاحتياجات العملية للحياة اليومية والعمل.',
+      p3Name: 'برامج خاصة',
+      p3Desc: 'مسارات تعلم مخصصة للأهداف الفردية أو المجالات المتخصصة مثل العربية الدبلوماسية.',
+      p4Name: 'القرآن والتجويد',
+      p4Desc: 'تعلم قراءة القرآن الكريم بشكل صحيح مع إتقان أحكام التجويد لنطق سليم.',
+      p5Name: 'الدراسات الإسلامية',
+      p5Desc: 'فهم العقيدة، الفقه، والسيرة النبوية باللغة العربية لتعميق الوعي الديني.',
+      skillsHeading: '🎧 رُبى لتطوير المهارات الأربع المتدرجة',
+      skillsSub: 'اختر المهارة المطلوبة لتوليد جلسة تدريبية ذكية وموجهة:',
+      sk1Title: '🎧 الاستماع النشط',
+      sk1Desc: 'تدوين كورنيل والمقاطع المبسطة',
+      sk2Title: '🗣️ التحدث بطلاقة',
+      sk2Desc: 'تقنية المنصة الدقيقة للإلقاء',
+      sk3Title: '📖 القراءة التبادلية',
+      sk3Desc: 'التنبؤ، التوضيح، والتلخيص',
+      sk4Title: '✍️ الكتابة المتدرجة',
+      sk4Desc: 'العصف الذهني والمسودة المراجعة',
+      skillLabelCtx: 'السياق أو المفردات المستهدفة للمهارة:',
+      btnSkillText: 'توليد تدريب المهارة عبر مَدَاد',
+      loadSkillTxt: 'جاري إعداد تدريب المهارة عبر محرك مَدَاد...',
+      storiesHeading: '📖 مسارات رُبى للقصص المتدرجة (TPRS والسير والقرآن)',
+      storiesSub: 'اختر مسار السرد القصصي التدرجي المناسب لمتعلمي اللغات:',
+      st1Title: '🏡 مسار البيئة والحياة',
+      st1Desc: 'مواقف يومية مألوفة للمبتدئين (A1-A2)',
+      st2Title: '📜 مسار الصحابة والسير',
+      st2Desc: 'سرديات تاريخية تربوية مبسطة ومشكولة',
+      st3Title: '📖 مسار القصص القرآني',
+      st3Desc: 'عبر وحِكم من البيان القرآني بلغة ميسرة',
+      storyLabelPrompt: 'عنوان القصة أو تفاصيل إضافية:',
+      btnStoryText: 'توليد القصة المتدرجة مشكولة بالكامل عبر مَدَاد',
+      midadSecHeading: '⚙️ خدمات مَدَاد العربية التابعة لأكاديمية رُبى',
+      midadSecSub: 'انتقل مباشرة إلى الأقسام والخدمات التابعة لمنظومة مداد المخزنة معك:',
+      lnkAudio: '🎙️ مِداد الصوتي والتنزيل',
+      lnkQuran: '📖 قسم القرآن والسور الـ 114[cite: 3]',
+      lnkGrammar: '📐 معمل القواعد والإعراب',
+      lnkReview: '✍️ معجم الصواب والمراجعة',
+      lnkStudent: '🎓 بوابة الطالب والدروس',
+      lnkSup: '👔 الإشراف والشؤون[cite: 2]',
+      footerTxt1: 'أكاديمية رُبى العربية الذكية — تحت مظلة مَدَاد العربية للذكاء الاصطناعي.',
+      footerTxt2: '© 2026 جميع الحقوق محفوظة.'
+    },
+    en: {
+      htmlDir: 'ltr',
+      pageTitle: 'Roba Academy & Midad Arabic Hub | Programs, Skills & Stories',
+      brandTitle: 'Roba Academy',
+      navProg: 'Programs',
+      navSkills: 'Skills',
+      navStories: 'Stories',
+      navMidad: 'Midad Hub',
+      navSup: 'Supervisor & Finance',
+      heroEyebrow: 'Modern Standard Arabic · For Non-Native Speakers',
+      heroTitle: 'Arabic is a language, <span class="accent">a culture</span>, a story worth discovering',
+      heroLead: 'Roba Academy guides you from your first letter to reading, writing, and speaking Arabic with confidence — backed by Midad AI tools.',
+      heroBoxTop: 'Midad AI Engine & Roba Academy',
+      heroBoxDesc: 'Fully vocalized TPRS stories, structured curriculum, and direct audio generation.',
+      progEyebrow: 'OUR PROGRAMS',
+      progTitle: 'A track built for who you are',
+      progDesc: 'Whatever brought you to Arabic — school, work, faith, or curiosity — there is a program shaped around your goal, not a one-size-fits-all course.',
+      p1Name: 'School Students',
+      p1Desc: 'Specialized programs that strengthen Arabic fundamentals for students across school stages.',
+      p2Name: 'Adults',
+      p2Desc: 'Flexible courses focused on conversation and practical needs, for daily life and work.',
+      p3Name: 'Special Programs',
+      p3Desc: 'Custom learning tracks for individual goals or specialized fields, such as diplomatic Arabic.',
+      p4Name: 'Quran & Tajweed',
+      p4Desc: 'Learn to read the Holy Quran correctly while mastering the rules of Tajweed for proper pronunciation.',
+      p5Name: 'Islamic Studies',
+      p5Desc: 'Understand creed, jurisprudence (Fiqh), and the Prophetic Biography in Arabic, deepening religious awareness.',
+      skillsHeading: '🎧 Roba Four-Skills Progressive Tracks',
+      skillsSub: 'Select a language skill to generate an interactive, targeted training session:',
+      sk1Title: '🎧 Active Listening',
+      sk1Desc: 'Cornell note-taking & simplified audio clips',
+      sk2Title: '🗣️ Fluent Speaking',
+      sk2Desc: '1-minute impromptu speech technique',
+      sk3Title: '📖 Reciprocal Reading',
+      sk3Desc: 'Predicting, clarifying, & semantic summary',
+      sk4Title: '✍️ Progressive Writing',
+      sk4Desc: 'Brainstorming, drafting, & revision',
+      skillLabelCtx: 'Context or target vocabulary for the skill:',
+      btnSkillText: 'Generate Skill Exercise via Midad',
+      loadSkillTxt: 'Preparing skill exercise through Midad engine...',
+      storiesHeading: '📖 Roba Progressive Story Tracks (TPRS, Biography & Quran)',
+      storiesSub: 'Select a storytelling track tailored for language acquisition:',
+      st1Title: '🏡 Environment & Daily Life',
+      st1Desc: 'Familiar everyday scenarios for beginners (A1-A2)',
+      st2Title: '📜 Companions & Biography',
+      st2Desc: 'Simplified, fully vocalized historical narratives',
+      st3Title: '📖 Simplified Quranic Stories',
+      st3Desc: 'Wisdom and morals from Quranic phrasing',
+      storyLabelPrompt: 'Story title or additional details:',
+      btnStoryText: 'Generate Fully Vocalized Story via Midad',
+      midadSecHeading: '⚙️ Midad Arabic Services (Subordinate to Roba Academy)',
+      midadSecSub: 'Navigate directly to connected Midad components and tools stored locally:',
+      lnkAudio: '🎙️ Midad Audio & TTS Studio',
+      lnkQuran: '📖 Quran & 114 Surahs[cite: 3]',
+      lnkGrammar: '📐 Grammar & Parsing Lab',
+      lnkReview: '✍️ Correctness Lexicon & Review',
+      lnkStudent: '🎓 Student Hub & Lessons',
+      lnkSup: '👔 Supervisor & Payroll[cite: 2]',
+      footerTxt1: 'Roba Arabic Smart Academy — Under the umbrella of Midad Arabic Artificial Intelligence.',
+      footerTxt2: '© 2026 All rights reserved.'
+    }
+  };
+
+  function toggleLanguage() {
+    currentLang = currentLang === 'ar' ? 'en' : 'ar';
+    const t = translations[currentLang];
+
+    document.getElementById('htmlRoot').setAttribute('dir', t.htmlDir);
+    document.getElementById('bodyDir').setAttribute('dir', t.htmlDir);
+    document.getElementById('pageTitle').innerText = t.pageTitle;
+    document.getElementById('brandTitle').innerText = t.brandTitle;
+    document.getElementById('navProg').innerText = t.navProg;
+    document.getElementById('navSkills').innerText = t.navSkills;
+    document.getElementById('navStories').innerText = t.navStories;
+    document.getElementById('navMidad').innerText = t.navMidad;
+    document.getElementById('navSup').innerText = t.navSup;
+
+    document.getElementById('heroEyebrow').innerText = t.heroEyebrow;
+    document.getElementById('heroTitle').innerHTML = t.heroTitle;
+    document.getElementById('heroLead').innerText = t.heroLead;
+    document.getElementById('heroBoxTop').innerText = t.heroBoxTop;
+    document.getElementById('heroBoxDesc').innerText = t.heroBoxDesc;
+
+    document.getElementById('progEyebrow').innerText = t.progEyebrow;
+    document.getElementById('progTitle').innerText = t.progTitle;
+    document.getElementById('progDesc').innerText = t.progDesc;
+
+    document.getElementById('p1Name').innerText = t.p1Name;
+    document.getElementById('p1Desc').innerText = t.p1Desc;
+    document.getElementById('p2Name').innerText = t.p2Name;
+    document.getElementById('p2Desc').innerText = t.p2Desc;
+    document.getElementById('p3Name').innerText = t.p3Name;
+    document.getElementById('p3Desc').innerText = t.p3Desc;
+    document.getElementById('p4Name').innerText = t.p4Name;
+    document.getElementById('p4Desc').innerText = t.p4Desc;
+    document.getElementById('p5Name').innerText = t.p5Name;
+    document.getElementById('p5Desc').innerText = t.p5Desc;
+
+    document.getElementById('skillsHeading').innerText = t.skillsHeading;
+    document.getElementById('skillsSub').innerText = t.skillsSub;
+    document.getElementById('sk1Title').innerText = t.sk1Title;
+    document.getElementById('sk1Desc').innerText = t.sk1Desc;
+    document.getElementById('sk2Title').innerText = t.sk2Title;
+    document.getElementById('sk2Desc').innerText = t.sk2Desc;
+    document.getElementById('sk3Title').innerText = t.sk3Title;
+    document.getElementById('sk3Desc').innerText = t.sk3Desc;
+    document.getElementById('sk4Title').innerText = t.sk4Title;
+    document.getElementById('sk4Desc').innerText = t.sk4Desc;
+    document.getElementById('skillLabelCtx').innerText = t.skillLabelCtx;
+    document.getElementById('btnSkillText').innerText = t.btnSkillText;
+    document.getElementById('loadSkillTxt').innerText = t.loadSkillTxt;
+
+    document.getElementById('storiesHeading').innerText = t.storiesHeading;
+    document.getElementById('storiesSub').innerText = t.storiesSub;
+    document.getElementById('st1Title').innerText = t.st1Title;
+    document.getElementById('st1Desc').innerText = t.st1Desc;
+    document.getElementById('st2Title').innerText = t.st2Title;
+    document.getElementById('st2Desc').innerText = t.st2Desc;
+    document.getElementById('st3Title').innerText = t.st3Title;
+    document.getElementById('st3Desc').innerText = t.st3Desc;
+    document.getElementById('storyLabelPrompt').innerText = t.storyLabelPrompt;
+    document.getElementById('btnStoryText').innerText = t.btnStoryText;
+
+    document.getElementById('midadSecHeading').innerText = t.midadSecHeading;
+    document.getElementById('midadSecSub').innerText = t.midadSecSub;
+    document.getElementById('lnkAudio').innerText = t.lnkAudio;
+    document.getElementById('lnkQuran').innerText = t.lnkQuran;
+    document.getElementById('lnkGrammar').innerText = t.lnkGrammar;
+    document.getElementById('lnkReview').innerText = t.lnkReview;
+    document.getElementById('lnkStudent').innerText = t.lnkStudent;
+    document.getElementById('lnkSup').innerText = t.lnkSup;
+
+    document.getElementById('footerTxt1').innerText = t.footerTxt1;
+    document.getElementById('footerTxt2').innerText = t.footerTxt2;
+  }
+
+  function selectSkillTrack(skillName, cardEl) {
+    document.querySelectorAll('.skill-card').forEach(c => c.classList.remove('active'));
+    cardEl.classList.add('active');
+    document.getElementById('selectedSkill').value = skillName;
+  }
+
+  function selectStoryTrack(trackName, cardEl) {
+    document.querySelectorAll('.story-card').forEach(c => c.classList.remove('active'));
+    cardEl.classList.add('active');
+    document.getElementById('selectedStoryTrack').value = trackName;
+  }
+
+  async function generateSkillExercise() {
+    const skill = document.getElementById('selectedSkill').value;
+    const context = document.getElementById('skillContextInput').value.trim() || (currentLang === 'ar' ? 'عام' : 'general');
+    const loader = document.getElementById('skillLoader');
+    const outputBox = document.getElementById('skillOutputBox');
+
+    loader.style.display = 'block';
+    outputBox.style.display = 'none';
+
+    let payload = {
+      source_type: `أكاديمية رُبى - مهارة ${skill}`,
+      source_content: `صمم تمريناً تفاعلياً متدرجاً لتطوير مهارة (${skill}) في سياق (${context}) لطلاب غير الناطقين بالعربية، مع تقديم إرشادات تطبيقية عبر عقل مَدَاد.`,
+      output_type: 'جلسة تدريب للمهارة',
+      generation_mode: 'roba_ai'
+    };
+
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/generate-from-source', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      loader.style.display = 'none';
+      if(data.status === 'success') {
+        outputBox.textContent = data.output;
+        outputBox.style.display = 'block';
+      } else {
+        showSkillFallback(skill, context);
+      }
+    } catch(err) {
+      loader.style.display = 'none';
+      showSkillFallback(skill, context);
+    }
+  }
+
+  function showSkillFallback(skill, context) {
+    const outputBox = document.getElementById('skillOutputBox');
+    if (currentLang === 'ar') {
+      outputBox.innerHTML = `✨ <b>[تدريب مهارة ${skill} - أكاديمية رُبى عبر مَدَاد]:</b>\n\n<b>السياق المستهدف:</b> (${context})\n<b>النشاط المقترح:</b> استمع إلى الحوار القصير، ثم قم بتدوين الكلمات المفتاحية في جدول كورنيل المرفق، وأجب عن الأسئلة الدلالية بثلاث جمل مشكولة.`;
+    } else {
+      outputBox.innerHTML = `✨ <b>[${skill} Skill Training - Roba Academy via Midad]:</b>\n\n<b>Target Context:</b> (${context})\n<b>Suggested Activity:</b> Listen to the short dialogue, take notes using the Cornell method, and answer comprehension questions with three vocalized sentences.`;
+    }
+    outputBox.style.display = 'block';
+  }
+
+  async function generateStoryTrackContent() {
+    const track = document.getElementById('selectedStoryTrack').value;
+    const promptVal = document.getElementById('storyPromptInput').value.trim() || (currentLang === 'ar' ? 'قصة ترحيبية مشكولة' : 'Vocalized welcome story');
+    const loader = document.getElementById('storyLoader');
+    const outputBox = document.getElementById('storyOutputBox');
+
+    loader.style.display = 'block';
+    outputBox.style.display = 'none';
+
+    let payload = {
+      source_type: `أكاديمية رُبى - ${track}`,
+      source_content: `اكتب قصة متدرجة ومشكولة بالكامل ضمن مسار (${track}) حول (${promptVal}) بناءً على إطار كراشين للمدخلات المفهومة (TPRS)، مع مسرد للمفردات الأساسية بدعم من مَدَاد.`,
+      output_type: 'قصة متدرجة مشكولة',
+      generation_mode: 'roba_ai'
+    };
+
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/generate-from-source', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      loader.style.display = 'none';
+      if(data.status === 'success') {
+        outputBox.textContent = data.output;
+        outputBox.style.display = 'block';
+      } else {
+        showStoryFallback(track, promptVal);
+      }
+    } catch(err) {
+      loader.style.display = 'none';
+      showStoryFallback(track, promptVal);
+    }
+  }
+
+  function showStoryFallback(track, val) {
+    const outputBox = document.getElementById('storyOutputBox');
+    if (currentLang === 'ar') {
+      outputBox.innerHTML = `✨ <b>[مسار القصص المتدرجة - رُبى ومَدَاد]:</b>\n\n<b>المسار:</b> ${track}\n<b>العنوان:</b> ${val}\n\n«كَانَ يَا مَكَان، ذَهَبَ الأصدقاءُ إِلَى الحَدِيقَةِ الجَمِيلَةِ لِيَتَعَارَفُوا وَيُتَابِعُوا أطرافَ الحَدِيثِ بالعَرَبِيَّةِ الفُصْحَى المُبَسَّطَةِ...»\n\n<b>📚 مسرد المفردات:</b>\n• ذَهَبَ: went\n• الحَدِيقَة: the garden`;
+    } else {
+      outputBox.innerHTML = `✨ <b>[Progressive Story Track - Roba & Midad]:</b>\n\n<b>Track:</b> ${track}\n<b>Title:</b> ${val}\n\n«Once upon a time, friends went to the beautiful garden to meet and converse in simplified Standard Arabic...»\n\n<b>📚 Vocabulary Glossary:</b>\n• ذَهَبَ: went\n• الحَدِيقَة: the garden`;
+    }
+    outputBox.style.display = 'block';
+  }
+</script>
+</body>
+</html>

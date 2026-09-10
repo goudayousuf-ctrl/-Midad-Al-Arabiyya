@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوابة الطالب الذكية والمستقلة | مداد AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Rakkas&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  body{ background:#F7F5F0; color:#2C302E; font-family:'IBM Plex Sans Arabic', sans-serif; padding:20px; margin:0; line-height:1.9; }
+  .wrapper{ max-width:1100px; margin:0 auto; }
+  
+  nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 12px 24px; border-bottom: 1px solid #E2DDD5; display: flex; justify-content: center; gap: 8px; margin-bottom: 35px; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); flex-wrap: wrap; position: sticky; top: 15px; z-index: 100; }
+  nav a { display: flex; align-items: center; gap: 6px; text-decoration: none; color: #5A605C; font-weight: 500; font-size: 13px; padding: 8px 14px; border-radius: 10px; transition: all 0.25s ease; background: #FAF9F6; border: 1px solid #EAE5D9; }
+  nav a:hover, nav a.active { background: #F4EFE6; border-color: #C5A059; color: #C5A059; transform: translateY(-1px); font-weight: 600; }
+
+  .card{ background:#FFFFFF; padding:40px; border-radius:18px; border:1px solid #E2DDD5; box-shadow:0 6px 25px rgba(0,0,0,0.03); margin-bottom:30px; }
+  h2{ font-family:'Rakkas',serif; color:#C5A059; font-size:28px; margin-bottom:15px; margin-top:0; }
+  .field{ margin-bottom:20px; }
+  label{ display:block; margin-bottom:8px; color:#5A605C; font-size:14px; font-weight:600; }
+  input, select, textarea{ width:100%; background:#FAF9F6; border:1px solid #D6D0C4; color:#2C302E; padding:12px 16px; border-radius:12px; font-family:inherit; box-sizing:border-box; font-size:15px; transition:0.3s; }
+  input:focus, select:focus, textarea:focus{ outline:none; border-color:#C5A059; background:#FFF; box-shadow:0 0 0 4px rgba(197,160,89,0.1); }
+  
+  button{ background:#007A78; color:#FFF; padding:12px 28px; border:none; border-radius:12px; font-weight:600; cursor:pointer; font-size:15px; transition:0.3s; box-shadow:0 4px 15px rgba(0,122,120,0.25); }
+  button:hover{ background:#005F5D; transform: translateY(-1px); }
+  
+  .output{ margin-top:25px; padding:25px; background:#FAF9F6; border:1px solid #E2DDD5; border-radius:12px; display:none; line-height:2.2; white-space:pre-wrap; }
+
+  /* تبويبات الأقسام الرئيسية (AI vs معلمو المؤسسة) */
+  .main-support-tabs { display: flex; gap: 15px; margin-bottom: 30px; border-bottom: 3px solid #C5A059; padding-bottom: 15px; }
+  .main-tab-btn { background: #FAF9F6; border: 1px solid #D6D0C4; color: #5A605C; padding: 14px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 16px; flex: 1; text-align: center; }
+  .main-tab-btn.active { background: #C5A059; color: #FFF; border-color: #C5A059; }
+
+  /* تبويبات أجزاء الذكاء الاصطناعي الفرعية */
+  .tabs-container { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; border-bottom: 2px solid #E2DDD5; padding-bottom: 15px; }
+  .tab-btn { background: #FAF9F6; border: 1px solid #D6D0C4; color: #5A605C; padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 14px; }
+  .tab-btn.active { background: #007A78; color: #FFF; border-color: #007A78; }
+  
+  .section-panel { display: none; }
+  .section-panel.active { display: block; }
+  
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .skill-card { background: #FAF9F6; border: 1px solid #EAE5D9; padding: 16px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; }
+  .skill-card:hover, .skill-card.active { border-color: #007A78; background: #E6F2F2; font-weight: bold; color: #007A78; }
+  
+  .scientific-note { background: #F4EFE6; border-right: 4px solid #C5A059; padding: 12px 16px; border-radius: 8px; font-size: 13px; color: #5A605C; margin-bottom: 15px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  
+  <nav>
+    <a href="index.html"><span>🏠</span> الرئيسية</a>
+    <a href="workspace.html"><span>🎯</span> الدروس</a>
+    <a href="curriculum.html"><span>📚</span> المناهج</a>
+    <a href="generator.html"><span>⚡</span> مختبر التوليد</a>
+    <a href="assessments.html"><span>📝</span> التقويم</a>
+    <a href="review.html"><span>✍️</span> المراجعة</a>
+    <a href="ocr.html"><span>🖼️</span> تحويل صورة</a>
+    <a href="vocabulary.html"><span>📖</span> المفردات</a>
+    <a href="student.html" class="active"><span>🎓</span> بوابة الطالب</a>
+    <a href="memory.html"><span>🧠</span> الذاكرة</a>
+    <a href="analysis.html"><span>📊</span> التحليل</a>
+    <a href="supervisor.html"><span>👔</span> الإشراف</a>
+  </nav>
+
+  <div class="card">
+    <h2>🎓 بوابة الطالب الذكية (الدعم الشامل)</h2>
+    <p style="color: #6B6759; margin-bottom: 25px;">اختر بين الدعم الفوري القائم على الذكاء الاصطناعي أو التواصل المباشر مع معلمي المؤسسة المشتركة.</p>
+
+    <!-- الأزرار الرئيسية للفصل بين نوعي الدعم -->
+    <div class="main-support-tabs">
+      <button class="main-tab-btn active" onclick="switchMainSupport('ai', event)">🤖 أولاً: الدعم القائم على الذكاء الاصطناعي</button>
+      <button class="main-tab-btn" onclick="switchMainSupport('human', event)">👨‍🏫 ثانياً: دعم معلمي المؤسسة المشتركة</button>
+    </div>
+
+    <!-- ---------------------------------------------------- -->
+    <!-- القسم الأول: الدعم القائم على الذكاء الاصطناعي -->
+    <!-- ---------------------------------------------------- -->
+    <div id="support-ai-section" class="section-panel active">
+      
+      <div class="tabs-container">
+        <button class="tab-btn active" onclick="switchTab('homework', event)">📝 مساعدة في حل الواجبات</button>
+        <button class="tab-btn" onclick="switchTab('correction', event)">✍️ تصحيح الأخطاء والنصوص</button>
+        <button class="tab-btn" onclick="switchTab('explain', event)">💡 اشرح لي درسًا أو قاعدة</button>
+        <button class="tab-btn" onclick="switchTab('skills', event)">🌐 المهارات اللغوية (متدرج)</button>
+      </div>
+
+      <!-- 1. الواجبات -->
+      <div id="tab-homework" class="section-panel active">
+        <h3 style="font-family:'Rakkas',serif; color:#007A78; font-size:22px; margin-bottom:15px;">المساعدة التوجيهية في حل الواجبات</h3>
+        <div class="field">
+          <label>سؤال الواجب أو التدريب</label>
+          <textarea id="hwText" rows="4" placeholder="اكتب سؤال الواجب هنا..."></textarea>
+        </div>
+        <button onclick="processStudentRequest('homework')">الحصول على إرشاد وتوجيه</button>
+        <div id="loading-homework" style="display:none; color:#C5A059; margin-top:15px; font-weight:600;">جاري إعداد التوجيه الإرشادي...</div>
+        <div id="output-homework" class="output"></div>
+      </div>
+
+      <!-- 2. التصحيح -->
+      <div id="tab-correction" class="section-panel">
+        <h3 style="font-family:'Rakkas',serif; color:#007A78; font-size:22px; margin-bottom:15px;">تصحيح الأخطاء وتحسين النصوص</h3>
+        <div class="field">
+          <label>النص المراد تصحيحه</label>
+          <textarea id="corrText" rows="4" placeholder="اكتب نصك هنا..."></textarea>
+        </div>
+        <button onclick="processStudentRequest('correction')">تصحيح وتحليل النص</button>
+        <div id="loading-correction" style="display:none; color:#C5A059; margin-top:15px; font-weight:600;">جاري فحص وتصحيح النص...</div>
+        <div id="output-correction" class="output"></div>
+      </div>
+
+      <!-- 3. الشرح -->
+      <div id="tab-explain" class="section-panel">
+        <h3 style="font-family:'Rakkas',serif; color:#007A78; font-size:22px; margin-bottom:15px;">اشرح لي درسًا أو قاعدة</h3>
+        <div class="field">
+          <label>عنوان الدرس أو القاعدة المطلوبة</label>
+          <input id="explainTopic" type="text" placeholder="مثال: التاء المربوطة...">
+        </div>
+        <button onclick="processStudentRequest('explain')">اشرح لي الدرس ببساطة</button>
+        <div id="loading-explain" style="display:none; color:#C5A059; margin-top:15px; font-weight:600;">جاري إعداد الشرح الميسر...</div>
+        <div id="output-explain" class="output"></div>
+      </div>
+
+      <!-- 4. المهارات (محدث بالمادة العلمية والاستراتيجيات المقترحة) -->
+      <div id="tab-skills" class="section-panel">
+        <h3 style="font-family:'Rakkas',serif; color:#007A78; font-size:22px; margin-bottom:15px;">ورشة التدريب المتدرج للمهارات اللغوية الأربع</h3>
+        <p style="color:#6B6759; font-size:14px; margin-bottom:20px;">اختر المهارة المطلوبة لتطبيق الاستراتيجية العلمية المعتمدة لتطويرها:</p>
+        
+        <div class="skills-grid">
+          <div class="skill-card active" onclick="switchSkillType('استماع', this)">🎧 مهارة الاستماع<br><small style="font-weight:normal; font-size:11px;">الاستماع النشط وتدوين كورنيل</small></div>
+          <div class="skill-card" onclick="switchSkillType('تحدث', this)">🗣️ مهارة التحدث<br><small style="font-weight:normal; font-size:11px;">تقنية المنصة الدقيقة للإلقاء</small></div>
+          <div class="skill-card" onclick="switchSkillType('قراءة', this)">📖 مهارة القراءة<br><small style="font-weight:normal; font-size:11px;">استراتيجية القراءة التبادلية</small></div>
+          <div class="skill-card" onclick="switchSkillType('كتابة', this)">✍️ مهارة الكتابة<br><small style="font-weight:normal; font-size:11px;">نموذج الكتابة المتدرجة (Process)</small></div>
+        </div>
+        <input id="activeSkillType" type="hidden" value="استماع">
+
+        <div style="background:#FAF9F6; border:1px solid #E2DDD5; padding:25px; border-radius:14px; margin-top:20px;">
+          
+          <!-- وصف المادة العلمية التوجيهية لكل مهارة -->
+          <div id="scientific-desc-استماع" class="scientific-note">
+            <b>المادة العلمية المقترحة:</b> مقاطع صوتية قصيرة (2-3 دقائق) من بودكاست تعليمي باللغة العربية الفصحى (مواضيع علمية مبسطة أو ثقافية).<br>
+            <b>الاستراتيجية:</b> الاستماع النشط وتدوين الكلمات المفتاحية (Cornell Note-taking) على مرحلتين (الفهم العام ثم استخلاص الأفكار).
+          </div>
+          <div id="scientific-desc-تحدث" class="scientific-note" style="display:none;">
+            <b>المادة العلمية المقترحة:</b> بنك بطاقات تفاعلية يحوي مواضيع واقعية محفزة (مثل: "لو استطعت السفر عبر الزمن...").<br>
+            <b>الاستراتيجية:</b> تقنية "المنصة الدقيقة" (30 ثانية للتفكير + دقيقة للتحدث دون توقف) لتعزيز الطلاقة وتقليل القلق.
+          </div>
+          <div id="scientific-desc-قراءة" class="scientific-note" style="display:none;">
+            <b>المادة العلمية المقترحة:</b> نصوص سردية ومقالات علمية مبسطة مجهزة بمسرّد للمفردات وأسئلة تفكير ناقد.<br>
+            <b>الاستراتيجية:</b> "القراءة التبادلية" (التنبؤ، توليد الأسئلة، توضيح الغامض، والتلخيص).
+          </div>
+          <div id="scientific-desc-كتابة" class="scientific-note" style="display:none;">
+            <b>المادة العلمية المقترحة:</b> قوالب تنظيمية جاهزة (خريطة القصة / جدول المقارنة) مع معايير تقييم ذاتي (Rubric).<br>
+            <b>الستراتيجية:</b> نموذج "الكتابة المتدرجة بالحوسبة الذهنية" (عصف ذهني، مسودة، مراجعة، فالنسخة النهائية).
+          </div>
+
+          <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
+            <div style="flex: 1; min-width: 250px;" class="field">
+              <label>المستوى التعليمي</label>
+              <select id="skillLevel">
+                <option value="تمهيدي">المستوى 1: تمهيدي</option>
+                <option value="متوسط">المستوى 2: متوسط</option>
+                <option value="متقدم">المستوى 3: متتقدم</option>
+              </select>
+            </div>
+            <div style="flex: 1; min-width: 250px;" class="field">
+              <label>الموضوع أو السياق المقترح</label>
+              <input id="skillContext" type="text" placeholder="مثال: التسوق، البيئة، العائلة...">
+            </div>
+          </div>
+          <button onclick="generateGraduatedSkill()" style="background:#007A78; margin-top:10px;">توليد مادة التدريب الموجهة</button>
+          <div id="loading-skills" style="display:none; color:#007A78; margin-top:15px; font-weight:600;">جاري إعداد التمرين المخصص للمهارة...</div>
+          <div id="output-skills" class="output"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ---------------------------------------------------- -->
+    <!-- القسم الثاني: دعم معلمي المؤسسة المشتركة -->
+    <!-- ---------------------------------------------------- -->
+    <div id="support-human-section" class="section-panel">
+      <h3 style="font-family:'Rakkas',serif; color:#C5A059; font-size:24px; margin-bottom:15px;">👨‍🏫 منصة التواصل مع معلمي المؤسسة المشتركة</h3>
+      <p style="color: #6B6759; font-size: 14px; margin-bottom: 25px;">إذا واجهتك مسألة تحتاج إلى تدخل مباشر من معلمي المؤسسة، قم بإرسال استفسارك وسيتم الرد عليك في أقرب وقت.</p>
+      
+      <div class="field">
+        <label>اختر المعلم أو القسم المختص</label>
+        <select id="humanTeacher">
+          <option value="قسم اللغة العربية العام">قسم اللغة العربية العام</option>
+          <option value="معلم المستوى المبتدئ">معلم المستوى المبتدئ (دعم خاص)</option>
+          <option value="لجنة القواعد والتراكيب">لجنة القواعد والتراكيب</option>
+          <option value="المشرف التربوي المناوب">المشرف التربوي المناوب</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>عنوان الاستفسار أو الواجب</label>
+        <input id="humanTitle" type="text" placeholder="مثال: استفسار حول قاعدة الإبدال في الواجب الثالث...">
+      </div>
+
+      <div class="field">
+        <label>تفاصيل الاستفسار أو المرفق النصي</label>
+        <textarea id="humanMessage" rows="5" placeholder="اكتب تفاصيل طلب الدعم الموجه للمعلم بوضوح..."></textarea>
+      </div>
+
+      <button onclick="submitHumanSupport()" style="background:#C5A059;">إرسال الطلب لمعلمي المؤسسة</button>
+      <div id="loading-human" style="display:none; color:#C5A059; margin-top:15px; font-weight:600;">جاري إرسال طلبك لمعلمي المؤسسة...</div>
+      <div id="output-human" class="output" style="border-color:#C5A059; background:#FAF9F6;"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function switchMainSupport(type, event) {
+    document.getElementById('support-ai-section').style.display = (type === 'ai') ? 'block' : 'none';
+    document.getElementById('support-human-section').style.display = (type === 'human') ? 'block' : 'none';
+    document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+}
+
+function switchTab(tabName, event) {
+    document.querySelectorAll('#support-ai-section .section-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    
+    if(tabName === 'homework') document.getElementById('tab-homework').classList.add('active');
+    else if(tabName === 'correction') document.getElementById('tab-correction').classList.add('active');
+    else if(tabName === 'explain') document.getElementById('tab-explain').classList.add('active');
+    else if(tabName === 'skills') document.getElementById('tab-skills').classList.add('active');
+    
+    if(event && event.currentTarget) event.currentTarget.classList.add('active');
+}
+
+function switchSkillType(skillName, cardEl) {
+    document.querySelectorAll('.skill-card').forEach(c => c.classList.remove('active'));
+    cardEl.classList.add('active');
+    document.getElementById('activeSkillType').value = skillName;
+
+    // إظهار الملاحظة العلمية الخاصة بالمهارة المختارة
+    ['استماع', 'تحدث', 'قراءة', 'كتابة'].forEach(s => {
+        let noteEl = document.getElementById(`scientific-desc-${s}`);
+        if(noteEl) noteEl.style.display = (s === skillName) ? 'block' : 'none';
+    });
+}
+
+async function processStudentRequest(type) {
+    let payload = {};
+    let loadingEl = document.getElementById(`loading-${type}`);
+    let outputEl = document.getElementById(`output-${type}`);
+    
+    if(type === 'homework') {
+        let text = document.getElementById('hwText').value;
+        if(!text.trim()) { alert('الرجاء كتابة السؤال أولاً.'); return; }
+        payload = { source_type: 'واجب منزلي للطالب', source_content: text, output_type: 'جملة', details: 'توجيه إرشادي تعليمي بدون إعطاء الحل النهائي مباشرة' };
+    } else if(type === 'correction') {
+        let text = document.getElementById('corrText').value;
+        if(!text.trim()) { alert('الرجاء كتابة النص المراد تصحيحه أولاً.'); return; }
+        payload = { source_type: 'تصحيح نص طالب', source_content: text, output_type: 'فقرة', details: 'تصحيح الأخطاء النحوية والإملائية مع توضيح سبب التصحيح بلطف' };
+    } else if(type === 'explain') {
+        let topic = document.getElementById('explainTopic').value;
+        if(!topic.trim()) { alert('الرجاء كتابة عنوان الدرس أو القاعدة.'); return; }
+        payload = { source_type: 'شرح درس', source_content: topic, output_type: 'فقرة', details: 'شرح مبسط وميسر مع أمثلة واضحة لغير الناطقين بالعربية' };
+    }
+
+    loadingEl.style.display = 'block';
+    outputEl.style.display = 'none';
+
+    try {
+        const res = await fetch('http://127.0.0.1:8000/api/generate-from-source', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        loadingEl.style.display = 'none';
+        if(data.status === 'success') {
+            outputEl.textContent = data.output;
+            outputEl.style.display = 'block';
+        }
+    } catch(err) {
+        loadingEl.style.display = 'none';
+        alert('حدث خطأ في الاتصال بالخادم.');
+    }
+}
+
+async function generateGraduatedSkill() {
+    let skill = document.getElementById('activeSkillType').value;
+    let level = document.getElementById('skillLevel').value;
+    let context = document.getElementById('skillContext').value || 'عام';
+    let loadingEl = document.getElementById('loading-skills');
+    let outputEl = document.getElementById('output-skills');
+
+    loadingEl.style.display = 'block';
+    outputEl.style.display = 'none';
+
+    let scientificStrategy = "";
+    if(skill === 'استماع') scientificStrategy = "استراتيجية الاستماع النشط وتدوين الكلمات المفتاحية (Cornell Note-taking) عبر مقطع قصير مبسط.";
+    else if(skill === 'تحدث') scientificStrategy = "تقنية المنصة الدقيقة (1-Minute Impromptu Speech) مع طرح أسئلة مفتوحة محفزة للطلاقة.";
+    else if(skill === 'قراءة') scientificStrategy = "استراتيجية القراءة التبادلية (التنبؤ، توليد الأسئلة، توضيح الغامض، والتلخيص) مع مسرد مفردات.";
+    else if(skill === 'كتابة') scientificStrategy = "نموذج الكتابة المتدرجة (عصف ذهني، مسودة أولى، مراجعة، وتدقيق بمعايير تقييم واضحة).";
+
+    try {
+        const res = await fetch('http://127.0.0.1:8000/api/generate-from-source', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                source_type: `تطوير مهارة ${skill} وفق المنهجية العلمية`,
+                source_content: `تصميم تمرين تطبيقي لمهارة ${skill} بمستوى (${level}) في سياق (${context}) مستخدماً: ${scientificStrategy}`,
+                output_type: 'فقرة',
+                details: `المستوى: ${level} - الاستراتيجية: ${scientificStrategy}`
+            })
+        });
+        const data = await res.json();
+        loadingEl.style.display = 'none';
+        if(data.status === 'success') {
+            outputEl.textContent = data.output;
+            outputEl.style.display = 'block';
+        }
+    } catch(err) {
+        loadingEl.style.display = 'none';
+        alert('حدث خطأ في الاتصال بالخادم.');
+    }
+}
+
+function submitHumanSupport() {
+    let teacher = document.getElementById('humanTeacher').value;
+    let title = document.getElementById('humanTitle').value;
+    let message = document.getElementById('humanMessage').value;
+    let loadingEl = document.getElementById('loading-human');
+    let outputEl = document.getElementById('output-human');
+
+    if(!title.trim() || !message.trim()) { alert('الرجاء تعبئة عنوان ووضوح الاستفسار.'); return; }
+
+    loadingEl.style.display = 'block';
+    outputEl.style.display = 'none';
+
+    setTimeout(() => {
+        loadingEl.style.display = 'none';
+        outputEl.innerHTML = `✅ <b>تم إرسال طلبك بنجاح إلى (${teacher})!</b><br>عنوان الطلب: ${title}<br>حالة الطلب: قيد المراجعة من قبل معلمي المؤسسة (سيتم الرد خلال 24 ساعة).`;
+        outputEl.style.display = 'block';
+    }, 1000);
+}
+</script>
+</body>
+</html>

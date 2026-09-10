@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مداد AI — علمٌ يُنتفع به</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- مكتبة الأيقونات FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root{
+    --bg:#F9F8F5;
+    --surface:#FFFFFF;
+    --surface-alt:#F2EFE9;
+    --border:#E3DED3;
+    --border-dark:#D1C9BC;
+    --text:#2D312E;
+    --text-dim:#686D68;
+    --text-faint:#959B95;
+    --gold:#8A6D3B;
+    --gold-bright:#A48245;
+    --gold-soft:#F5F0E6;
+    --teal:#3B6E63;
+    --teal-soft:#EBF2F0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Cairo', sans-serif;
+    line-height:1.7;
+  }
+  h1,h2,h3,.display{ font-family:'Amiri', serif; }
+  .mono{ font-family:'IBM Plex Mono', monospace; direction:ltr; unicode-bidi:isolate; }
+  a{ color:inherit; text-decoration:none; }
+
+  ::selection{ background:var(--gold-soft); color:var(--gold-bright); }
+
+  /* ===== Header ===== */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(249, 248, 245, 0.95); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-wrap{
+    max-width:1300px; margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; justify-content:space-between; gap:15px;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; flex-shrink: 0; }
+  .brand-mark{
+    width:42px !important; height:42px !important; position:relative; flex-shrink:0; background:var(--gold-soft); border-radius:8px; display:flex; align-items:center; justify-content:center;
+    overflow: hidden; box-shadow: 0 2px 8px rgba(138,109,59,0.15);
+  }
+  .brand-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .brand-name{ font-family:'Amiri',serif; font-size:22px; color:var(--text); font-weight:700; }
+  .brand-tag{ font-size:11px; color:var(--text-faint); margin-top:-2px; }
+  nav{ flex-grow: 1; display: flex; justify-content: center; }
+  nav ul{ list-style:none; display:flex; gap:8px; align-items:center; flex-wrap: wrap; justify-content: center; }
+  nav a{ font-size:12px; color:var(--text-dim); transition:color .2s; font-weight:600; padding: 4px 6px; border-radius: 6px; }
+  nav a:hover{ color:var(--gold); background: var(--surface-alt); }
+  .btn-nav{
+    background:var(--gold); color:#FFF !important; padding:10px 20px;
+    border-radius:8px; font-weight:600; font-size:13.5px; transition:background .2s, transform .2s;
+    box-shadow:0 4px 12px rgba(138,109,59,0.2); flex-shrink: 0; white-space: nowrap;
+  }
+  .btn-nav:hover{ background:var(--gold-bright); transform:translateY(-1px); }
+
+  /* ===== Hero ===== */
+  @keyframes gentleFloat {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-4px); }
+    100% { transform: translateY(0px); }
+  }
+  .hero{
+    max-width:1160px; margin:0 auto; padding:70px 28px 50px;
+    text-align:center; position:relative;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:10px;
+    font-size:12.5px; letter-spacing:0.1em; color:var(--teal);
+    margin-bottom:20px; font-weight:600; background:var(--teal-soft); padding:6px 16px; border-radius:20px;
+  }
+
+  .hero h1{
+    font-size:clamp(32px,5.2vw,54px); color:var(--text);
+    margin-bottom:20px; max-width:820px; margin-inline:auto; font-weight:700;
+    animation: gentleFloat 4s ease-in-out infinite;
+    line-height: 1.5;
+  }
+  .hero h1 em{ font-style:normal; color:var(--gold); }
+  .hero p.lead{
+    max-width:580px; margin:0 auto 35px; font-size:16px; color:var(--text-dim);
+  }
+  .hero-ctas{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:45px; }
+  .btn-primary{
+    background:var(--gold); color:#FFF; padding:14px 28px; border-radius:10px;
+    font-weight:700; font-size:15px; transition:transform .2s, background .2s;
+    box-shadow:0 8px 25px rgba(138,109,59,0.25);
+  }
+  .btn-primary:hover{ transform:translateY(-2px); background:var(--gold-bright); }
+  .btn-ghost{
+    border:1.5px solid var(--border-dark); color:var(--text); padding:14px 28px;
+    border-radius:10px; font-weight:600; font-size:15px; transition:border-color .2s, background .2s;
+    background:var(--surface);
+  }
+  .btn-ghost:hover{ border-color:var(--gold); background:var(--surface-alt); }
+
+  /* ===== Quick Access Grid to App Sections ===== */
+  .quick-sections{
+    max-width:1160px; margin:0 auto 60px; padding:0 28px;
+  }
+  .sections-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:22px;
+  }
+  .section-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:26px; text-align:right; transition:all 0.3s ease; display:flex; flex-direction:column; gap:12px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.02);
+  }
+  .section-card:hover{
+    transform:translateY(-4px); border-color:var(--gold); background:var(--surface); box-shadow:0 10px 30px rgba(138,109,59,0.1);
+  }
+  .section-icon{ font-size:30px; }
+  .section-card h3{ font-family:'Amiri',serif; font-size:20px; color:var(--text); font-weight:700; }
+  .section-card p{ font-size:14px; color:var(--text-dim); line-height:1.6; }
+
+  /* ===== Section shared ===== */
+  section{ padding:60px 28px; border-top:1px solid var(--border); }
+  .section-inner{ max-width:1160px; margin:0 auto; }
+  .section-head{ max-width:600px; margin-bottom:35px; }
+  .section-head h2{ font-size:clamp(24px,2.8vw,34px); color:var(--text); margin-bottom:10px; line-height:1.3; font-weight:700; }
+  .section-head p{ font-size:15px; color:var(--text-dim); }
+
+  /* ===== Identity ===== */
+  .identity-grid{ display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .not-list{ list-style:none; display:flex; flex-direction:column; gap:12px; }
+  .not-list li{
+    font-size:15px; color:var(--text-dim); padding-right:24px; position:relative;
+  }
+  .not-list li::before{ content:'—'; position:absolute; right:0; color:var(--text-faint); }
+  .is-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:30px; position:relative; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.02);
+  }
+  .is-card::before{
+    content:''; position:absolute; top:0; right:0; width:4px; height:100%; background:var(--gold);
+  }
+  .is-card .label{ font-size:11px; letter-spacing:0.12em; color:var(--gold); margin-bottom:8px; font-weight:700; }
+  .is-card h3{ font-family:'Amiri',serif; font-size:24px; color:var(--text); margin-bottom:10px; font-weight:700; }
+  .is-card p{ font-size:15px; color:var(--text-dim); }
+
+  /* ===== Principles ===== */
+  .principles-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .principle{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; box-shadow:0 4px 15px rgba(0,0,0,0.02); }
+  .principle .mono{ font-size:11.5px; color:var(--teal); margin-bottom:10px; display:block; font-weight:600; }
+  .principle h3{ font-family:'Amiri',serif; font-size:20px; color:var(--text); margin-bottom:8px; font-weight:700; }
+  .principle p{ font-size:14px; color:var(--text-dim); line-height:1.7; }
+
+  footer{ border-top:1px solid var(--border); padding:30px 28px; background:var(--surface-alt); }
+  .footer-inner{ max-width:1160px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; }
+  .footer-inner .mono{ font-size:12px; color:var(--text-dim); font-weight:600; }
+
+  @media (max-width:1150px){
+    nav ul{ display:none; }
+  }
+  @media (max-width:900px){
+    .identity-grid{ grid-template-columns:1fr; }
+    .principles-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <a href="index.html" class="brand">
+      <div class="brand-mark">
+        <img src="logo.png" alt="شعار مداد">
+      </div>
+      <div>
+        <div class="brand-name">مداد <span class="mono" style="font-size:12px; color:var(--gold);">AI</span></div>
+        <div class="brand-tag">علمٌ يُنتفع به</div>
+      </div>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="workspace.html">📂 الأقسام</a></li>
+        <li><a href="Midad Audio.html" style="color: #008080; font-weight: 600; background: #E6F2F2; border: 1px solid #B3D9D9;">🎙️ مِداد الصوتي</a></li>
+        <li><a href="curriculum.html">📚 المناهج</a></li>
+        <li><a href="generator.html">⚡ مختبر التوليد</a></li>
+        <li><a href="assessments.html">📝 التقويم</a></li>
+        <li><a href="review.html">✍️ المراجعة</a></li>
+        <li><a href="ocr.html">🖼️ OCR</a></li>
+        <li><a href="vocabulary.html">📖 المفردات</a></li>
+        <li><a href="grammar.html">📐 القواعد</a></li>
+        <li><a href="sentences.html">💬 الجمل</a></li>
+        <li><a href="student.html">🎓 بوابة الطالب</a></li>
+        <li><a href="quran.html">📖 القرآن</a></li>
+        <li><a href="memory.html">🧠 الذاكرة</a></li>
+        <li><a href="analysis.html">📊 التحليل</a></li>
+        <li><a href="supervisor.html">👔 الإشراف</a></li>
+      </ul>
+    </nav>
+    <a href="workspace.html" class="btn-nav">مساحة العمل</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">✦ مساعد تربوي عربي متخصص ✦</div>
+  <h1 style="line-height: 1.5;">
+    <span style="font-family:'Amiri',serif; color:var(--gold); font-size:1.15em; border-bottom: 2px solid var(--gold); padding-bottom: 2px; display:inline-block; margin-bottom: 8px;">مداد</span><br>
+    <span style="display:inline-block;">ذكاءٌ يُعين المعلم،</span><br>
+    ولا <em>يُغني</em> عنه
+  </h1>
+  <p class="lead">مداد مساعد تربوي يعمل إلى جانب معلمي اللغة العربية، يحضّر معهم، ويقترح، ويتذكر — لكن القرار يبقى دائمًا للمعلم.</p>
+  <div class="hero-ctas">
+    <a href="workspace.html" class="btn-primary">دخول مساحة العمل الذكية</a>
+    <a href="#sections" class="btn-ghost">استعرض أقسام المنصة</a>
+  </div>
+</section>
+
+<!-- قسم البحث الفوري في موسوعة مداد التراثية (الشاملة والنحو) -->
+<section style="padding: 20px 28px; background: var(--surface-alt);">
+  <div class="section-inner" style="max-width: 900px; background: var(--surface); border: 2px solid var(--gold); border-radius: 16px; padding: 30px; box-shadow: 0 6px 20px rgba(138,109,59,0.08);">
+    <h2 style="font-family:'Amiri',serif; font-size: 26px; color: var(--gold); margin-bottom: 12px; text-align: center;">📚 موسوعة مداد التراثية (البحث في الشاملة والنحو)</h2>
+    <p style="text-align: center; color: var(--text-dim); font-size: 14px; margin-bottom: 20px;">استعلم فوراً عن القواعد النحوية، المتون، والشواهد الموثقة من أمهات كتب التراث.</p>
+    <div style="display: flex; gap: 12px;">
+      <input type="text" id="homeShamelaSearch" placeholder="اكتب قاعدة أو باباً نحسياً للبحث (مثل: المبتدأ، الإعراب)..." style="flex: 1; padding: 12px 16px; border: 1px solid var(--border-dark); border-radius: 10px; font-family: 'Cairo', sans-serif; font-size: 15px; background: var(--bg);">
+      <button onclick="homeShamelaSearchTrigger()" style="background: var(--gold); color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: 'Cairo', sans-serif;">بحث تراثي</button>
+    </div>
+    <div id="homeShamelaResults" style="margin-top: 20px; display: none;"></div>
+  </div>
+</section>
+
+<!-- Roles Section (من أنت اليوم؟) -->
+<section class="roles-section" style="padding: 50px 28px; background: var(--surface-alt); border-top: 1px solid var(--border);">
+  <div class="section-inner" style="text-align: center;">
+    <div class="section-head" style="margin: 0 auto 40px; max-width: 700px;">
+      <h2 style="font-family:'Amiri',serif; font-size:32px; color:var(--text); margin-bottom:10px;">من أنت اليوم؟</h2>
+      <p style="font-size:15px; color:var(--text-dim);">لكل دور في المنظومة التعليمية مساره الخاص داخل مداد.</p>
+    </div>
+    
+    <div class="roles-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; text-align: right;">
+      
+      <!-- المعلم -->
+      <div class="role-card" style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;">
+        <div>
+          <div style="font-size: 32px; margin-bottom: 12px;">👨‍🏫</div>
+          <h3 style="font-family:'Amiri',serif; font-size: 22px; color: var(--text); margin-bottom: 8px;">المعلم</h3>
+          <p style="font-size: 13.5px; color: var(--text-dim); margin-bottom: 20px; line-height: 1.6;">تحضير الدروس، توليد الأنشطة، والمتابعة اليومية للفصل.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); padding-top: 15px;">
+          <a href="workspace.html" style="font-size: 13.5px; color: var(--teal); font-weight: 600; text-decoration: none;">🎯 مساحة العمل</a>
+          <a href="grammar.html" style="font-size: 13.5px; color: var(--gold); font-weight: 600; text-decoration: none;">📐 معمل القواعد</a>
+          <a href="exercises.html" style="font-size: 13.5px; color: var(--text); font-weight: 600; text-decoration: none;">📝 التدريبات</a>
+        </div>
+      </div>
+
+      <!-- الطالب -->
+      <div class="role-card" style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;">
+        <div>
+          <div style="font-size: 32px; margin-bottom: 12px;">🎓</div>
+          <h3 style="font-family:'Amiri',serif; font-size: 22px; color: var(--text); margin-bottom: 8px;">الطالب</h3>
+          <p style="font-size: 13.5px; color: var(--text-dim); margin-bottom: 20px; line-height: 1.6;">مساعدة في الواجبات، تصحيح النصوص، وتدريب متدرج على المهارات.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); padding-top: 15px;">
+          <a href="student.html" style="font-size: 13.5px; color: var(--teal); font-weight: 600; text-decoration: none;">🎓 بوابة الطالب</a>
+          <a href="quran.html" style="font-size: 13.5px; color: var(--gold); font-weight: 600; text-decoration: none;">📖 قسم القرآن الكريم</a>
+          <a href="exercises.html" style="font-size: 13.5px; color: var(--text); font-weight: 600; text-decoration: none;">🌐 المهارات المتدرجة</a>
+        </div>
+      </div>
+
+      <!-- مطور المحتوى -->
+      <div class="role-card" style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;">
+        <div>
+          <div style="font-size: 32px; margin-bottom: 12px;">💻</div>
+          <h3 style="font-family:'Amiri',serif; font-size: 22px; color: var(--text); margin-bottom: 8px;">مطور المحتوى</h3>
+          <p style="font-size: 13.5px; color: var(--text-dim); margin-bottom: 20px; line-height: 1.6;">بناء المناهج، بنك المفردات، والمراجعة اللغوية والعلمية.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); padding-top: 15px;">
+          <a href="curriculum.html" style="font-size: 13.5px; color: var(--teal); font-weight: 600; text-decoration: none;">📚 تطوير المناهج</a>
+          <a href="vocabulary.html" style="font-size: 13.5px; color: var(--gold); font-weight: 600; text-decoration: none;">📖 بنك المفردات</a>
+          <a href="review.html" style="font-size: 13.5px; color: var(--text); font-weight: 600; text-decoration: none;">🔍 المراجعة العلمية</a>
+          <a href="generator.html" style="font-size: 13.5px; color: var(--gold); font-weight: 600; text-decoration: none;">⚡ مختبر التوليد</a>
+        </div>
+      </div>
+
+      <!-- مدير المدرسة / المشرف -->
+      <div class="role-card" style="background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;">
+        <div>
+          <div style="font-size: 32px; margin-bottom: 12px;">🏫</div>
+          <h3 style="font-family:'Amiri',serif; font-size: 22px; color: var(--text); margin-bottom: 8px;">مدير المدرسة / المشرف</h3>
+          <p style="font-size: 13.5px; color: var(--text-dim); margin-bottom: 20px; line-height: 1.6;">نظرة شاملة على أداء الفصول والمعلمين، وتقارير قابلة للقرار.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); padding-top: 15px;">
+          <a href="supervisor.html" style="font-size: 13.5px; color: var(--teal); font-weight: 600; text-decoration: none;">👔 الإدارة والإشراف</a>
+          <a href="analysis.html" style="font-size: 13.5px; color: var(--gold); font-weight: 600; text-decoration: none;">📊 تحليل الأداء</a>
+          <a href="memory.html" style="font-size: 13.5px; color: var(--text); font-weight: 600; text-decoration: none;">🧠 ذاكرة المؤسسة</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Direct Links to App Modules -->
+<div class="quick-sections" id="sections">
+  <div class="sections-grid">
+    <a href="workspace.html" class="section-card">
+      <div class="section-icon">🎯</div>
+      <h3>تخطيط الدروس</h3>
+      <p>إعداد خطط الحصص الدراسية الذكية بالاستعانة بالذاكرة الاستباقية للفصول.</p>
+    </a>
+    <a href="Midad Audio.html" class="section-card" style="border: 2px solid #008080;">
+      <div class="section-icon">🎙️</div>
+      <h3 style="color: #008080;">مِداد الصوتي</h3>
+      <p>تدقيق الأخطاء الإملائية آلياً وتحويل النصوص العربية إلى أصوات بشرية طبيعية وتنزيلها.</p>
+    </a>
+    <a href="quran.html" class="section-card">
+      <div class="section-icon">📖</div>
+      <h3>القرآن الكريم والتجويد</h3>
+      <p>إدارة الـ 114 سورة، خطط الحفظ المتدرج، وتتبع تقدم الطلاب بالترميز اللوني.</p>
+    </a>
+    <a href="vocabulary.html" class="section-card">
+      <div class="section-icon">📚</div>
+      <h3>المفردات الإثراءية</h3>
+      <p>توليد بطاقات الكلمات، التراجم، ووصف الصور التخيلية المناسبة.</p>
+    </a>
+    <a href="sentences.html" class="section-card">
+      <div class="section-icon">✍️</div>
+      <h3>الجمل والتراكيب</h3>
+      <p>صياغة الجمل الوظيفية المشكولة بدقة تامة لتناسب المستويات المختلفة.</p>
+    </a>
+    <a href="dialogues.html" class="section-card">
+      <div class="section-icon">💬</div>
+      <h3>الفقرات والحوارات</h3>
+      <p>بناء النصوص المترابطة والحوارات الثنائية الحية للتدريب العملي.</p>
+    </a>
+    <a href="exercises.html" class="section-card">
+      <div class="section-icon">📝</div>
+      <h3>التدريبات التفاعلية</h3>
+      <p>تصميم أنشطة متدرجة تتنقل بالطلاب من المفردات إلى الجمل والنصوص.</p>
+    </a>
+    <a href="analysis.html" class="section-card">
+      <div class="section-icon">📊</div>
+      <h3>تحليل أداء الطلاب</h3>
+      <p>رصد عثرات الأداء واستخراج التوصيات العلاجية للمعلمين والمشرفين.</p>
+    </a>
+  </div>
+</div>
+
+<section class="identity">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="eyebrow" style="justify-content:flex-start;">من مداد</div>
+      <h2>ليس روبوتًا يجيب.<br>بل خبير يعمل معك.</h2>
+    </div>
+    <div class="identity-grid">
+      <div class="identity-not">
+        <p style="font-size:13px; color:var(--text-faint); margin-bottom:16px;">ما لا يفعله مداد أبدًا</p>
+        <ul class="not-list">
+          <li>لا يستبدل المعلم أو يتخذ القرار نيابة عنه</li>
+          <li>لا يخترع معلومة لغوية أو غير موثقة</li>
+          <li>لا يُصدر أحكامًا نهائية دون مراجعة المعلم</li>
+          <li>لا يضحّي بالجودة من أجل السرعة</li>
+        </ul>
+      </div>
+      <div class="is-card">
+        <div class="label mono">WHAT MADAD IS</div>
+        <h3>معينٌ، لا بديل</h3>
+        <p>مداد يخطط معك، ويقترح النشاط، ويتذكر أسلوبك وطلابك، ثم يترك لك القرار الأخير دائمًا. هدفه أن يوفر وقتك، لا أن يحل محل تفكيرك.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="principles">
+  <div class="section-inner">
+    <div class="section-head">
+      <div class="eyebrow" style="justify-content:flex-start;">مبادئ لا نتنازل عنها</div>
+      <h2>القواعد التي تحكم كل رد يقدّمه مداد</h2>
+    </div>
+    <div class="principles-grid">
+      <div class="principle">
+        <span class="mono">01 · العلم قبل التقنية</span>
+        <h3>الغاية لا الوسيلة</h3>
+        <p>التقنية أداة. أما الغاية فنشر العلم النافع، ونقيس كل ميزة بهذا المعيار قبل إضافتها.</p>
+      </div>
+      <div class="principle">
+        <span class="mono">02 · العربية أولًا</span>
+        <h3>لا لغة مترجمة</h3>
+        <p>مداد بُني للعربية من جذوره، لا كأداة عامة تُرجمت واجهتها إليها.</p>
+      </div>
+      <div class="principle">
+        <span class="mono">03 · المعرفة لا تضيع</span>
+        <h3>حفظ الخبرة</h3>
+        <p>خبرة كل معلم ثروة. مداد يعمل على حفظها وتنظيمها لتنتقل لمن بعده.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span class="mono">MADAD AI — v0.1 PROTOTYPE</span>
+    <span class="mono">© 2026</span>
+  </div>
+</footer>
+
+<script>
+  async function homeShamelaSearchTrigger() {
+    const query = document.getElementById('homeShamelaSearch').value.trim();
+    const container = document.getElementById('homeShamelaResults');
+    
+    if (!query) {
+      container.innerHTML = '<p style="color: #b22222; text-align: center;">الرجاء كتابة نص للبحث في الموسوعة.</p>';
+      container.style.display = 'block';
+      return;
+    }
+    
+    container.innerHTML = '<p style="color: var(--gold); text-align: center;">جاري البحث والاسترجاع من الذخيرة التراثية...</p>';
+    container.style.display = 'block';
+    
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/shamela/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: query, top_k: 3 })
+      });
+      
+      const data = await response.json();
+      if (data.status === "success" && data.results && data.results.length > 0) {
+        let html = '';
+        data.results.forEach(item => {
+          html += `
+            <div style="background: var(--bg); border-right: 4px solid var(--gold); padding: 14px; margin-bottom: 10px; border-radius: 8px; text-align: right;">
+              <p style="margin: 0 0 8px 0; color: var(--text); font-size: 14.5px; line-height: 1.7;">${item.text.replace(/\n/g, '<br>')}</p>
+              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 6px; margin-top: 6px;">
+                <small style="color: var(--gold); font-weight: bold;">📌 المرجع: ${item.reference}</small>
+                <span style="background: var(--surface-alt); color: var(--text-dim); padding: 2px 8px; border-radius: 4px; font-size: 11px;">${item.book_title || 'موسوعة مداد'}</span>
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+      } else {
+        container.innerHTML = '<p style="color: var(--text-dim); text-align: center;">لم يتم العثور على مطابقة مباشرة في النطاق الحالي.</p>';
+      }
+    } catch (error) {
+      container.innerHTML = '<p style="color: red; text-align: center;">خطأ في الاتصال بالخادم. تأكد من تشغيل الخادم المحلي.</p>';
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مساحة العمل الشاملة | مداد AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Rakkas&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- مكتبة الأيقونات FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+      --primary-espresso: #2C221E;
+      --accent-gold: #C5A059;
+      --bg-sand: #F7F4EB;
+      --card-bg: #FFFFFF;
+      --turquoise: #008080;
+      --text-main: #332C27;
+      --border-color: #E6DFD5;
+  }
+
+  body{ background: var(--bg-sand); color: var(--text-main); font-family:'Cairo', sans-serif; padding:20px; margin:0; line-height:1.8; }
+  .wrapper{ max-width:1100px; margin:0 auto; }
+  
+  /* الهيدر الاحترافي الموحد */
+  nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 12px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: center; gap: 8px; margin-bottom: 35px; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); flex-wrap: wrap; position: sticky; top: 15px; z-index: 100; }
+  nav a { display: flex; align-items: center; gap: 6px; text-decoration: none; color: var(--primary-espresso); font-weight: 500; font-size: 13px; padding: 8px 14px; border-radius: 10px; transition: all 0.25s ease; background: #FAF9F6; border: 1px solid var(--border-color); }
+  nav a:hover, nav a.active { background: #F4EFE6; border-color: var(--accent-gold); color: var(--accent-gold); transform: translateY(-1px); font-weight: 600; }
+
+  .card{ background: var(--card-bg); padding:40px; border-radius:18px; border:1px solid var(--border-color); box-shadow:0 10px 30px rgba(44, 34, 30, 0.08); margin-bottom:30px; }
+  h2{ font-family:'Cairo',sans-serif; color: var(--primary-espresso); font-size:1.6rem; margin-bottom:20px; margin-top:0; display: flex; align-items: center; gap: 10px; }
+  
+  .field{ margin-bottom:20px; }
+  label{ display:block; margin-bottom:8px; color: var(--primary-espresso); font-size:14px; font-weight:600; }
+  input, select, textarea{ width:100%; background:#FAF8F5; border:2px solid var(--border-color); color: var(--text-main); padding:12px 16px; border-radius:12px; font-family:inherit; box-sizing:border-box; font-size:15px; transition:0.3s; }
+  input:focus, select:focus, textarea:focus{ outline:none; border-color: var(--accent-gold); background:#FFF; box-shadow:0 0 0 4px rgba(197,160,89,0.1); }
+  
+  /* تنسيقات الأزرار والإجراءات الموحدة */
+  .actions-bar { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+  .btn { padding: 12px 24px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; font-size: 1rem; color: #FFF; text-decoration: none; }
+  .btn-primary { background-color: var(--accent-gold); color: var(--primary-espresso); }
+  .btn-primary:hover { background-color: #b38e4a; }
+  .btn-secondary { background-color: var(--turquoise); color: #fff; }
+  .btn-secondary:hover { background-color: #006666; }
+  .btn-success { background-color: #2e7d32; color: #fff; }
+  .btn-success:hover { background-color: #1b5e20; }
+
+  .output{ margin-top:20px; padding:20px; background:#FAF8F5; border:2px dashed var(--border-color); border-radius:12px; display:none; }
+  .suggestion{ background:#F4EFE6; border-right:4px solid var(--accent-gold); padding:15px 20px; border-radius:10px; margin-bottom:20px; font-size:14px; color: var(--primary-espresso); }
+  
+  .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+  .module-box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 18px; border-radius: 14px; text-align: center; cursor: pointer; transition: 0.3s; }
+  .module-box:hover { border-color: var(--accent-gold); background: #FAF8F5; transform: translateY(-3px); }
+  .module-box h3 { font-size: 16px; color: var(--primary-espresso); margin-bottom: 6px; font-weight: 700; }
+  .module-box p { font-size: 12px; color: #686D68; margin: 0; }
+
+  /* تنسيقات قسم مِداد الصوتي المطابقة لـ Midad Audio.html */
+  .audio-controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px; }
+  .corrected-text-box { background: #fff; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 15px; line-height: 1.6; }
+  audio { width: 100%; margin-top: 10px; margin-bottom: 15px; display: block; }
+  .loader { display: none; text-align: center; padding: 15px; color: var(--accent-gold); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  
+  <!-- الهيدر الاحترافي الموحد -->
+  <nav>
+    <a href="index.html"><span>🏠</span> الرئيسية</a>
+    <a href="workspace.html" style="background: #F4EFE6; border-color: #C5A059; color: #C5A059;"><span>📂</span> الأقسام</a>
+    <a href="Midad Audio.html" style="color: #008080; font-weight: 600; background: #E6F2F2; border: 1px solid #B3D9D9;"><span>🎙️</span> مِداد الصوتي</a>
+    <a href="curriculum.html"><span>📚</span> المناهج</a>
+    <a href="generator.html"><span>⚡</span> مختبر التوليد</a>
+    <a href="assessments.html"><span>📝</span> التقويم</a>
+    <a href="review.html"><span>✍️</span> المراجعة</a>
+    <a href="ocr.html"><span>🖼️</span> تحويل صورة</a>
+    <a href="vocabulary.html"><span>📖</span> المفردات</a>
+    <a href="grammar.html"><span>📐</span> القواعد</a>
+    <a href="sentences.html"><span>💬</span> الجمل</a>
+    <a href="student.html"><span>🎓</span> بوابة الطالب</a>
+    <a href="quran.html"><span>📖</span> قسم القرآن</a>
+    <a href="memory.html"><span>🧠</span> الذاكرة</a>
+    <a href="analysis.html"><span>📊</span> التحليل</a>
+    <a href="supervisor.html" style="color: #C5A059; font-weight: 600; background: #F4EFE6; border: 1px solid #D6D0C4;"><span>👔</span> الإشراف</a>
+  </nav>
+
+  <!-- لوحة التنقل السريع -->
+  <div class="modules-grid">
+    <div class="module-box" onclick="location.href='workspace.html'">
+      <h3>🎯 تخطيط الدروس</h3>
+      <p>الذاكرة الاستباقية للفصول</p>
+    </div>
+    <div class="module-box" onclick="location.href='curriculum.html'">
+      <h3>📚 تطوير المناهج</h3>
+      <p>تصميم الوحدات والأهداف</p>
+    </div>
+    <div class="module-box" onclick="location.href='grammar.html'">
+      <h3>📐 معمل القواعد</h3>
+      <p>الشرح الاستقرائي وتوليد التراكيب</p>
+    </div>
+    <div class="module-box" onclick="location.href='student.html'">
+      <h3>🎓 بوابة الطالب الذكية</h3>
+      <p>الدعم الذكي ومعلمو المؤسسة</p>
+    </div>
+    <div class="module-box" onclick="location.href='assessments.html'">
+      <h3>📝 التقويم والاختبارات</h3>
+      <p>توصيف الأسئلة وتحليل الأخطاء</p>
+    </div>
+  </div>
+
+  <!-- قسم البحث في الموسوعة التراثية -->
+  <div class="card" style="border: 2px solid var(--accent-gold);">
+    <h2><i class="fa-solid fa-book-bookmark" style="color: var(--accent-gold);"></i> موسوعة مداد التراثية (البحث في الشاملة والنحو)</h2>
+    <div class="field" style="display: flex; gap: 10px;">
+      <input type="text" id="shamelaSearchInput" placeholder="ابحث عن قاعدة، باب نحوي، أو شاهد (مثل: المبتدأ، الإعراب)..." style="flex: 1;">
+      <button class="btn btn-primary" onclick="triggerShamelaSearch()" style="white-space: nowrap; padding: 12px 24px;">بحث تراثي</button>
+    </div>
+    <div id="shamelaDisplayResults" style="margin-top: 15px; display: none;"></div>
+  </div>
+
+  <!-- قسم مِداد الصوتي المطور والمطابق تماماً للتصميم المستقل -->
+  <div id="audio-section" class="card" style="border: 2px solid var(--turquoise);">
+    <h2><i class="fa-solid fa-microphone-lines" style="color: var(--turquoise);"></i> مِداد الصوتي (التحويل الصوتي والتدقيق وتنوع الشخصيات)</h2>
+    
+    <div class="field">
+      <label for="ttsInputText">أدخل أو الصق الجملة العربية للنطق والتنزيل:</label>
+      <textarea id="ttsInputText" rows="4" placeholder="اكتب الجملة هنا (مثال: أهلاً بك في منصة مداد)..."></textarea>
+    </div>
+
+    <div class="audio-controls-grid">
+      <div>
+        <label for="voiceSelect"><i class="fa-solid fa-users-viewfinder"></i> الشخصية الصوتية:</label>
+        <select id="voiceSelect">
+          <option value="رجل">صوت رجل (فصيح / طبقة عميقة)</option>
+          <option value="ولد صغير">صوت ولد صغير (طبقة طفولية حادة)</option>
+          <option value="امرأة">صوت امرأة (طبقة دافئة متوازنة)</option>
+          <option value="بنت صغيرة">صوت بنت صغيرة (طبقة حادة رفيعة)</option>
+        </select>
+      </div>
+      <div>
+        <label for="dialectSelect"><i class="fa-solid fa-earth-americas"></i> الإطار المنهجي:</label>
+        <select id="dialectSelect">
+          <option value="msa">الفصحى المعيارية (عقل مداد)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions-bar">
+      <button class="btn btn-secondary" onclick="processTextCorrection()">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> تدقيق وتحليل ذكي
+      </button>
+      <button class="btn btn-primary" onclick="generateAndPlayFullAudio()">
+        <i class="fa-solid fa-volume-high"></i> نطق وتشغيل وتفعيل التحميل
+      </button>
+    </div>
+
+    <div id="ttsLoader" class="loader">
+      <i class="fa-solid fa-spinner fa-spin"></i> جاري تجهيز الملف الصوتي والنطق...
+    </div>
+
+    <div id="ttsResultSection" class="output" style="margin-top: 20px;">
+      <div style="font-weight:700; color:var(--turquoise); margin-bottom:8px;"><i class="fa-solid fa-check-circle"></i> النتيجة والشخصية المختارة:</div>
+      <div id="correctedOutputText" class="corrected-text-box"></div>
+      
+      <div style="font-weight:700; color:var(--turquoise); margin-top:15px; margin-bottom:8px;"><i class="fa-solid fa-headphones"></i> مشغل الصوت الحي:</div>
+      <audio id="audioPlayer" controls></audio>
+      
+      <div>
+        <a id="downloadBtn" class="btn btn-success" download="midad_audio.mp3" style="display:inline-flex;">
+          <i class="fa-solid fa-download"></i> تنزيل ملف الصوت (MP3)
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- نموذج تخطيط الدروس الأساسي -->
+  <div class="card">
+    <h2>🎯 تخطيط الدرس الذكي واستدعاء السياق</h2>
+    <div id="suggestionsWrap" class="suggestion">جارِ استدعاء الذاكرة الاستباقية للفصول...</div>
+    
+    <div class="field" style="background: #F4EFE6; padding: 18px; border-radius: 14px; border: 1px solid var(--border-color);">
+      <label style="color: var(--accent-gold); font-size: 15px; margin-bottom: 10px;">🌟 مستوى وتوجيه التوليد الذكي للدرس</label>
+      <select id="generationMode" onchange="toggleModeInputs()">
+        <option value="madad" selected>التوليد المبني على معايير وخبرة مداد الرسمية</option>
+        <option value="free">التوليد الحر المفتوح</option>
+        <option value="custom">التوليد المبني على مصادر خاصة للمؤسسة أو المعلم</option>
+      </select>
+    </div>
+
+    <div class="field" id="gradeGroup">
+      <label>الصف الدراسي المستهدف (لمعايير مداد)</label>
+      <select id="targetGrade">
+        <option value="الصف الأول">الصف الأول</option>
+        <option value="الصف الثاني">الصف الثاني</option>
+        <option value="الصف الثالث">الصف الثالث</option>
+        <option value="الصف الرابع">الصف الرابع</option>
+        <option value="الصف الخامس">الصف الخامس</option>
+        <option value="الصف السادس">الصف السادس</option>
+        <option value="الصف السابع">الصف السابع</option>
+        <option value="الصف الثامن">الصف الثامن</option>
+        <option value="الصف التاسع">الصف التاسع</option>
+        <option value="الصف العاشر">الصف العاشر</option>
+        <option value="الصف الحادي عشر">الصف الحادي عشر</option>
+        <option value="الثاني عشر">الثاني عشر</option>
+      </select>
+    </div>
+
+    <div class="field" id="customSourceGroup" style="display:none;">
+      <label>المصدر الخاص للمؤسسة أو المعلم (نصوص، كتب، أو وثائق إثرائية)</label>
+      <textarea id="customSourceText" rows="3" placeholder="أدخل محتوى المصدر الخاص بك هنا ليتم اعتماده حصرياً في تخطيط الدرس..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>اسم الفصل الدراسي</label>
+      <input id="className" type="text" value="مستوى مبتدئ" oninput="updateThinkingPanel()">
+    </div>
+    <div class="field">
+      <label>المستوى اللغوي للطلاب</label>
+      <input id="level" type="text" value="مبتدئ تماماً">
+    </div>
+    <div class="field">
+      <label>مدة الحصة الدراسية</label>
+      <input id="duration" type="text" value="45 دقيقة">
+    </div>
+    <div class="field">
+      <label>عنوان الدرس المستهدف</label>
+      <input id="lessonTitle" type="text" value="التحية والتعارف اليومي">
+    </div>
+    
+    <button class="btn btn-primary" id="genBtn" onclick="generateLesson()" style="padding: 14px 30px;">توليد خطة الدرس التفصيلية</button>
+    <div id="loading" style="display:none; color: var(--accent-gold); margin-top:18px; font-weight:600;">يقوم مداد بإعداد الخطة التربوية بعناية...</div>
+    <div id="output" class="output"></div>
+  </div>
+
+</div>
+
+<script>
+  let currentCorrectedText = "";
+  let systemVoices = [];
+
+  function loadVoices() {
+    if ('speechSynthesis' in window) {
+      systemVoices = window.speechSynthesis.getVoices();
+    }
+  }
+  loadVoices();
+  if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }
+
+  function toggleModeInputs() {
+    let mode = document.getElementById('generationMode').value;
+    document.getElementById('gradeGroup').style.display = (mode === 'madad') ? 'block' : 'none';
+    document.getElementById('customSourceGroup').style.display = (mode === 'custom') ? 'block' : 'none';
+  }
+
+  async function updateThinkingPanel() {
+    const className = document.getElementById('className').value.trim() || 'عام';
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/class-suggestions/${encodeURIComponent(className)}`);
+      const data = await res.json();
+      if(data.status === 'success') {
+        document.getElementById('suggestionsWrap').innerHTML = `<b>سياق الذاكرة الاستباقية لمداد:</b> ${data.suggestion}`;
+      }
+    } catch(e) {}
+  }
+
+  async function triggerShamelaSearch() {
+    const query = document.getElementById('shamelaSearchInput').value.trim();
+    const container = document.getElementById('shamelaDisplayResults');
+    
+    if (!query) {
+      container.innerHTML = '<p style="color: #b22222; text-align: center;">الرجاء كتابة نص للبحث في الموسوعة.</p>';
+      container.style.display = 'block';
+      return;
+    }
+    
+    container.innerHTML = '<p style="color: #8c6d53; text-align: center;">جاري البحث والاسترجاع من الذخيرة التراثية...</p>';
+    container.style.display = 'block';
+    
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/shamela/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: query, top_k: 3 })
+      });
+      
+      const data = await response.json();
+      if (data.status === "success" && data.results && data.results.length > 0) {
+        let html = '';
+        data.results.forEach(item => {
+          html += `
+            <div style="background: white; border-right: 5px solid var(--accent-gold); padding: 15px; margin-bottom: 12px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+              <p style="margin: 0 0 10px 0; color: var(--text-main); font-size: 15px; line-height: 1.8;">${item.text.replace(/\n/g, '<br>')}</p>
+              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 8px; margin-top: 8px;">
+                <small style="color: var(--accent-gold); font-weight: bold;">📌 المرجع: ${item.reference}</small>
+                <span style="background: #F4EFE6; color: var(--primary-espresso); padding: 2px 8px; border-radius: 4px; font-size: 12px;">${item.book_title || 'موسوعة مداد'}</span>
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+      } else {
+        container.innerHTML = '<p style="color: #666; text-align: center;">لم يتم العثور على مطابقة مباشرة في النطاق الحالي.</p>';
+      }
+    } catch (error) {
+      container.innerHTML = '<p style="color: red; text-align: center;">خطأ في الاتصال بالخادم. تأكد من تشغيل الخادم المحلي.</p>';
+    }
+  }
+
+  async function processTextCorrection() {
+    const text = document.getElementById('ttsInputText').value.trim();
+    if (!text) {
+      alert("الرجاء إدخال نص أولاً للتدقيق.");
+      return;
+    }
+
+    const loader = document.getElementById('ttsLoader');
+    const resultSection = document.getElementById('ttsResultSection');
+    loader.style.display = 'block';
+    resultSection.style.display = 'none';
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/spellcheck', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: text,
+          voice: document.getElementById('voiceSelect').value,
+          dialect: document.getElementById('dialectSelect').value
+        })
+      });
+
+      const data = await response.json();
+      loader.style.display = 'none';
+
+      if (data.status === 'success') {
+        currentCorrectedText = data.correctedText;
+        document.getElementById('correctedOutputText').innerText = currentCorrectedText;
+        resultSection.style.display = 'block';
+      } else {
+        currentCorrectedText = text.replace(/علي/g, 'على');
+        document.getElementById('correctedOutputText').innerText = currentCorrectedText;
+        resultSection.style.display = 'block';
+      }
+    } catch (error) {
+      loader.style.display = 'none';
+      currentCorrectedText = text.replace(/علي/g, 'على');
+      document.getElementById('correctedOutputText').innerText = currentCorrectedText;
+      resultSection.style.display = 'block';
+    }
+  }
+
+  function generateAndPlayFullAudio() {
+    const text = document.getElementById('ttsInputText').value.trim();
+    const selectedVoice = document.getElementById('voiceSelect').value;
+
+    if (!text) {
+      alert("الرجاء كتابة نص لتوليد وتشغيل الصوت!");
+      return;
+    }
+
+    if (!('speechSynthesis' in window)) {
+      alert("متصفحك لا يدعم النطق الصوتي.");
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ar';
+
+    if (systemVoices.length === 0) loadVoices();
+    const arabicVoice = systemVoices.find(v => v.lang.startsWith('ar'));
+    if (arabicVoice) utterance.voice = arabicVoice;
+
+    switch (selectedVoice) {
+      case 'رجل': utterance.pitch = 0.6; utterance.rate = 0.9; break;
+      case 'ولد صغير': utterance.pitch = 1.5; utterance.rate = 1.15; break;
+      case 'امرأة': utterance.pitch = 1.1; utterance.rate = 1.0; break;
+      case 'بنت صغيرة': utterance.pitch = 2.0; utterance.rate = 1.05; break;
+      default: utterance.pitch = 1.0; utterance.rate = 1.0;
+    }
+
+    const loader = document.getElementById('ttsLoader');
+    const resultSection = document.getElementById('ttsResultSection');
+    loader.style.display = 'block';
+    resultSection.style.display = 'none';
+
+    utterance.onend = function() {
+      loader.style.display = 'none';
+    };
+
+    window.speechSynthesis.speak(utterance);
+
+    loader.style.display = 'none';
+    document.getElementById('correctedOutputText').innerHTML = `<strong>[تم تفعيل الشخصية ونطق الجملة: ${selectedVoice}]</strong><br>${text}`;
+    resultSection.style.display = 'block';
+
+    const encodedText = encodeURIComponent(text);
+    const audioStreamUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedText}&tl=ar&client=tw-ob`;
+
+    const audioPlayer = document.getElementById('audioPlayer');
+    audioPlayer.src = audioStreamUrl;
+
+    const downloadBtn = document.getElementById('downloadBtn');
+    downloadBtn.href = audioStreamUrl;
+    downloadBtn.download = `midad_${selectedVoice.replace(/\s+/g, '_')}.mp3`;
+    downloadBtn.style.display = 'inline-flex';
+  }
+
+  async function generateLesson() {
+    const btn = document.getElementById('genBtn'), loading = document.getElementById('loading'), output = document.getElementById('output');
+    btn.disabled = true; loading.style.display = 'block'; output.style.display = 'none';
+    
+    const generationMode = document.getElementById('generationMode').value;
+    const targetGrade = document.getElementById('targetGrade').value;
+    const customSourceText = document.getElementById('customSourceText').value;
+    const effectiveClassName = (generationMode === 'madad') ? targetGrade : document.getElementById('className').value;
+
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/generate-lesson', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          class_name: effectiveClassName,
+          level: document.getElementById('level').value,
+          duration: document.getElementById('duration').value,
+          lesson_title: document.getElementById('lessonTitle').value,
+          generation_mode: generationMode,
+          custom_source: customSourceText
+        })
+      });
+      const data = await res.json();
+      loading.style.display = 'none'; btn.disabled = false;
+      if(data.status === 'success') { 
+        output.textContent = data.lesson_plan; 
+        output.style.display = 'block'; 
+      }
+    } catch(err) { 
+      loading.style.display = 'none'; 
+      btn.disabled = false; 
+      alert('حدث خطأ في الاتصال بالخادم.'); 
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', updateThinkingPanel);
+</script>
+</body>
+</html>

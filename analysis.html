@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحليل أداء الطلاب | مداد AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Rakkas&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  body{ background:#F7F5F0; color:#2C302E; font-family:'IBM Plex Sans Arabic', sans-serif; padding:30px; margin:0; line-height:1.9; }
+  .wrapper{ max-width:900px; margin:0 auto; }
+  nav { background:#FFFFFF; padding:20px; border-bottom:2px solid #E2DDD5; display:flex; justify-content:center; gap:15px; margin-bottom:35px; border-radius:16px; box-shadow:0 6px 25px rgba(0,0,0,0.04); flex-wrap:wrap; }
+  nav a { display:flex; flex-direction:column; align-items:center; text-decoration:none; color:#5A605C; font-weight:600; font-size:13px; padding:10px 18px; border-radius:12px; transition:0.3s; background:#FAF9F6; border:1px solid #EAE5D9; }
+  nav a:hover { background:#F4EFE6; transform: translateY(-2px); border-color:#C5A059; color:#C5A059; }
+  nav a.active { background:#F4EFE6; border-color:#C5A059; color:#C5A059; font-weight:700; }
+  .card{ background:#FFFFFF; padding:45px; border-radius:18px; border:1px solid #E2DDD5; box-shadow:0 6px 25px rgba(0,0,0,0.03); margin-bottom:30px; }
+  h2{ font-family:'Rakkas',serif; color:#C5A059; font-size:30px; margin-bottom:15px; margin-top:0; }
+  .field{ margin-bottom:24px; }
+  label{ display:block; margin-bottom:8px; color:#5A605C; font-size:14px; font-weight:600; }
+  input, textarea{ width:100%; background:#FAF9F6; border:1px solid #D6D0C4; color:#2C302E; padding:14px 16px; border-radius:12px; font-family:inherit; font-size:15px; box-sizing:border-box; transition:0.3s; }
+  input:focus, textarea:focus{ outline:none; border-color:#C5A059; background:#FFF; box-shadow:0 0 0 4px rgba(197,160,89,0.1); }
+  button{ background:#C5A059; color:#FFF; padding:15px 35px; border:none; border-radius:12px; font-weight:600; cursor:pointer; font-size:16px; transition:0.3s; box-shadow:0 4px 15px rgba(197,160,89,0.25); }
+  button:hover{ background:#B38F4E; transform: translateY(-1px); }
+  .output{ margin-top:30px; display:none; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <nav>
+    <a href="index.html">🏠 الرئيسية</a>
+    <a href="workspace.html">🎯 الدروس</a>
+    <a href="vocabulary.html">📚 المفردات</a>
+    <a href="sentences.html">✍️ الجمل</a>
+    <a href="dialogues.html">💬 الحوارات</a>
+    <a href="exercises.html">📝 التدريبات</a>
+    <a href="analysis.html" class="active">📊 التحليل</a>
+    <a href="supervisor.html">👔 الإشراف</a>
+  </nav>
+
+  <div class="card">
+    <h2>📊 تحليل أداء وعثرات الطلاب</h2>
+    <div class="field">
+      <label>اسم الفصل</label>
+      <input id="className" type="text" value="مستوى مبتدئ">
+    </div>
+    <div class="field">
+      <label>ملاحظات الأداء وأخطاء الطلاب</label>
+      <textarea id="rawNotes" rows="3" placeholder="سجل أخطاء النطق، الخلط في قواعد التذكير والتأنيث..."></textarea>
+    </div>
+    <button id="analyzeBtn" onclick="analyzeStudents()">حلل أداء الفصل واستخرج التوصيات</button>
+    <div id="loading" style="display:none; color:#C5A059; margin-top:18px; font-weight:600;">جاري تحليل البيانات وإعداد التقرير...</div>
+    <div id="output" class="output"></div>
+  </div>
+</div>
+
+<script>
+  function formatAIResponse(rawText) {
+      let cleaned = rawText.replace(/[#*`]/g, '');
+      let sections = cleaned.split(/(?=\d+\.|\n[أ-ي\s]+:)/g);
+      let htmlOutput = '';
+      
+      sections.forEach((sec, index) => {
+          if (!sec.trim()) return;
+          const themes = [
+              { bg: '#FAF8F5', border: '#C5A880', badge: '#8C6D53', titleColor: '#4A3B32' }, 
+              { bg: '#F4F7F6', border: '#739E82', badge: '#3B6E53', titleColor: '#2C4A3E' }, 
+              { bg: '#FAF4EF', border: '#D4A373', badge: '#BC6C25', titleColor: '#6B4226' }  
+          ];
+          let theme = themes[index % themes.length];
+          let lines = sec.trim().split('\n');
+          let title = lines[0] || `قسم ${index + 1}`;
+          let bodyLines = lines.slice(1);
+
+          let formattedBody = bodyLines.map(line => {
+              if (!line.trim()) return '';
+              return `
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; background: rgba(255,255,255,0.6); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.03);">
+                  <span style="flex-grow: 1;">${line}</span>
+                  <button onclick="speakText(this)" data-text="${encodeURIComponent(line)}" style="background: ${theme.badge}; color: #FFF; border: none; padding: 3px 10px; border-radius: 15px; font-size: 0.75em; cursor: pointer; font-family: 'Cairo', sans-serif; display: flex; align-items: center; gap: 3px; flex-shrink: 0; margin-right: 10px;">
+                      🔊 نطق
+                  </button>
+              </div>`;
+          }).join('');
+
+          htmlOutput += `
+          <div style="background: ${theme.bg}; border: 1px solid ${theme.border}; border-right: 5px solid ${theme.badge}; border-radius: 12px; padding: 18px; margin-bottom: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.03);">
+              <div style="margin-bottom: 12px; border-bottom: 1px dashed ${theme.border}; padding-bottom: 8px;">
+                  <h4 style="margin: 0; color: ${theme.titleColor}; font-size: 1.1em; font-weight: bold; font-family: 'Cairo', sans-serif;">${title}</h4>
+              </div>
+              <div>
+                  ${formattedBody}
+              </div>
+          </div>`;
+      });
+      return `<div style="font-family: 'Cairo', sans-serif; direction: rtl;">${htmlOutput}</div>`;
+  }
+
+  function speakText(btn) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      let text = decodeURIComponent(btn.getAttribute('data-text'));
+      let utterance = new SpeechSynthesisUtterance(text);
+      let voices = window.speechSynthesis.getVoices();
+      let arabicVoice = voices.find(v => v.lang.startsWith('ar'));
+      if (arabicVoice) utterance.voice = arabicVoice;
+      utterance.lang = 'ar-SA';
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
+  }
+
+  async function analyzeStudents() {
+    const btn = document.getElementById('analyzeBtn'), loading = document.getElementById('loading'), output = document.getElementById('output');
+    btn.disabled = true; loading.style.display = 'block'; output.style.display = 'none';
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/analyze-students', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          class_name: document.getElementById('className').value,
+          raw_notes: document.getElementById('rawNotes').value
+        })
+      });
+      const data = await res.json();
+      loading.style.display = 'none'; btn.disabled = false;
+      if(data.status === 'success') { 
+        output.innerHTML = formatAIResponse(data.analysis_report); 
+        output.style.display = 'block'; 
+      }
+    } catch(err) { 
+      loading.style.display = 'none'; 
+      btn.disabled = false; 
+      alert('خطأ في الاتصال بالخادم.'); 
+    }
+  }
+</script>
+</body>
+</html>

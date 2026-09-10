@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>مساحة تجربة أداء الطلاب - مداد</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; background: #f9f9f6; color: #333; padding: 20px; direction: rtl; }
+        .container { max-width: 850px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #800020; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        label { font-weight: bold; display: block; margin-top: 15px; }
+        select, input, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background: #800020; color: #fff; border: none; padding: 12px 20px; margin-top: 20px; cursor: pointer; border-radius: 4px; font-size: 16px; width: 100%; }
+        button:hover { background: #600015; }
+        
+        /* تنسيقات تقرير الطباعة والنسخ الجميل */
+        .result-box { margin-top: 25px; background: #ffffff; border: 2px solid #e3dec3; padding: 30px; border-radius: 8px; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .report-header { text-align: center; border-bottom: 2px solid #800020; padding-bottom: 15px; margin-bottom: 20px; }
+        .report-header h3 { color: #800020; margin: 0 0 5px 0; font-size: 22px; }
+        .report-header p { color: #666; margin: 0; font-size: 14px; }
+        
+        .student-info { background: #fdfbf7; padding: 15px; border-radius: 6px; margin-bottom: 20px; border-right: 4px solid #800020; }
+        .student-info p { margin: 5px 0; font-weight: bold; color: #444; }
+
+        .report-section { margin-bottom: 20px; background: #fcfcf9; padding: 15px; border-radius: 6px; border: 1px solid #eee; }
+        .report-section h4 { color: #5a4a22; margin-top: 0; border-bottom: 1px dashed #ddd; padding-bottom: 8px; font-size: 16px; }
+        .report-content { white-space: pre-line; line-height: 1.9; color: #222; font-size: 15px; }
+
+        @media print {
+            body { background: #fff; padding: 0; }
+            .container { box-shadow: none; padding: 0; max-width: 100%; }
+            button, label, select, input, textarea, h2 { display: none; }
+            .result-box { display: block !important; border: none; padding: 0; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>مساحة اختبار الطالب والتخطيط العلاجي (مداد)</h2>
+    
+    <label for="studentName">اسم الطالب التجريبي:</label>
+    <input type="text" id="studentName" value="أحمد محمد" placeholder="أدخل اسم الطالب...">
+
+    <label for="subjectSelect">اختر المادة:</label>
+    <select id="subjectSelect">
+        <option value="arabic_native">اللغة العربية (للناطقين بها)</option>
+        <option value="arabic_non_native">اللغة العربية لغير الناطقين بها</option>
+        <option value="quran">القرآن الكريم والتجويد</option>
+        <option value="islamic_studies">الدراسات الإسلامية</option>
+    </select>
+
+    <label for="errorsInput">الأخطاء المرصودة (أخطاء الطالب مفصولة بفاصلة أو أسطر):</label>
+    <textarea id="errorsInput" rows="3" placeholder="اكتب الأخطاء هنا...">الخلط بين المتكلم والغائب عند الإسناد لضمير المتكلم</textarea>
+
+    <button onclick="runSimulation()">تشخيص الطالب واستخراج الخطة العلاجية</button>
+
+    <div id="resultBox" class="result-box">
+        <div class="report-header">
+            <h3>تقرير تحليل الأداء التربوي واللغوي</h3>
+            <p>منصة "مداد" التعليمية للغة العربية والعلوم الشرعية</p>
+        </div>
+
+        <div class="student-info">
+            <p>اسم الطالب: <span id="resStudent" style="color: #800020;"></span></p>
+            <p>المادة الدراسية: <span id="resSubject" style="color: #800020;"></span></p>
+        </div>
+
+        <div class="report-section">
+            <h4>التفاصيل والخطط العلاجية</h4>
+            <div id="aiReportContent" class="report-content"></div>
+        </div>
+        
+        <button onclick="window.print()" style="background: #5a4a22; margin-top: 10px;">طباعة أو حفظ التقرير (PDF)</button>
+    </div>
+</div>
+
+<script>
+async function runSimulation() {
+    const studentName = document.getElementById('studentName').value;
+    const subject = document.getElementById('subjectSelect').value;
+    const errorsText = document.getElementById('errorsInput').value;
+    const errorsList = errorsText.split(',').map(e => e.trim()).filter(e => e.length > 0);
+
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/student/analyze-performance', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                student_name: studentName,
+                subject: subject,
+                errors: errorsList
+            })
+        });
+
+        const data = await response.json();
+        if(data.status === 'success') {
+            const report = data.diagnostic_report;
+            document.getElementById('resStudent').innerText = report.student;
+            document.getElementById('resSubject').innerText = report.subject;
+            document.getElementById('aiReportContent').innerText = report.ai_generated_analysis;
+            document.getElementById('resultBox').style.display = 'block';
+        }
+    } catch(err) {
+        alert('تعذر الاتصال بالخادم المحلي. تأكد من تشغيل ملف الخادم main.py');
+        console.error(err);
+    }
+}
+</script>
+
+</body>
+</html>

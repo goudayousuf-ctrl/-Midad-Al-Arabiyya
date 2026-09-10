@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوابة الإشراف والمتابعة التعليمية المالية | مداد AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Rakkas&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- SheetJS for Excel export -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+  body{ background:#F7F5F0; color:#2C302E; font-family:'IBM Plex Sans Arabic', sans-serif; padding:20px; margin:0; line-height:1.8; }
+  .wrapper{ max-width:1400px; margin:0 auto; }
+  
+  nav { background:#FFFFFF; padding:15px 20px; border-bottom:2px solid #E2DDD5; display:flex; justify-content:center; gap:8px; margin-bottom:30px; border-radius:16px; box-shadow:0 6px 25px rgba(0,0,0,0.04); flex-wrap:wrap; position:sticky; top:15px; z-index:100; }
+  nav a { display:flex; align-items:center; gap:6px; text-decoration:none; color:#5A605C; font-weight:600; font-size:13px; padding:8px 14px; border-radius:10px; transition:0.3s; background:#FAF9F6; border:1px solid #EAE5D9; }
+  nav a:hover { background:#F4EFE6; transform: translateY(-1px); border-color:#C5A059; color:#C5A059; }
+  nav a.active { background:#F4EFE6; border-color:#C5A059; color:#C5A059; font-weight:700; }
+
+  .card{ background:#FFFFFF; padding:35px; border-radius:18px; border:1px solid #E2DDD5; box-shadow:0 6px 25px rgba(0,0,0,0.03); margin-bottom:30px; }
+  h2, h3{ font-family:'Rakkas',serif; color:#C5A059; margin-top:0; }
+  h2{ font-size:28px; margin-bottom:15px; }
+  h3{ font-size:22px; margin-bottom:15px; border-bottom:1px dashed #D6D0C4; padding-bottom:8px; }
+
+  .grid-2 { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .field{ margin-bottom:20px; }
+  label{ display:block; margin-bottom:8px; color:#5A605C; font-size:14px; font-weight:600; }
+  input, textarea, select{ width:100%; background:#FAF9F6; border:1px solid #D6D0C4; color:#2C302E; padding:10px 12px; border-radius:8px; font-family:inherit; font-size:14px; box-sizing:border-box; transition:0.3s; }
+  input:focus, textarea:focus, select:focus{ outline:none; border-color:#C5A059; background:#FFF; box-shadow:0 0 0 3px rgba(197,160,89,0.1); }
+  
+  .role-tabs { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+  .role-btn { background:#FAF9F6; border:1px solid #D6D0C4; color:#5A605C; padding:10px 20px; border-radius:12px; font-weight:700; cursor:pointer; font-size:14px; transition:0.3s; }
+  .role-btn.active-role { background:#C5A059; color:#FFF; border-color:#C5A059; box-shadow:0 4px 15px rgba(197,160,89,0.3); }
+
+  .supervision-table { width:100%; border-collapse:collapse; margin-top:15px; font-size:13px; text-align:right; }
+  .supervision-table th, .supervision-table td { border:1px solid #E2DDD5; padding:10px 12px; vertical-align:middle; transition: background-color 0.3s; }
+  .supervision-table th { background:#FAF9F6; color:#5A605C; text-align:center; font-size:13.5px; }
+  .supervision-table td.text-center { text-align:center; }
+  
+  /* تنسيق الصفين لكل طالب */
+  tr.student-main-row { border-top: 2px solid #C5A059; background: #FFFFFF; }
+  tr.student-sub-row { border-bottom: 2px solid #C5A059; background: #FAF9F6; }
+
+  /* التنسيق الشرطي الأخضر عند اكتمال الحصص المستهدفة */
+  tr.completed-month-row, 
+  tr.completed-month-row > td { 
+    background-color: #E8F8F5 !important; 
+    border-color: #A2D9CE !important; 
+    color: #145A32 !important; 
+  }
+  tr.completed-month-row input, 
+  tr.completed-month-row select, 
+  tr.completed-month-row textarea { 
+    background-color: #D4EFDF !important; 
+    color: #145A32 !important; 
+    border-color: #A2D9CE !important; 
+  }
+
+  .editable-cell { background: transparent; border: 1px dashed transparent; padding: 6px; border-radius: 6px; width: 100%; font-family: inherit; font-size: 13px; color: #2C302E; transition: 0.2s; box-sizing: border-box; }
+  .editable-cell:hover { background: #FAF9F6; border-color: #D6D0C4; }
+  .editable-cell:focus { background: #FFF; border-color: #C5A059; outline: none; box-shadow: 0 0 0 2px rgba(197,160,89,0.15); }
+
+  button.submit-btn{ background:#C5A059; color:#FFF; padding:14px 30px; border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:15px; transition:0.3s; box-shadow:0 4px 15px rgba(197,160,89,0.25); display:inline-flex; align-items:center; gap:8px; }
+  button.submit-btn:hover{ background:#B38F4E; transform: translateY(-1px); }
+  
+  .output{ margin-top:25px; padding:25px; background:#FAF9F6; border:1px solid #E2DDD5; border-radius:12px; white-space:pre-wrap; display:none; line-height:2; font-size:14.5px; color:#1F2321; }
+  .action-icon-btn { background:none; border:none; cursor:pointer; font-size:16px; margin:0 2px; transition:0.2s; }
+  .action-icon-btn:hover { transform:scale(1.2); }
+
+  .copy-floating-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background: #C5A059;
+    color: #FFF;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(197,160,89,0.4);
+    z-index: 1000;
+    transition: 0.3s;
+    display: flex;
+    align-items:center;
+    gap: 8px;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+  }
+  .copy-floating-btn:hover { background: #B38F4E; transform: translateY(-2px); }
+</style>
+</head>
+<body>
+
+<button class="copy-floating-btn" onclick="copyFullCode()">
+  <span>📋</span> نسخ الكود بالكامل
+</button>
+
+<div class="wrapper">
+  <nav>
+    <a href="index.html"><span>🏠</span> الرئيسية</a>
+    <a href="workspace.html"><span>🎯</span> الدروس</a>
+    <a href="curriculum.html"><span>📚</span> المناهج</a>
+    <a href="generator.html"><span>⚡</span> مختبر التوليد</a>
+    <a href="exercises.html"><span>📝</span> التقويم</a>
+    <a href="review.html"><span>✍️</span> المراجعة</a>
+    <a href="ocr.html"><span>🖼️</span> تحويل صورة</a>
+    <a href="vocabulary.html"><span>📖</span> المفردات</a>
+    <a href="grammar.html"><span>📐</span> القواعد</a>
+    <a href="sentences.html"><span>💬</span> الجمل</a>
+    <a href="student.html"><span>🎓</span> بوابة الطالب</a>
+    <a href="memory.html"><span>🧠</span> الذاكرة</a>
+    <a href="analysis.html"><span>📊</span> التحليل</a>
+    <a href="supervisor.html" class="active"><span>👔</span> الإشراف</a>
+  </nav>
+
+  <!-- إدارة الصلاحيات -->
+  <div class="card" style="border: 2px solid #C5A059; background: #FFF;">
+    <h2>🔐 إدارة الصلاحيات ومشاركة النظام مع المعلمين</h2>
+    <p style="color:#686D68; font-size:14px; margin-bottom:15px;">حدد دورك للتصفح:</p>
+    
+    <div class="role-tabs" id="roleTabsContainer">
+      <button type="button" class="role-btn active-role" onclick="switchRole('teacher1', this)">👨‍🏫 المعلم: أستاذ أحمد محمد</button>
+      <button type="button" class="role-btn" onclick="switchRole('teacher2', this)">👨‍🏫 المعلم: أستاذة فاطمة علي</button>
+      <button type="button" class="role-btn" onclick="switchRole('supervisor', this)">👔 المشرف العام (إدارة شاملة + الشؤون المالية)</button>
+    </div>
+    <input type="hidden" id="currentRole" value="teacher1">
+  </div>
+
+  <!-- الشؤون المالية وحسابات المعلمين -->
+  <div class="card supervisor-only-section" id="teachersFinancialCard" style="display:none; border: 2px solid #C5A059; background: #FAF9F6;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
+      <div>
+        <h2 style="margin-bottom:5px;">💰 إدارة المعلمين، الأجور، وحسابات نهاية الشهر</h2>
+        <p style="color:#686D68; font-size:14px; margin:0;">حساب مستحقات الساعات والرواتب تلقائياً مع التحويل الفوري بين العملات[cite: 2].</p>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <div>
+          <label for="currencySelector" style="font-size:12px; margin-bottom:3px;">💱 العملة:</label>
+          <select id="currencySelector" onchange="toggleCurrencyRate()" style="padding:6px 10px; font-weight:700; color:#C5A059; font-size:13px;">
+            <option value="USD" selected>الدولار الأمريكي ($)</option>
+            <option value="EGP">الجنيه المصري (EGP)</option>
+          </select>
+        </div>
+        <button type="button" class="submit-btn" style="padding:8px 16px; font-size:13px;" onclick="addNewTeacherModal()"><span>➕</span> إضافة معلم جديد</button>
+      </div>
+    </div>
+    
+    <div style="overflow-x:auto;">
+      <table class="supervision-table" id="teachersTable">
+        <thead>
+          <tr>
+            <th>اسم المعلم</th>
+            <th>البريد الإلكتروني / الهاتف</th>
+            <th id="rateHeader">سعر الساعة ($)</th>
+            <th>عدد الحصص المنجزة</th>
+            <th id="totalHeader">إجمالي الراتب ($)</th>
+            <th>إجراءات التنبيه</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-teacher-id="1">
+            <td><b>أستاذ أحمد محمد</b></td>
+            <td>ahmed.m@madad-ai.com<br><span style="font-size:11px; color:#686D68;">+201000000001</span></td>
+            <td><input type="number" class="editable-cell teacher-rate" data-teacher="1" data-base-usd="25" value="25" onchange="updateBaseRate(this); calculateMonthlyPayroll();"></td>
+            <td class="text-center teacher-completed-count" data-teacher="1">0 حصة</td>
+            <td><b style="color:#C5A059; font-size:15px;" class="teacher-total" data-teacher="1">$0</b></td>
+            <td class="text-center">
+              <button onclick="sendRealAutomatedMessage('أحمد محمد', 'ahmed.m@madad-ai.com', 'pre_class', 'تنبيه')" style="background:#25D366; color:#fff; border:none; padding:5px 10px; border-radius:6px; cursor:pointer; font-size:12px;">⏰ تنبيه</button>
+            </td>
+          </tr>
+          <tr data-teacher-id="2">
+            <td><b>أستاذة فاطمة علي</b></td>
+            <td>fatma.a@madad-ai.com<br><span style="font-size:11px; color:#686D68;">+201000000002</span></td>
+            <td><input type="number" class="editable-cell teacher-rate" data-teacher="2" data-base-usd="30" value="30" onchange="updateBaseRate(this); calculateMonthlyPayroll();"></td>
+            <td class="text-center teacher-completed-count" data-teacher="2">0 حصة</td>
+            <td><b style="color:#C5A059; font-size:15px;" class="teacher-total" data-teacher="2">$0</b></td>
+            <td class="text-center">
+              <button onclick="sendRealAutomatedMessage('فاطمة علي', 'fatma.a@madad-ai.com', 'pre_class', 'تنبيه')" style="background:#25D366; color:#fff; border:none; padding:5px 10px; border-radius:6px; cursor:pointer; font-size:12px;">⏰ تنبيه</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- نظام متابعة حصص الطلاب التفصيلية -->
+  <div class="card" style="border: 2px solid #C5A059; background: linear-gradient(to bottom, #FFFFFF, #FAF9F6);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
+      <div>
+        <h2 id="tableTitle" style="margin-bottom:5px;">👥 بيانات الطلاب والتتبع التفصيلي للحصص (توليد آلي حسب المستهدف)</h2>
+        <p id="tableDesc" style="color:#686D68; font-size:14px; margin:0;">عدد الحصص يتولد آلياً حسب المستهدف مع خيارات (حضر / غائب / مؤجلة) وتاريخ الحصة والتنسيق الشرطي الأخضر عند الاكتمال.</p>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="submit-btn" style="padding:8px 14px; font-size:13px; background:#137333;" onclick="exportTablesToExcel()"><span>📊</span> تحميل الجداول كملف إكسل (.xlsx)</button>
+        <button type="button" class="submit-btn" style="padding:8px 14px; font-size:13px; background:#5A605C;" onclick="addManualSessionColumn()"><span>➕</span> إضافة حصة يدوياً</button>
+        <button type="button" id="addStudentBtn" class="submit-btn" style="padding:8px 14px; font-size:13px; display:none;" onclick="addNewStudentRow()"><span>➕</span> إضافة طالب جديد</button>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table class="supervision-table" id="studentsSupervisionTable">
+        <thead>
+          <tr id="tableHeaderRow">
+            <th style="min-width:150px;">👤 اسم الطالب بالكامل</th>
+            <th style="min-width:130px;">👨‍🏫 المعلم المسؤول</th>
+            <th style="min-width:110px; background:#FAF6EE; color:#C5A059; text-align:center;">🎯 المستهدف (شهرياً)</th>
+            <!-- أعمدة الحصص المتولدة آلياً -->
+            <th class="dynamic-header-placeholder" style="min-width:140px; background:#FAF6EE;">📌 الحصة 1</th>
+            <th class="dynamic-header-placeholder" style="min-width:140px; background:#FAF6EE;">📌 الحصة 2</th>
+            <th class="dynamic-header-placeholder" style="min-width:140px; background:#FAF6EE;">📌 الحصة 3</th>
+            <th class="dynamic-header-placeholder" style="min-width:140px; background:#FAF6EE;">📌 الحصة 4</th>
+            <th style="min-width:130px;">📖 المستوى / المادة</th>
+            <th style="min-width:160px;">📝 ملاحظات وتوجيهات</th>
+            <th style="min-width:130px;">🌟 المكافآت</th>
+            <th class="supervisor-only-col" style="min-width:140px; display:none;">📧 قنوات التواصل</th>
+            <th class="supervisor-only-col" style="min-width:110px; display:none;">💳 حالة الدفع</th>
+            <th style="min-width:130px;">🤖 المساعد مداد</th>
+            <th class="supervisor-only-col" style="min-width:70px; display:none;">حذف</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- طالب افتراضي 1 -->
+          <tr class="student-main-row" data-student-id="1" data-teacher-id="1">
+            <td rowspan="2"><input type="text" class="editable-cell student-name" value="جون دوي (John Doe)" style="font-weight:700; font-size:14px;"></td>
+            <td rowspan="2">
+              <select class="editable-cell teacher-assign-select" onchange="updateRowTeacher(this)">
+                <option value="1" selected>أستاذ أحمد محمد</option>
+                <option value="2">أستاذة فاطمة علي</option>
+              </select>
+            </td>
+            <td rowspan="2" style="text-align:center; background:#FAF6EE;">
+              <input type="number" class="editable-cell target-sessions-input" value="4" min="1" onchange="onTargetChange(this)" style="font-weight:700; text-align:center; color:#C5A059;">
+            </td>
+            <td colspan="4" class="sessions-info-banner" style="background:#FAF9F6; font-size:12px; color:#5A605C; text-align:center; font-weight:600;">📌 مواعيد الحصص وحالاتها (في الصف الثاني أدناه)</td>
+            <td rowspan="2"><input type="text" class="editable-cell student-level" value="العربية بين يديك (الكتاب الأول)"></td>
+            <td rowspan="2"><textarea class="editable-cell student-notes" rows="3" style="min-height:60px;">أداء متميز بالنطق، يحتاج مراجعة أحرف التفخيم وحرف العين.</textarea></td>
+            <td rowspan="2">
+              <select class="editable-cell student-reward" style="font-weight:700; color:#C5A059; margin-bottom:4px; font-size:12px;">
+                <option value="star" selected>⭐ نجمة التميز</option>
+              </select>
+              <button onclick="sendRewardNotification('جون دوي', 'john.doe@email.com')" style="background:#C5A059; color:#fff; border:none; padding:4px; border-radius:4px; font-size:11px; width:100%;">🎁 إرسال المكافأة</button>
+            </td>
+            <td rowspan="2" class="supervisor-only-col" style="display:none;">
+              <input type="email" class="editable-cell student-email" value="john.doe@email.com" placeholder="البريد" style="margin-bottom:4px; font-size:12px;">
+              <button onclick="sendPreClassAlert('جون دوي', document.querySelector('.student-email').value)" style="background:#25D366; color:#fff; border:none; padding:4px; border-radius:4px; font-size:11px; width:100%;">⏰ تنبيه الموعد</button>
+            </td>
+            <td rowspan="2" class="text-center supervisor-only-col" style="display:none;">
+              <select class="editable-cell student-payment" style="font-weight:700; color:#137333; font-size:12px;">
+                <option value="paid" selected>تم الدفع</option>
+                <option value="unpaid">لم يدفع</option>
+              </select>
+            </td>
+            <td rowspan="2">
+              <span style="color:#C5A059; font-weight:600; font-size:11px;">مداد:</span> مستوى ممتاز وثابت.<br>
+              <button onclick="sendBillingAlert('جون دوي', 'john.doe@email.com')" class="supervisor-only-col" style="margin-top:4px; background:#25D366; color:#fff; border:none; padding:3px; border-radius:4px; font-size:11px; display:block; width:100%;">📨 تذكير الدفع</button>
+            </td>
+            <td rowspan="2" class="text-center supervisor-only-col" style="display:none;">
+              <button class="action-icon-btn" onclick="deleteStudentRow(this)">🗑️</button>
+            </td>
+          </tr>
+          <!-- صف الحصص الفرعي للطالب 1 -->
+          <tr class="student-sub-row" data-student-id="1" data-teacher-id="1">
+            <td style="background:#FAF9F6; text-align:center;" class="dynamic-session-td">
+              <input type="date" class="editable-cell session-date-item" value="2026-09-01" style="font-size:11px; margin-bottom:4px; padding:4px;">
+              <select class="editable-cell session-status-item" onchange="calculateMonthlyPayroll()" style="font-weight:700; color:#137333; font-size:11px; padding:4px;">
+                <option value="completed" selected>✅ حضر</option>
+                <option value="absent">❌ غائب</option>
+                <option value="postponed">⏳ مؤجلة</option>
+              </select>
+            </td>
+            <td style="background:#FAF9F6; text-align:center;" class="dynamic-session-td">
+              <input type="date" class="editable-cell session-date-item" value="2026-09-05" style="font-size:11px; margin-bottom:4px; padding:4px;">
+              <select class="editable-cell session-status-item" onchange="calculateMonthlyPayroll()" style="font-weight:700; color:#137333; font-size:11px; padding:4px;">
+                <option value="completed" selected>✅ حضر</option>
+                <option value="absent">❌ غائب</option>
+                <option value="postponed">⏳ مؤجلة</option>
+              </select>
+            </td>
+            <td style="background:#FAF9F6; text-align:center;" class="dynamic-session-td">
+              <input type="date" class="editable-cell session-date-item" value="2026-09-08" style="font-size:11px; margin-bottom:4px; padding:4px;">
+              <select class="editable-cell session-status-item" onchange="calculateMonthlyPayroll()" style="font-weight:700; color:#137333; font-size:11px; padding:4px;">
+                <option value="completed" selected>✅ حضر</option>
+                <option value="absent">❌ غائب</option>
+                <option value="postponed">⏳ مؤجلة</option>
+              </select>
+            </td>
+            <td style="background:#FAF9F6; text-align:center;" class="dynamic-session-td">
+              <input type="date" class="editable-cell session-date-item" value="2026-09-12" style="font-size:11px; margin-bottom:4px; padding:4px;">
+              <select class="editable-cell session-status-item" onchange="calculateMonthlyPayroll()" style="font-weight:700; color:#C5221F; font-size:11px; padding:4px;">
+                <option value="absent" selected>❌ غائب</option>
+                <option value="completed">✅ حضر</option>
+                <option value="postponed">⏳ مؤجلة</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- قسم التقويم الإشرافي -->
+  <div class="card supervisor-only-section" id="supervisorEvaluationSection" style="display:none; border: 2px solid #C5A059; background: #FFF;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
+      <h2 style="margin:0;">📋 التقويم الإشرافي (للمشرف العام حصرياً)[cite: 2]</h2>
+      <button type="button" class="submit-btn" style="padding:8px 16px; font-size:13px;" onclick="addNewTeacherModal()"><span>➕</span> إضافة معلم جديد</button>
+    </div>
+    <p style="color:#686D68; font-size:14px; margin-bottom:20px;">بيانات المعلم المستهدف واستمارة التقييم التفصيلية لأداء الحصة الافتراضية.</p>
+
+    <div class="grid-2" style="background:#FAF9F6; padding:20px; border-radius:12px; border:1px solid #E2DDD5; margin-bottom:25px;">
+      <div class="field">
+        <label>اختيار المعلم (قيد الإشراف)</label>
+        <select id="teacherSelect" onchange="updateTeacherEmail()">
+          <option value="أحمد محمد" data-email="ahmed.m@madad-ai.com" data-phone="+201000000001">أستاذ أحمد محمد</option>
+          <option value="فاطمة علي" data-email="fatma.a@madad-ai.com" data-phone="+201000000002">أستاذة فاطمة علي</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>البريد الإلكتروني للمعلم</label>
+        <input id="teacherEmail" type="email" value="ahmed.m@madad-ai.com" readonly style="background:#EFECE6;">
+      </div>
+      <div class="field">
+        <label>رقم هاتف المعلم (واتساب)</label>
+        <input id="teacherPhone" type="text" value="+201000000001" readonly style="background:#EFECE6;">
+      </div>
+      <div class="field">
+        <label>الصف / المستوى</label>
+        <input id="targetClass" type="text" placeholder="مثال: العربية بين يديك">
+      </div>
+      <div class="field">
+        <label>موضوع الدرس</label>
+        <input id="lessonTopic" type="text" placeholder="مثال: الحوار الأول">
+      </div>
+      <div class="field">
+        <label>حضور الطلاب</label>
+        <input id="attendanceInfo" type="text" placeholder="عدد الحضور: 10">
+      </div>
+    </div>
+
+    <h3 style="font-size:18px; margin-bottom:12px;">📝 عناصر التقييم التفصيلية</h3>
+    
+    <button id="analyzeBtn" class="submit-btn" onclick="generateAndEmailReport()">
+      <span>🚀</span> توليد التقرير الإشرافي وإرساله لبريد المعلم[cite: 2]
+    </button>
+    <div id="loading" style="display:none; color:#C5A059; margin-top:15px; font-weight:600;">جاري الإرسال عبر خادم مداد...</div>
+    <div id="output" class="output"></div>
+  </div>
+</div>
+
+<script>
+  let teachersList = [
+    { id: '1', name: 'أستاذ أحمد محمد', rate: 25, email: 'ahmed.m@madad-ai.com', phone: '+201000000001' },
+    { id: '2', name: 'أستاذة فاطمة علي', rate: 30, email: 'fatma.a@madad-ai.com', phone: '+201000000002' }
+  ];
+
+  const USD_TO_EGP_RATE = 50.98;
+  let globalMaxSessions = 4;
+  let studentIdCounter = 1;
+
+  function updateTeacherEmail() {
+    const select = document.getElementById('teacherSelect');
+    if(!select) return;
+    const selectedName = select.value;
+    const found = teachersList.find(t => t.name === selectedName);
+    if(found) {
+      document.getElementById('teacherEmail').value = found.email;
+      const phoneInput = document.getElementById('teacherPhone');
+      if(phoneInput) phoneInput.value = found.phone || '';
+    }
+  }
+
+  function addNewTeacherModal() {
+    const name = prompt("أدخل اسم المعلم الجديد:");
+    if(!name) return;
+    const email = prompt("أدخل البريد الإلكتروني للمعلم:", "teacher@madad-ai.com");
+    const phone = prompt("أدخل رقم هاتف المعلم (واتساب):", "+201000000000");
+    const currency = document.getElementById('currencySelector') ? document.getElementById('currencySelector').value : 'USD';
+    const rateInput = prompt(`سعر الساعة (${currency === 'EGP' ? 'EGP' : '$'}):`, currency === 'EGP' ? '1270' : '25');
+    
+    let baseUsdRate = currency === 'EGP' ? (parseFloat(rateInput) / USD_TO_EGP_RATE) : (parseFloat(rateInput) || 25);
+    const newId = (teachersList.length + 1).toString();
+    teachersList.push({ id: newId, name, rate: baseUsdRate, email, phone });
+
+    rebuildTeachersTable();
+    rebuildRoleTabs();
+    rebuildTeacherSelects();
+    calculateMonthlyPayroll();
+    alert(`✨ تمت إضافة المعلم (${name}) بنجاح.`);
+  }
+
+  function updateBaseRate(input) {
+    const currency = document.getElementById('currencySelector').value;
+    let val = parseFloat(input.value) || 0;
+    let baseUsd = currency === 'EGP' ? (val / USD_TO_EGP_RATE) : val;
+    input.setAttribute('data-base-usd', baseUsd);
+  }
+
+  function toggleCurrencyRate() {
+    const currency = document.getElementById('currencySelector').value;
+    const rateHeader = document.getElementById('rateHeader');
+    const totalHeader = document.getElementById('totalHeader');
+
+    if (currency === 'EGP') {
+      rateHeader.innerText = 'سعر الساعة (EGP)';
+      totalHeader.innerText = 'إجمالي الراتب (EGP)';
+    } else {
+      rateHeader.innerText = 'سعر الساعة ($)';
+      totalHeader.innerText = 'إجمالي الراتب ($)';
+    }
+
+    document.querySelectorAll('.teacher-rate').forEach(input => {
+      let baseUsd = parseFloat(input.getAttribute('data-base-usd')) || parseFloat(input.value);
+      input.value = (currency === 'EGP' ? (baseUsd * USD_TO_EGP_RATE) : baseUsd).toFixed(2);
+    });
+    calculateMonthlyPayroll();
+  }
+
+  function rebuildTeachersTable() {
+    const currency = document.getElementById('currencySelector') ? document.getElementById('currencySelector').value : 'USD';
+    const tbody = document.querySelector('#teachersFinancialCard tbody');
+    if(!tbody) return;
+    tbody.innerHTML = '';
+    
+    teachersList.forEach(t => {
+      let displayRate = currency === 'EGP' ? (t.rate * USD_TO_EGP_RATE).toFixed(2) : t.rate;
+      tbody.innerHTML += `
+        <tr data-teacher-id="${t.id}">
+          <td><b>${t.name}</b></td>
+          <td>${t.email}<br><span style="font-size:11px; color:#686D68;">${t.phone || ''}</span></td>
+          <td><input type="number" class="editable-cell teacher-rate" data-teacher="${t.id}" data-base-usd="${t.rate}" value="${displayRate}" onchange="updateBaseRate(this); calculateMonthlyPayroll();"></td>
+          <td class="text-center teacher-completed-count" data-teacher="${t.id}">0 حصة</td>
+          <td><b style="color:#C5A059; font-size:15px;" class="teacher-total" data-teacher="${t.id}">${currency === 'EGP' ? 'EGP 0' : '$0'}</b></td>
+          <td class="text-center">
+            <button onclick="sendRealAutomatedMessage('${t.name}', '${t.email}', 'pre_class', 'تنبيه')" style="background:#25D366; color:#fff; border:none; padding:5px 10px; border-radius:6px; cursor:pointer; font-size:12px;">⏰ تنبيه</button>
+          </td>
+        </tr>
+      `;
+    });
+  }
+
+  function rebuildRoleTabs() {
+    const container = document.getElementById('roleTabsContainer');
+    if(!container) return;
+    let html = '';
+    teachersList.forEach((t) => {
+      html += `<button type="button" class="role-btn" onclick="switchRole('teacher${t.id}', this)">👨‍🏫 المعلم: ${t.name}</button>`;
+    });
+    html += `<button type="button" class="role-btn" onclick="switchRole('supervisor', this)">👔 المشرف العام (إدارة شاملة + الشؤون المالية)</button>`;
+    container.innerHTML = html;
+  }
+
+  function rebuildTeacherSelects() {
+    document.querySelectorAll('.teacher-assign-select').forEach(sel => {
+      const curVal = sel.value;
+      let opts = '';
+      teachersList.forEach(t => {
+        opts += `<option value="${t.id}" ${t.id === curVal ? 'selected' : ''}>${t.name}</option>`;
+      });
+      sel.innerHTML = opts;
+    });
+
+    const supSelect = document.getElementById('teacherSelect');
+    if(supSelect) {
+      let supOpts = '';
+      teachersList.forEach(t => {
+        supOpts += `<option value="${t.name}" data-email="${t.email}" data-phone="${t.phone || ''}">${t.name}</option>`;
+      });
+      supSelect.innerHTML = supOpts;
+      updateTeacherEmail();
+    }
+  }
+
+  function updateRowTeacher(sel) {
+    const mainRow = sel.closest('tr');
+    const sId = mainRow.getAttribute('data-student-id');
+    const newTId = sel.value;
+    
+    mainRow.setAttribute('data-teacher-id', newTId);
+    const subRow = document.querySelector(`tr.student-sub-row[data-student-id="${sId}"]`);
+    if(subRow) subRow.setAttribute('data-teacher-id', newTId);
+    
+    calculateMonthlyPayroll();
+  }
+
+  // عند تغيير المستهدف لكل طالب، يتم فحص وتحديث عدد الحصص التلقائي
+  function onTargetChange(input) {
+    const mainRow = input.closest('tr');
+    const targetVal = parseInt(input.value) || 1;
+
+    // حساب أقصى مستهدف بين جميع الطلاب لتحديد عدد أعمدة الجدول الكلي
+    let maxTarget = 1;
+    document.querySelectorAll('.target-sessions-input').forEach(inp => {
+      let val = parseInt(inp.value) || 1;
+      if(val > maxTarget) maxTarget = val;
+    });
+
+    if(maxTarget > globalMaxSessions) {
+      globalMaxSessions = maxTarget;
+      rebuildHeaderAndRows();
+    } else {
+      calculateMonthlyPayroll();
+    }
+  }
+
+  // إضافة حصة يدوياً لجميع الطلاب لزيادة الأعمدة متى شئت
+  function addManualSessionColumn() {
+    globalMaxSessions++;
+    // تحديث خانة المستهدف للطالب الأول كمثال لكي يتوافق مع الزيادة اليدوية
+    rebuildHeaderAndRows();
+  }
+
+  // إعادة بناء الترويسة وأعمدة الحصص
+  function rebuildHeaderAndRows() {
+    const headerRow = document.getElementById('tableHeaderRow');
+    const oldHeaders = headerRow.querySelectorAll('.dynamic-header-placeholder');
+    oldHeaders.forEach(el => el.remove());
+
+    const levelTh = headerRow.children[3];
+    for (let i = 1; i <= globalMaxSessions; i++) {
+      const newTh = document.createElement('th');
+      newTh.className = 'dynamic-header-placeholder session-col-header';
+      newTh.style.cssText = 'min-width:140px; background:#FAF6EE;';
+      newTh.innerHTML = `📌 الحصة ${i}`;
+      headerRow.insertBefore(newTh, levelTh);
+    }
+
+    document.querySelectorAll('tr.student-main-row').forEach(mainRow => {
+      const placeholderCell = mainRow.querySelector('.sessions-info-banner');
+      if (placeholderCell) {
+        placeholderCell.setAttribute('colspan', globalMaxSessions);
+      }
+    });
+
+    document.querySelectorAll('tr.student-sub-row').forEach(subRow => {
+      let existingCellsData = [];
+      subRow.querySelectorAll('.dynamic-session-td').forEach(td => {
+        const dateVal = td.querySelector('.session-date-item') ? td.querySelector('.session-date-item').value : '';
+        const statusVal = td.querySelector('.session-status-item') ? td.querySelector('.session-status-item').value : 'completed';
+        existingCellsData.push({ date: dateVal, status: statusVal });
+      });
+
+      subRow.innerHTML = '';
+      for (let i = 0; i < globalMaxSessions; i++) {
+        let dVal = existingCellsData[i] ? existingCellsData[i].date : '';
+        let sVal = existingCellsData[i] ? existingCellsData[i].status : 'completed';
+
+        const newTd = document.createElement('td');
+        newTd.style.cssText = 'background:#FAF9F6; text-align:center;';
+        newTd.className = 'dynamic-session-td';
+        newTd.innerHTML = `
+          <input type="date" class="editable-cell session-date-item" value="${dVal}" style="font-size:11px; margin-bottom:4px; padding:4px;">
+          <select class="editable-cell session-status-item" onchange="calculateMonthlyPayroll()" style="font-weight:700; color:#137333; font-size:11px; padding:4px;">
+            <option value="completed" ${sVal === 'completed' ? 'selected' : ''}>✅ حضر</option>
+            <option value="absent" ${sVal === 'absent' ? 'selected' : ''}>❌ غائب</option>
+            <option value="postponed" ${sVal === 'postponed' ? 'selected' : ''}>⏳ مؤجلة</option>
+          </select>
+        `;
+        subRow.appendChild(newTd);
+      }
+    });
+
+    calculateMonthlyPayroll();
+  }
+
+  function calculateMonthlyPayroll() {
+    const currency = document.getElementById('currencySelector') ? document.getElementById('currencySelector').value : 'USD';
+    let counts = {};
+    teachersList.forEach(t => counts[t.id] = 0);
+
+    document.querySelectorAll('tr.student-main-row').forEach(mainRow => {
+      const sId = mainRow.getAttribute('data-student-id');
+      const tId = mainRow.getAttribute('data-teacher-id');
+      const subRow = document.querySelector(`tr.student-sub-row[data-student-id="${sId}"]`);
+      
+      if(!subRow) return;
+
+      let completedInRow = 0;
+      const sessionSelects = subRow.querySelectorAll('.session-status-item');
+
+      sessionSelects.forEach(select => {
+        if(select.value === 'completed') {
+          completedInRow++;
+          if(counts[tId] !== undefined) counts[tId]++;
+        }
+      });
+
+      const targetInput = mainRow.querySelector('.target-sessions-input');
+      const targetSessions = targetInput ? (parseInt(targetInput.value) || 4) : 4;
+
+      // التنسيق الشرطي: تلوين الصفين (الرئيسي والفرعي) باللون الأخضر عند اكتمال الحصص المحضورة للمستهدف
+      if (completedInRow >= targetSessions) {
+        mainRow.classList.add('completed-month-row');
+        subRow.classList.add('completed-month-row');
+      } else {
+        mainRow.classList.remove('completed-month-row');
+        subRow.classList.remove('completed-month-row');
+      }
+    });
+
+    teachersList.forEach(t => {
+      const count = counts[t.id] || 0;
+      const rateInput = document.querySelector(`.teacher-rate[data-teacher="${t.id}"]`);
+      const rate = rateInput ? (parseFloat(rateInput.value) || 0) : t.rate;
+      const total = count * rate;
+
+      const countEl = document.querySelector(`.teacher-completed-count[data-teacher="${t.id}"]`);
+      const totalEl = document.querySelector(`.teacher-total[data-teacher="${t.id}"]`);
+
+      if(countEl) countEl.innerText = count + ' حصة';
+      if(totalEl) totalEl.innerText = (currency === 'EGP' ? 'EGP ' : '$') + total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    });
+  }
+
+  function switchRole(role, btn) {
+    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active-role'));
+    btn.classList.add('active-role');
+    document.getElementById('currentRole').value = role;
+
+    const supCols = document.querySelectorAll('.supervisor-only-col');
+    const supSections = document.querySelectorAll('.supervisor-only-section');
+    const evalSection = document.getElementById('supervisorEvaluationSection');
+    const addBtn = document.getElementById('addStudentBtn');
+    const title = document.getElementById('tableTitle');
+    const desc = document.getElementById('tableDesc');
+    
+    const mainRows = document.querySelectorAll('tr.student-main-row');
+    const subRows = document.querySelectorAll('tr.student-sub-row');
+
+    if(role === 'supervisor') {
+      supCols.forEach(el => el.style.display = '');
+      supSections.forEach(el => el.style.display = 'block');
+      if(evalSection) evalSection.style.display = 'block';
+      addBtn.style.display = 'inline-flex';
+      title.innerText = '👥 بيانات الطلاب والتتبع التفصيلي للحصص (توليد آلي حسب المستهدف)';
+      desc.innerText = 'عدد الحصص يتولد آلياً حسب المستهدف مع خيارات (حضر / غائب / مؤجلة) وتاريخ الحصة والتنسيق الشرطي الأخضر عند الاكتمال.';
+      
+      mainRows.forEach(r => r.style.display = '');
+      subRows.forEach(r => r.style.display = '');
+      calculateMonthlyPayroll();
+    } else {
+      supCols.forEach(el => el.style.display = 'none');
+      supSections.forEach(el => el.style.display = 'none');
+      if(evalSection) evalSection.style.display = 'none';
+      addBtn.style.display = 'none';
+      
+      const teacherObj = teachersList.find(t => `teacher${t.id}` === role);
+      const teacherId = teacherObj ? teacherObj.id : '1';
+      const teacherName = teacherObj ? teacherObj.name : 'المعلم';
+      
+      title.innerText = `👥 متابعة حصص طلاب المعلم: ${teacherName} (الرابط الخاص)`;
+      desc.innerText = 'الصف الأول: تفاصيل الطالب والمستوى. الصف الثاني: تواريخ الحصص وحضورها وتُحتسب أوماتيكياً في سجلك المالي[cite: 2].';
+      
+      mainRows.forEach(r => {
+        const sId = r.getAttribute('data-student-id');
+        const subR = document.querySelector(`tr.student-sub-row[data-student-id="${sId}"]`);
+        if(r.getAttribute('data-teacher-id') === teacherId) {
+          r.style.display = '';
+          if(subR) subR.style.display = '';
+        } else {
+          r.style.display = 'none';
+          if(subR) subR.style.display = 'none';
+        }
+      });
+    }
+  }
+
+  function addNewStudentRow() {
+    studentIdCounter++;
+    const sId = studentIdCounter;
+    const tableBody = document.querySelector('#studentsSupervisionTable tbody');
+    
+    let teacherOpts = '';
+    teachersList.forEach(t => {
+      teacherOpts += `<option value="${t.id}">${t.name}</option>`;
+    });
+
+    let sessionTdsHtml = '';
+    for(let i=1; i<=globalMaxSessions; i++) {
+      sessionTdsHtml += `
+        <td style="background:#FAF9F6; text-align:center;" class="dynamic-session-td">
+          <input type="date" class="editable-cell session-date-item" style="font-size:11px; margin-bottom:4px; padding:4px;">
+          <select class="editable-cell session-status-item" onchange="calculateMonthlyPayroll()" style="font-weight:700; color:#137333; font-size:11px; padding:4px;">
+            <option value="completed" selected>✅ حضر</option>
+            <option value="absent">❌ غائب</option>
+            <option value="postponed">⏳ مؤجلة</option>
+          </select>
+        </td>
+      `;
+    }
+
+    const mainRow = document.createElement('tr');
+    mainRow.className = 'student-main-row';
+    mainRow.setAttribute('data-student-id', sId);
+    mainRow.setAttribute('data-teacher-id', '1');
+    mainRow.innerHTML = `
+      <td rowspan="2"><input type="text" class="editable-cell student-name" value="طالب جديد" style="font-weight:700; font-size:14px;"></td>
+      <td rowspan="2">
+        <select class="editable-cell teacher-assign-select" onchange="updateRowTeacher(this)">
+          ${teacherOpts}
+        </select>
+      </td>
+      <td rowspan="2" style="text-align:center; background:#FAF6EE;">
+        <input type="number" class="editable-cell target-sessions-input" value="4" min="1" onchange="onTargetChange(this)" style="font-weight:700; text-align:center; color:#C5A059;">
+      </td>
+      <td colspan="${globalMaxSessions}" class="sessions-info-banner" style="background:#FAF9F6; font-size:12px; color:#5A605C; text-align:center; font-weight:600;">📌 تفاصيل حصص الشهر (التاريخ وحالة الحضور في الصف الثاني أدناه)</td>
+      <td rowspan="2"><input type="text" class="editable-cell student-level" value="المستوى"></td>
+      <td rowspan="2"><textarea class="editable-cell student-notes" rows="3" style="min-height:60px;">ملاحظات...</textarea></td>
+      <td rowspan="2">
+        <select class="editable-cell student-reward" style="font-weight:700; color:#C5A059; margin-bottom:4px; font-size:12px;">
+          <option value="star" selected>⭐ نجمة التميز</option>
+        </select>
+        <button onclick="sendRewardNotification('طالب جديد', 'student@email.com')" style="background:#C5A059; color:#fff; border:none; padding:4px; border-radius:4px; font-size:11px; width:100%;">🎁 إرسال المكافأة</button>
+      </td>
+      <td rowspan="2" class="supervisor-only-col" style="display:${document.getElementById('currentRole').value === 'supervisor' ? '' : 'none'};">
+        <input type="email" class="editable-cell student-email" value="student@email.com" placeholder="البريد" style="margin-bottom:4px; font-size:12px;">
+        <button onclick="sendPreClassAlert('طالب جديد', document.querySelector('.student-email').value)" style="background:#25D366; color:#fff; border:none; padding:4px; border-radius:4px; font-size:11px; width:100%;">⏰ تنبيه</button>
+      </td>
+      <td rowspan="2" class="text-center supervisor-only-col" style="display:${document.getElementById('currentRole').value === 'supervisor' ? '' : 'none'};">
+        <select class="editable-cell student-payment" style="font-weight:700; color:#137333; font-size:12px;">
+          <option value="paid" selected>تم الدفع</option>
+          <option value="unpaid">لم يدفع</option>
+        </select>
+      </td>
+      <td rowspan="2">
+        <span style="color:#C5A059; font-weight:600; font-size:11px;">مداد:</span> جديد.<br>
+        <button onclick="sendBillingAlert('طالب جديد', 'student@email.com')" class="supervisor-only-col" style="margin-top:4px; background:#25D366; color:#fff; border:none; padding:3px; border-radius:4px; font-size:11px; display:block; width:100%;">📨 تذكير الدفع</button>
+      </td>
+      <td rowspan="2" class="text-center supervisor-only-col" style="display:${document.getElementById('currentRole').value === 'supervisor' ? '' : 'none'};">
+        <button class="action-icon-btn" onclick="deleteStudentRow(this)">🗑️</button>
+      </td>
+    `;
+
+    const subRow = document.createElement('tr');
+    subRow.className = 'student-sub-row';
+    subRow.setAttribute('data-student-id', sId);
+    subRow.setAttribute('data-teacher-id', '1');
+    subRow.innerHTML = sessionTdsHtml;
+
+    tableBody.appendChild(mainRow);
+    tableBody.appendChild(subRow);
+    calculateMonthlyPayroll();
+  }
+
+  function deleteStudentRow(btn) {
+    if(confirm("هل أنت متأكد من حذف هذا الطالب (الصفين)؟")) {
+      const mainRow = btn.closest('tr');
+      const sId = mainRow.getAttribute('data-student-id');
+      const subRow = document.querySelector(`tr.student-sub-row[data-student-id="${sId}"]`);
+      
+      if(subRow) subRow.remove();
+      mainRow.remove();
+      calculateMonthlyPayroll();
+    }
+  }
+
+  function exportTablesToExcel() {
+    try {
+      const wb = XLSX.utils.book_new();
+
+      let studentHeaders = [];
+      document.querySelectorAll('#studentsSupervisionTable th').forEach((th, idx) => {
+        if(idx < 3 + globalMaxSessions || document.getElementById('currentRole').value === 'supervisor') {
+          if(!th.classList.contains('sessions-info-banner')) {
+            studentHeaders.push(th.innerText.replace('🗑️', '').trim());
+          }
+        }
+      });
+
+      let studentRowsData = [];
+      document.querySelectorAll('tr.student-main-row').forEach(mainRow => {
+        if(mainRow.style.display !== 'none') {
+          const sId = mainRow.getAttribute('data-student-id');
+          const subRow = document.querySelector(`tr.student-sub-row[data-student-id="${sId}"]`);
+
+          let rowData = [];
+          const name = mainRow.querySelector('.student-name') ? mainRow.querySelector('.student-name').value : mainRow.cells[0].innerText;
+          const teacherSelect = mainRow.querySelector('.teacher-assign-select');
+          const teacherName = teacherSelect ? teacherSelect.options[teacherSelect.selectedIndex].text : '';
+          const target = mainRow.querySelector('.target-sessions-input') ? mainRow.querySelector('.target-sessions-input').value : '';
+          
+          rowData.push(name, teacherName, target);
+
+          if(subRow) {
+            const sessionCells = subRow.querySelectorAll('td.dynamic-session-td');
+            sessionCells.forEach(cell => {
+              const dateVal = cell.querySelector('.session-date-item') ? cell.querySelector('.session-date-item').value : '';
+              const sel = cell.querySelector('.session-status-item');
+              const statusText = sel ? sel.options[sel.selectedIndex].text : '';
+              rowData.push(`${dateVal ? dateVal + ': ' : ''}${statusText}`);
+            });
+          }
+
+          const level = mainRow.querySelector('.student-level') ? mainRow.querySelector('.student-level').value : '';
+          const notes = mainRow.querySelector('.student-notes') ? mainRow.querySelector('.student-notes').value : '';
+          const reward = mainRow.querySelector('.student-reward') ? mainRow.querySelector('.student-reward').value : '';
+          
+          rowData.push(level, notes, reward);
+
+          if(document.getElementById('currentRole').value === 'supervisor') {
+            const email = mainRow.querySelector('.student-email') ? mainRow.querySelector('.student-email').value : '';
+            const paymentSelect = mainRow.querySelector('.student-payment');
+            const payment = paymentSelect ? paymentSelect.options[paymentSelect.selectedIndex].text : '';
+            rowData.push(email, payment);
+          }
+
+          studentRowsData.push(rowData);
+        }
+      });
+
+      const wsStudentsData = [studentHeaders, ...studentRowsData];
+      const wsStudents = XLSX.utils.aoa_to_sheet(wsStudentsData);
+      XLSX.utils.book_append_sheet(wb, wsStudents, "متابعة الطلاب");
+
+      let teacherHeaders = [];
+      document.querySelectorAll('#teachersTable th').forEach(th => teacherHeaders.push(th.innerText.trim()));
+
+      let teacherRowsData = [];
+      document.querySelectorAll('#teachersTable tbody tr').forEach(row => {
+        let tName = row.cells[0].innerText.trim();
+        let tContact = row.cells[1].innerText.replace(/\n/g, ' - ').trim();
+        let tRate = row.querySelector('.teacher-rate') ? row.querySelector('.teacher-rate').value : '';
+        let tCount = row.querySelector('.teacher-completed-count') ? row.querySelector('.teacher-completed-count').innerText : '';
+        let tTotal = row.querySelector('.teacher-total') ? row.querySelector('.teacher-total').innerText : '';
+        teacherRowsData.push([tName, tContact, tRate, tCount, tTotal]);
+      });
+
+      const wsTeachersData = [teacherHeaders, ...teacherRowsData];
+      const wsTeachers = XLSX.utils.aoa_to_sheet(wsTeachersData);
+      XLSX.utils.book_append_sheet(wb, wsTeachers, "شؤون المعلمين والرواتب");
+
+      XLSX.writeFile(wb, "Madad_AI_Monthly_Reports.xlsx");
+      alert("✅ تم تصدير وتحميل ملف الإكسل بنجاح!");
+    } catch(e) {
+      console.error(e);
+      alert("❌ حدث خطأ أثناء تصدير الملف.");
+    }
+  }
+
+  function copyFullCode() {
+    const codeContent = document.documentElement.outerHTML;
+    navigator.clipboard.writeText(codeContent).then(() => {
+      alert("📋 تم نسخ كود الصفحة بالكامل بنجاح إلى الحافظة!");
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+      alert("❌ فشل نسخ الكود.");
+    });
+  }
+
+  async function sendRealAutomatedMessage(name, contact, type, customTest) {
+    if(!contact || contact.includes('email.com')) {
+      contact = prompt(`أدخل البريد الإلكتروني لـ (${name}):`, "your_email@gmail.com");
+      if(!contact) return;
+    }
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/send-automated-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recipient_name: name, recipient_contact: contact, message_type: type, custom_message: customTest })
+      });
+      const data = await res.json();
+      if(data.status === 'success') alert(`✅ تم إرسال الرسالة بنجاح إلى (${contact})`);
+    } catch(err) {
+      alert("❌ خطأ في الاتصال بالخادم المحلي.");
+    }
+  }
+
+  function sendPreClassAlert(name, email) {
+    sendRealAutomatedMessage(name, email, 'pre_class', `السلام عليكم 🌸\nنذكركم بأن حصتكم عبر منصة مداد ستنطلق خلال 5 دقائق ⏳`);
+  }
+  function sendRewardNotification(name, email) {
+    sendRealAutomatedMessage(name, email, 'reward', `أهلاً بالمتألق ${name} 🌟\nيسرنا منحك نجمة التميز من منصة مداد! 💪✨`);
+  }
+  function sendBillingAlert(name, email) {
+    sendRealAutomatedMessage(name, email, 'billing', `السلام عليكم 🌸\nأتم الطالب ${name} حصصه الشهرية. نرجو تجديد الاشتراك وتأكيد الدفع 🌟`);
+  }
+
+  window.onload = function() {
+    rebuildTeacherSelects();
+    switchRole('teacher1', document.querySelectorAll('.role-btn')[0]);
+    calculateMonthlyPayroll();
+  };
+
+  async function generateAndEmailReport() {
+    const btn = document.getElementById('analyzeBtn'), loading = document.getElementById('loading'), output = document.getElementById('output');
+    btn.disabled = true; loading.style.display = 'block'; output.style.display = 'none';
+    
+    TheTeacherName = document.getElementById('teacherSelect').value;
+    const teacherEmail = document.getElementById('teacherEmail').value;
+    const notes = document.getElementById('positiveNotes').value;
+
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/analyze-students', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ class_name: 'تقرير إشرافي', raw_notes: `معلم: ${TheTeacherName}, ملاحظات: ${notes}` })
+      });
+      const data = await res.json();
+      loading.style.display = 'none'; btn.disabled = false;
+      if(data.status === 'success') {
+        output.innerHTML = `✅ تم إرسال التقرير بنجاح إلى البريد (${teacherEmail}):\n\n` + data.diagnostic_page || data.diagnostic_report;
+        output.style.display = 'block';
+      }
+    }	catch(e) {
+      loading.style.display = 'none'; btn.disabled = false;
+      alert("خطأ في الاتصال بالخادم.");
+    }
+  }
+</script>
+</body>
+</html>
