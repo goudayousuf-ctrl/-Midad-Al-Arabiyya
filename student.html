@@ -25,12 +25,10 @@
   
   .output{ margin-top:25px; padding:25px; background:#FAF9F6; border:1px solid #E2DDD5; border-radius:12px; display:none; line-height:2.2; white-space:pre-wrap; }
 
-  /* تبويبات الأقسام الرئيسية (AI vs معلمو المؤسسة) */
   .main-support-tabs { display: flex; gap: 15px; margin-bottom: 30px; border-bottom: 3px solid #C5A059; padding-bottom: 15px; }
   .main-tab-btn { background: #FAF9F6; border: 1px solid #D6D0C4; color: #5A605C; padding: 14px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 16px; flex: 1; text-align: center; }
   .main-tab-btn.active { background: #C5A059; color: #FFF; border-color: #C5A059; }
 
-  /* تبويبات أجزاء الذكاء الاصطناعي الفرعية */
   .tabs-container { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; border-bottom: 2px solid #E2DDD5; padding-bottom: 15px; }
   .tab-btn { background: #FAF9F6; border: 1px solid #D6D0C4; color: #5A605C; padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 14px; }
   .tab-btn.active { background: #007A78; color: #FFF; border-color: #007A78; }
@@ -67,13 +65,11 @@
     <h2>🎓 بوابة الطالب الذكية (الدعم الشامل)</h2>
     <p style="color: #6B6759; margin-bottom: 25px;">اختر بين الدعم الفوري القائم على الذكاء الاصطناعي أو التواصل المباشر مع معلمي المؤسسة المشتركة.</p>
 
-    <!-- الأزرار الرئيسية للفصل بين نوعي الدعم -->
     <div class="main-support-tabs">
       <button class="main-tab-btn active" onclick="switchMainSupport('ai', event)">🤖 أولاً: الدعم القائم على الذكاء الاصطناعي</button>
       <button class="main-tab-btn" onclick="switchMainSupport('human', event)">👨‍🏫 ثانياً: دعم معلمي المؤسسة المشتركة</button>
     </div>
 
-    <!-- القسم الأول: الدعم القائم على الذكاء الاصطناعي -->
     <div id="support-ai-section" class="section-panel active">
       
       <div class="tabs-container">
@@ -83,7 +79,6 @@
         <button class="tab-btn" onclick="switchTab('skills', event)">🌐 المهارات اللغوية (متدرج)</button>
       </div>
 
-      <!-- 1. الواجبات -->
       <div id="tab-homework" class="section-panel active">
         <h3 style="font-family:'Rakkas',serif; color:#007A78; font-size:22px; margin-bottom:15px;">المساعدة التوجيهية في حل الواجبات</h3>
         <div class="field">
@@ -95,7 +90,6 @@
         <div id="output-homework" class="output"></div>
       </div>
 
-      <!-- 2. التصحيح -->
       <div id="tab-correction" class="section-panel">
         <h3 style="font-family:'Rakkas',serif; color:#007A78; font-size:22px; margin-bottom:15px;">تصحيح الأخطاء وتحسين النصوص</h3>
         <div class="field">
@@ -107,7 +101,6 @@
         <div id="output-correction" class="output"></div>
       </div>
 
-      <!-- 3. الشرح -->
       <div id="tab-explain" class="section-panel">
         <h3 style="font-family:'Rakkas',serif; color:#007A78; font-size:22px; margin-bottom:15px;">اشرح لي درسًا أو قاعدة</h3>
         <div class="field">
@@ -119,7 +112,6 @@
         <div id="output-explain" class="output"></div>
       </div>
 
-      <!-- 4. المهارات -->
       <div id="tab-skills" class="section-panel">
         <h3 style="font-family:'Rakkas',serif; color:#007A78; font-size:22px; margin-bottom:15px;">ورشة التدريب المتدرج للمهارات اللغوية الأربع</h3>
         <p style="color:#6B6759; font-size:14px; margin-bottom:20px;">اختر المهارة المطلوبة لتطبيق الاستراتيجية العلمية المعتمدة لتطويرها:</p>
@@ -173,7 +165,6 @@
 
     </div>
 
-    <!-- القسم الثاني: دعم معلمي المؤسسة المشتركة -->
     <div id="support-human-section" class="section-panel">
       <h3 style="font-family:'Rakkas',serif; color:#C5A059; font-size:24px; margin-bottom:15px;">👨‍🏫 منصة التواصل مع معلمي المؤسسة المشتركة</h3>
       <p style="color: #6B6759; font-size: 14px; margin-bottom: 25px;">إذا واجهتك مسألة تحتاج إلى تدخل مباشر من معلمي المؤسسة، قم بإرسال استفسارك وسيتم الرد عليك في أقرب وقت.</p>
@@ -260,7 +251,8 @@ async function processStudentRequest(type) {
     outputEl.style.display = 'none';
 
     try {
-        const res = await fetch('/api/generate-from-source', {
+        const apiUrl = window.location.origin + '/api/generate-from-source';
+        const res = await fetch(apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -296,7 +288,8 @@ async function generateGraduatedSkill() {
     else if(skill === 'كتابة') scientificStrategy = "نموذج الكتابة المتدرجة (عصف ذهني، مسودة، مراجعة).";
 
     try {
-        const res = await fetch('/api/generate-from-source', {
+        const apiUrl = window.location.origin + '/api/generate-from-source';
+        const res = await fetch(apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
