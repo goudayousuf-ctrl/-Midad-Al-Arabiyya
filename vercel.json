@@ -12,15 +12,8 @@
       "dest": "app.py"
     },
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*\\.html)",
+      "src": "/(.*)",
       "dest": "/$1"
-    },
-    {
-      "src": "/",
-      "dest": "/index.html"
     }
   ]
 }
