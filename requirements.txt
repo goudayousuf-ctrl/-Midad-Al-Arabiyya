@@ -1,6 +1,7 @@
-flask
 fastapi
 uvicorn
-requests
+pydantic
+google-genai
 pandas
 openpyxl
+requests
