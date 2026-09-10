@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قسم القرآن الكريم وتجويده المتدرج | منصة مداد AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Rakkas&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  body{ background:#F7F5F0; color:#2C302E; font-family:'IBM Plex Sans Arabic', sans-serif; padding:20px; margin:0; line-height:1.8; }
+  .wrapper{ max-width:1300px; margin:0 auto; }
+  
+  nav { background:#FFFFFF; padding:15px 20px; border-bottom:2px solid #E2DDD5; display:flex; justify-content:center; gap:8px; margin-bottom:30px; border-radius:16px; box-shadow:0 6px 25px rgba(0,0,0,0.04); flex-wrap:wrap; position:sticky; top:15px; z-index:100; }
+  nav a { display:flex; align-items:center; gap:6px; text-decoration:none; color:#5A605C; font-weight:600; font-size:13px; padding:8px 14px; border-radius:10px; transition:0.3s; background:#FAF9F6; border:1px solid #EAE5D9; }
+  nav a:hover { background:#F4EFE6; transform: translateY(-1px); border-color:#C5A059; color:#C5A059; }
+  nav a.active { background:#F4EFE6; border-color:#C5A059; color:#C5A059; font-weight:700; }
+
+  .card{ background:#FFFFFF; padding:35px; border-radius:18px; border:1px solid #E2DDD5; box-shadow:0 6px 25px rgba(0,0,0,0.03); margin-bottom:30px; }
+  h2, h3{ font-family:'Rakkas',serif; color:#C5A059; margin-top:0; }
+  h2{ font-size:28px; margin-bottom:15px; }
+  h3{ font-size:22px; margin-bottom:15px; border-bottom:1px dashed #D6D0C4; padding-bottom:8px; }
+
+  .grid-2 { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .field{ margin-bottom:20px; }
+  label{ display:block; margin-bottom:8px; color:#5A605C; font-size:14px; font-weight:600; }
+  input, textarea, select{ width:100%; background:#FAF9F6; border:1px solid #D6D0C4; color:#2C302E; padding:12px 14px; border-radius:10px; font-family:inherit; font-size:14.5px; box-sizing:border-box; transition:0.3s; }
+  input:focus, textarea:focus, select:focus{ outline:none; border-color:#C5A059; background:#FFF; box-shadow:0 0 0 4px rgba(197,160,89,0.1); }
+  
+  .quran-table { width:100%; border-collapse:collapse; margin-top:15px; font-size:13.5px; text-align:right; }
+  .quran-table th, .quran-table td { border:1px solid #E2DDD5; padding:10px 12px; vertical-align:middle; }
+  .quran-table th { background:#FAF9F6; color:#5A605C; text-align:center; }
+  .quran-table td.text-center { text-align:center; }
+
+  .editable-cell { background: transparent; border: 1px dashed transparent; padding: 6px; border-radius: 6px; width: 100%; font-family: inherit; font-size: 13.5px; color: #2C302E; transition: 0.2s; box-sizing: border-box; }
+  .editable-cell:hover { background: #FAF9F6; border-color: #D6D0C4; }
+  .editable-cell:focus { background: #FFF; border-color: #C5A059; outline: none; box-shadow: 0 0 0 2px rgba(197,160,89,0.15); }
+
+  .role-tabs { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+  .role-btn { background:#FAF9F6; border:2px solid #D6D0C4; color:#5A605C; padding:10px 20px; border-radius:12px; font-weight:700; cursor:pointer; font-size:14px; transition:0.3s; }
+  .role-btn.active-role { background:#C5A059; color:#FFF; border-color:#C5A059; box-shadow:0 4px 15px rgba(197,160,89,0.3); }
+
+  .status-select { padding: 6px 10px; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; border: 1px solid #D6D0C4; }
+  .status-done { background: #E8F8F5; color: #27AE60; border-color: #A2D9CE; }
+  .status-review { background: #EBF5FB; color: #2980B9; border-color: #AED6F1; }
+  .status-pending { background: #F2F4F4; color: #7F8C8D; border-color: #D5D8DC; }
+
+  .progress-container { background: #E2DDD5; border-radius: 10px; height: 20px; width: 100%; margin: 10px 0; overflow: hidden; position: relative; }
+  .progress-bar { background: linear-gradient(90deg, #C5A059, #27AE60); height: 100%; width: 0%; transition: width 0.4s ease; text-align: center; color: #FFF; font-size: 11px; font-weight: 700; line-height: 20px; }
+
+  button.submit-btn{ background:#C5A059; color:#FFF; padding:14px 30px; border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:15px; transition:0.3s; box-shadow:0 4px 15px rgba(197,160,89,0.25); display:inline-flex; align-items:center; gap:8px; }
+  button.submit-btn:hover{ background:#B38F4E; transform: translateY(-1px); }
+  
+  .motivation-box { background: #FAF6EE; border: 1px solid #D6D0C4; padding: 20px; border-radius: 12px; margin-bottom: 25px; }
+  .output{ margin-top:25px; padding:25px; background:#FAF9F6; border:1px solid #E2DDD5; border-radius:12px; white-space:pre-wrap; display:none; line-height:2; font-size:14.5px; color:#1F2321; }
+  .action-icon-btn { background:none; border:none; cursor:pointer; font-size:16px; margin:0 2px; }
+  .action-icon-btn:hover { transform:scale(1.2); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <!-- شريط التنقل الشامل -->
+  <nav>
+    <a href="index.html"><span>🏠</span> الرئيسية</a>
+    <a href="workspace.html"><span>🎯</span> الدروس</a>
+    <a href="curriculum.html"><span>📚</span> المناهج</a>
+    <a href="generator.html"><span>⚡</span> مختبر التوليد</a>
+    <a href="exercises.html"><span>📝</span> التقويم</a>
+    <a href="review.html"><span>✍️</span> المراجعة</a>
+    <a href="ocr.html"><span>🖼️</span> تحويل صورة</a>
+    <a href="vocabulary.html"><span>📖</span> المفردات</a>
+    <a href="grammar.html"><span>📐</span> القواعد</a>
+    <a href="sentences.html"><span>💬</span> الجمل</a>
+    <a href="student.html"><span>🎓</span> بوابة الطالب</a>
+    <a href="quran.html" class="active"><span>📖</span> قسم القرآن</a>
+    <a href="memory.html"><span>🧠</span> الذاكرة</a>
+    <a href="analysis.html"><span>📊</span> التحليل</a>
+    <a href="supervisor.html"><span>👔</span> الإشراف</a>
+  </nav>
+
+  <!-- بطاقة التحفيز -->
+  <div class="card">
+    <h2>📖 قسم القرآن الكريم وتجويده المتدرج</h2>
+    <p style="color:#686D68; font-size:14px; margin-bottom:20px;">منظومة آلية متكاملة لحفظ سور القرآن الـ 114 وفق خطط متدرجة[cite: 3].</p>
+    
+    <div class="motivation-box">
+      <h4 style="color:#C5A059; margin-top:0; font-size:17px;">✨ إشراقة إيمانية وحوافز أهل القرآن</h4>
+      <p id="dailyMotivation" style="font-size:14.5px; color:#2C302E; margin-bottom:0; font-weight:600;"></p>
+    </div>
+  </div>
+
+  <!-- إدارة الصلاحيات والفصل بين المعلمين والإشراف -->
+  <div class="card" style="border: 2px solid #C5A059; background: #FFF;">
+    <h2>🔐 إدارة صلاحيات الحلقات (المعلمون والإشراف)</h2>
+    <p style="color:#686D68; font-size:14px; margin-bottom:15px;">اختر دورك لتصفح حلقات المعلمين الخاصة أو لوحة الإشراف الشاملة:</p>
+    
+    <div class="role-tabs" id="roleTabsContainer">
+      <!-- يتم توليد الأزرار برمجياً -->
+    </div>
+    <button type="button" class="submit-btn supervisor-only-field" style="padding:8px 16px; font-size:13px; background:#2980B9; margin-top:10px; display:none;" onclick="addNewTeacherModal()"><span>➕</span> إضافة معلم جديد</button>
+  </div>
+
+  <!-- 1. المعلم مع طلابه (إدارة الحلقات) -->
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
+      <div>
+        <h3 id="teachersStudentsTitle">👨‍🏫 إدارة المعلمين وطلاب حلقتهم</h3>
+        <p style="font-size:13px; color:#686D68; margin:0;" id="teachersStudentsDesc">استعراض المعلم والطلاب التابعين لحلقته:</p>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="submit-btn supervisor-only-field" style="padding:8px 16px; font-size:13px; display:none;" onclick="addNewStudent()"><span>➕</span> إضافة طالب جديد</button>
+      </div>
+    </div>
+    
+    <div style="overflow-x:auto;">
+      <table class="quran-table" id="teachersStudentsTable">
+        <thead>
+          <tr>
+            <th>اسم المعلم المسؤول</th>
+            <th>اسم الطالب الحافظ</th>
+            <th>البريد الإلكتروني</th>
+            <th class="supervisor-only-field" style="display:none;">إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="teachersStudentsBody">
+          <!-- بيانات المعلمين والطلاب -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 2. الطلاب بشكل مستقل (الحفظ الجديد، أين توقف في المراجعة، وتقييماتها، نسبة الإنجاز المستقلة، وجدول الـ 114 سورة) -->
+  <div class="card" style="background: #FAF9F6;">
+    <h3>🎓 البوابة المستقلة للطلاب (الملف الفردي التام لكل طالب)</h3>
+    <p style="font-size:13px; color:#686D68; margin-bottom:20px;">لكل طالب ملفه المستقل الذي يعرض حفظه الجديد، أين توقف في المراجعة، تقديراته، نسبة إنجازه الفردية، وجدوله الخاص للـ 114 سورة:</p>
+
+    <div id="independentStudentContainer">
+      <!-- جداول الطلاب المستقلة -->
+    </div>
+  </div>
+
+  <!-- 5. المرور الإشرافي (مرتبط بالإشراف العام حصرياً ولا يظهر مطلقاً في ملف المعلم) -->
+  <div class="card supervisor-only-section" id="supervisorEvaluationSection" style="display:none; border: 2px solid #C5A059; background: #FFF;">
+    <h3>👔 تقرير المرور الإشرافي (للمشرف العام حصرياً)</h3>
+    <p style="font-size:14px; color:#686D68; margin-bottom:20px;">تقييم أداء المعلمين وحلقات التحفيظ وإرسال التوصيات:</p>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>المعلم المستهدف بالإشراف</label>
+        <select id="supervisorTeacherSelect">
+          <!-- خيارات المعلمين -->
+        </select>
+      </div>
+      <div class="field">
+        <label>بريد المعلم</label>
+        <input id="quranEmail" type="email" value="teacher@madad-ai.com">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>ملاحظات التجويد، ضبط الحلقة، والتقييم الإشرافي</label>
+      <textarea id="tajweedNotes" rows="3" placeholder="سجل تقييم المشرف العام على الحلقة..."></textarea>
+    </div>
+
+    <button id="quranBtn" class="submit-btn" onclick="submitQuranReport()">
+      <span>🚀</span> اعتماد التقرير الإشرافي وإرساله لبريد المعلم
+    </button>
+    
+    <div id="quranLoading" style="display:none; color:#C5A059; margin-top:15px; font-weight:600;">جاري إرسال التقرير الإشرافي...</div>
+    <div id="quranOutput" class="output"></div>
+  </div>
+</div>
+
+<script>
+  const motivations = [
+    "«خَيْرُكُمْ مَنْ تَعَلَّمَ القُرْآنَ وَعَلَّمَهُ» (رواه البخاري). واصل مسيرتك المباركة!",
+    "«اقْرَءُوا القُرْآنَ فإنَّه يأتي يوم القيامة شفيعاً لأصحابه» (رواه مسلم).",
+    "«الْمَاهِرُ بِالْقُرْآنِ مَعَ السَّفَرَةِ الْكِرَامِ الْبَرَرَةِ» (متفق عليه)."
+  ];
+
+  const defaultSurahs = [
+    {n:1, name:"الفاتحة", a:7, t:"مكية", s:"done"}, {n:2, name:"البقرة", a:286, t:"مدنية", s:"review"},
+    {n:3, name:"آل عمران", a:200, t:"مدنية", s:"pending"}, {n:4, name:"النساء", a:176, t:"مدنية", s:"pending"},
+    {n:5, name:"المائدة", a:120, t:"مدنية", s:"pending"}, {n:6, name:"الأنعام", a:165, t:"مكية", s:"pending"},
+    {n:7, name:"الأعراف", a:206, t:"مكية", s:"pending"}, {n:8, name:"الأنفال", a:75, t:"مدنية", s:"pending"},
+    {n:9, name:"التوبة", a:129, t:"مدنية", s:"pending"}, {n:10, name:"يونس", a:109, t:"مكية", s:"pending"},
+    {n:11, name:"هود", a:123, t:"مكية", s:"pending"}, {n:12, name:"يوسف", a:111, t:"مكية", s:"pending"},
+    {n:13, name:"الرعد", a:43, t:"مدنية", s:"pending"}, {n:14, name:"إبراهيم", a:52, t:"مكية", s:"pending"},
+    {n:15, name:"الحجر", a:99, t:"مكية", s:"pending"}, {n:16, name:"النحل", a:128, t:"مكية", s:"pending"},
+    {n:17, name:"الإسراء", a:111, t:"مكية", s:"pending"}, {n:18, name:"الكهف", a:110, t:"مكية", s:"pending"},
+    {n:19, name:"مريم", a:98, t:"مكية", s:"pending"}, {n:20, name:"طه", a:135, t:"مكية", s:"pending"},
+    {n:21, name:"الأنبياء", a:112, t:"مكية", s:"pending"}, {n:22, name:"الحج", a:78, t:"مدنية", s:"pending"},
+    {n:23, name:"المؤمنون", a:118, t:"مكية", s:"pending"}, {n:24, name:"النور", a:64, t:"مدنية", s:"pending"},
+    {n:25, name:"الفرقان", a:77, t:"مكية", s:"pending"}, {n:26, name:"الشعراء", a:227, t:"مكية", s:"pending"},
+    {n:27, name:"النمل", a:93, t:"مكية", s:"pending"}, {n:28, name:"القصص", a:88, t:"مكية", s:"pending"},
+    {n:29, name:"العنكبوت", a:69, t:"مكية", s:"pending"}, {n:30, name:"الروم", a:60, t:"مكية", s:"pending"},
+    {n:31, name:"لقمان", a:34, t:"مكية", s:"pending"}, {n:32, name:"السجدة", a:30, t:"مكية", s:"pending"},
+    {n:33, name:"الأحزاب", a:73, t:"مدنية", s:"pending"}, {n:34, name:"سبأ", a:54, t:"مكية", s:"pending"},
+    {n:35, name:"فاطر", a:45, t:"مكية", s:"pending"}, {n:36, name:"يس", a:83, t:"مكية", s:"review"},
+    {n:37, name:"الصافات", a:182, t:"مكية", s:"pending"}, {n:38, name:"ص", a:88, t:"مكية", s:"pending"},
+    {n:39, name:"الزمر", a:75, t:"مكية", s:"pending"}, {n:40, name:"غافر", a:85, t:"مكية", s:"pending"},
+    {n:41, name:"فصلت", a:54, t:"مكية", s:"pending"}, {n:42, name:"الشورى", a:53, t:"مكية", s:"pending"},
+    {n:43, name:"الزخرف", a:89, t:"مكية", s:"pending"}, {n:44, name:"الدخان", a:59, t:"مكية", s:"pending"},
+    {n:45, name:"الجاثية", a:37, t:"مكية", s:"pending"}, {n:46, name:"الأحقاف", a:35, t:"مكية", s:"pending"},
+    {n:47, name:"محمد", a:38, t:"مدنية", s:"pending"}, {n:48, name:"الفتح", a:29, t:"مدنية", s:"pending"},
+    {n:49, name:"الحجرات", a:18, t:"مدنية", s:"pending"}, {n:50, name:"ق", a:45, t:"مكية", s:"pending"},
+    {n:51, name:"الذاريات", a:60, t:"مكية", s:"pending"}, {n:52, name:"الطور", a:49, t:"مكية", s:"pending"},
+    {n:53, name:"النجم", a:62, t:"مكية", s:"pending"}, {n:54, name:"القمر", a:55, t:"مكية", s:"pending"},
+    {n:55, name:"الرحمن", a:78, t:"مدنية", s:"review"}, {n:56, name:"الواقعة", a:96, t:"مكية", s:"review"},
+    {n:57, name:"الحديد", a:29, t:"مدنية", s:"pending"}, {n:58, name:"المجادلة", a:22, t:"مدنية", s:"pending"},
+    {n:59, name:"الحشر", a:24, t:"مدنية", s:"pending"}, {n:60, name:"الممتحنة", a:13, t:"مدنية", s:"pending"},
+    {n:61, name:"الصف", a:14, t:"مدنية", s:"pending"}, {n:62, name:"الجمعة", a:11, t:"مدنية", s:"pending"},
+    {n:63, name:"المنافقون", a:11, t:"مدنية", s:"pending"}, {n:64, name:"التغابن", a:18, t:"مدنية", s:"pending"},
+    {n:65, name:"الطلاق", a:12, t:"مدنية", s:"pending"}, {n:66, name:"التحريم", a:12, t:"مدنية", s:"pending"},
+    {n:67, name:"الملك", a:30, t:"مكية", s:"done"}, {n:68, name:"القلم", a:52, t:"مكية", s:"pending"},
+    {n:69, name:"الحاقة", a:52, t:"مكية", s:"pending"}, {n:70, name:"المعارج", a:44, t:"مكية", s:"pending"},
+    {n:71, name:"نوح", a:28, t:"مكية", s:"pending"}, {n:72, name:"الجن", a:28, t:"مكية", s:"pending"},
+    {n:73, name:"المزمل", a:20, t:"مكية", s:"pending"}, {n:74, name:"المدثر", a:56, t:"مكية", s:"pending"},
+    {n:75, name:"القيامة", a:40, t:"مكية", s:"pending"}, {n:76, name:"الإنسان", a:31, t:"مدنية", s:"pending"},
+    {n:77, name:"المرسلات", a:50, t:"مكية", s:"pending"}, {n:78, name:"النبأ", a:40, t:"مكية", s:"done"},
+    {n:79, name:"النازعات", a:46, t:"مكية", s:"done"}, {n:80, name:"عبس", a:42, t:"مكية", s:"done"},
+    {n:81, name:"التكوير", a:29, t:"مكية", s:"pending"}, {n:82, name:"الانفطار", a:19, t:"مكية", s:"pending"},
+    {n:83, name:"المطففين", a:36, t:"مكية", s:"pending"}, {n:84, name:"الانشقاق", a:25, t:"مكية", s:"pending"},
+    {n:85, name:"البروج", a:22, t:"مكية", s:"pending"}, {n:86, name:"الطارق", a:17, t:"مكية", s:"pending"},
+    {n:87, name:"الأعلى", a:19, t:"مكية", s:"done"}, {n:88, name:"الغاشية", a:26, t:"مكية", s:"done"},
+    {n:89, name:"الفجر", a:30, t:"مكية", s:"done"}, {n:90, name:"البلد", a:20, t:"مكية", s:"done"},
+    {n:91, name:"الشمس", a:15, t:"مكية", s:"done"}, {n:92, name:"الليل", a:21, t:"مكية", s:"done"},
+    {n:93, name:"الضحى", a:11, t:"مكية", s:"done"}, {n:94, name:"الشرح", a:8, t:"مكية", s:"done"},
+    {n:95, name:"التين", a:8, t:"مكية", s:"done"}, {n:96, name:"العلق", a:19, t:"مكية", s:"done"},
+    {n:97, name:"القدر", a:5, t:"مكية", s:"done"}, {n:98, name:"البينة", a:8, t:"مدنية", s:"done"},
+    {n:99, name:"الزلزلة", a:8, t:"مدنية", s:"done"}, {n:100, name:"العاديات", a:11, t:"مكية", s:"done"},
+    {n:101, name:"القارعة", a:11, t:"مكية", s:"done"}, {n:102, name:"التكاثر", a:8, t:"مكية", s:"done"},
+    {n:103, name:"العصر", a:3, t:"مكية", s:"done"}, {n:104, name:"الهمزة", a:9, t:"مكية", s:"done"},
+    {n:105, name:"الفيل", a:5, t:"مكية", s:"done"}, {n:106, name:"قريش", a:4, t:"مكية", s:"done"},
+    {n:107, name:"الماعون", a:7, t:"مكية", s:"done"}, {n:108, name:"الكوثر", a:3, t:"مكية", s:"done"},
+    {n:109, name:"الكافرون", a:6, t:"مكية", s:"done"}, {n:110, name:"النصر", a:3, t:"مدنية", s:"done"},
+    {n:111, name:"المسد", a:5, t:"مكية", s:"done"}, {n:112, name:"الإخلاص", a:4, t:"مكية", s:"done"},
+    {n:113, name:"الفلق", a:5, t:"مكية", s:"done"}, {n:114, name:"الناس", a:6, t:"مكية", s:"done"}
+  ];
+
+  let teachersList = [
+    { id: '1', name: 'الشيخ عبد الرحمن أحمد', email: 'teacher1@madad-ai.com' },
+    { id: '2', name: 'أستاذة مريم خالد', email: 'teacher2@madad-ai.com' }
+  ];
+
+  let studentsList = [
+    { 
+      id: 's1', name: 'عمر أحمد', teacherId: '1', email: 'omar.h@student-madad.com',
+      newSave: 'سورة البقرة (1-20)', newGrade: 'ممتاز',
+      reviewStop: 'توقف عند آل عمران (آية 50)', reviewGrade: 'جيد جداً',
+      surahs: JSON.parse(JSON.stringify(defaultSurahs))
+    },
+    { 
+      id: 's2', name: 'فاطمة الزهراء', teacherId: '2', email: 'fatma.z@student-madad.com',
+      newSave: 'سورة آل عمران (50-80)', newGrade: 'جيد',
+      reviewStop: 'توقف عند النساء (آية 30)', reviewGrade: 'مقبول',
+      surahs: JSON.parse(JSON.stringify(defaultSurahs))
+    }
+  ];
+
+  function renderRoleTabs() {
+    const container = document.getElementById('roleTabsContainer');
+    if(!container) return;
+    let html = '';
+    teachersList.forEach((t, idx) => {
+      html += `<button type="button" class="role-btn ${idx === 0 ? 'active-role' : ''}" onclick="switchRole('teacher${t.id}', this)">👨‍🏫 المعلم: ${t.name}</button>`;
+    });
+    html += `<button type="button" class="role-btn" onclick="switchRole('supervisor', this)">👔 المشرف العام (إدارة شاملة + إضافة معلمين وطلاب + التقرير الإشرافي)</button>`;
+    container.innerHTML = html;
+
+    const supSelect = document.getElementById('supervisorTeacherSelect');
+    if(supSelect) {
+      supSelect.innerHTML = teachersList.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+    }
+  }
+
+  function renderTeachersStudentsTable() {
+    const tbody = document.getElementById('teachersStudentsBody');
+    if(!tbody) return;
+    tbody.innerHTML = '';
+
+    studentsList.forEach(student => {
+      let tr = document.createElement('tr');
+      tr.setAttribute('data-teacher-id', student.teacherId);
+      tr.innerHTML = `
+        <td>
+          <select class="editable-cell teacher-select-dropdown" onchange="updateStudentTeacherAssignment('${student.id}', this.value)" style="font-weight:700;">
+            ${teachersList.map(t => `<option value="${t.id}" ${t.id === student.teacherId ? 'selected' : ''}>${t.name}</option>`).join('')}
+          </select>
+        </td>
+        <td><input type="text" class="editable-cell" value="${student.name}" style="font-weight:700;" onchange="updateStudentField('${student.id}', 'name', this.value); renderAll();"></td>
+        <td><input type="email" class="editable-cell" value="${student.email}" onchange="updateStudentField('${student.id}', 'email', this.value)"></td>
+        <td class="text-center supervisor-only-field" style="display:none;"><button class="action-icon-btn" onclick="deleteStudent('${student.id}')">🗑️</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderIndependentStudentTables() {
+    const container = document.getElementById('independentStudentContainer');
+    container.innerHTML = '';
+
+    studentsList.forEach(student => {
+      let totalAyat = 6236;
+      let studentAyat = 0;
+      let studentDoneSurahs = 0;
+
+      student.surahs.forEach(s => {
+        if(s.s === 'done') {
+          studentAyat += s.a;
+          studentDoneSurahs++;
+        } else if(s.s === 'review') {
+          studentAyat += s.a * 0.5;
+        }
+      });
+
+      let studentPct = ((studentAyat / totalAyat) * 100).toFixed(1);
+      let studentRemainingSurahs = 114 - studentDoneSurahs;
+
+      let card = document.createElement('div');
+      card.className = 'card student-card';
+      card.style.cssText = 'background:#FFF; border:2px solid #C5A059; margin-bottom:25px;';
+      card.setAttribute('data-teacher-id', student.teacherId);
+      
+      let surahsRowsHTML = '';
+      student.surahs.forEach((surah, sIdx) => {
+        surahsRowsHTML += `
+          <tr style="border-bottom: 1px solid #E2DDD5;">
+            <td class="text-center">${surah.n}</td>
+            <td><b>${surah.name}</b></td>
+            <td class="text-center">${surah.a}</td>
+            <td class="text-center">${surah.t}</td>
+            <td class="text-center">
+              <select class="status-select ${surah.s === 'done' ? 'status-done' : (surah.s === 'review' ? 'status-review' : 'status-pending')}" onchange="updateStudentSurahStatus('${student.id}', ${sIdx}, this)">
+                <option value="done" ${surah.s === 'done' ? 'selected' : ''}>■ متقن (100%)</option>
+                <option value="review" ${surah.s === 'review' ? 'selected' : ''}>■ مراجعة (50%)</option>
+                <option value="pending" ${surah.s === 'pending' ? 'selected' : ''}>■ انتظار (0%)</option>
+              </select>
+            </td>
+          </tr>
+        `;
+      });
+
+      card.innerHTML = `
+        <h3 style="color:#C5A059; margin-top:0; font-size:20px; border-bottom:2px solid #C5A059; padding-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+          <span>👤 ملف الطالب المستقل: ${student.name}</span>
+        </h3>
+
+        <!-- نسبة الإنجاز الخاصة بكل طالب بشكل مستقل -->
+        <div style="background:#FAF9F6; padding:15px; border-radius:10px; border:1px solid #E2DDD5; margin-bottom:20px;">
+          <h4 style="margin:0 0 8px 0; color:#5A605C; font-size:15px;">📊 مؤشر إنجاز الطالب الفردي</h4>
+          <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13px; color:#2C302E; flex-wrap:wrap; gap:10px; margin-bottom:6px;">
+            <span>السور المحفوظة: ${studentDoneSurahs} من 114 سورة</span>
+            <span style="color:#C5221F;">السور المتبقية: ${studentRemainingSurahs} سورة</span>
+            <span style="color:#C5A059;">نسبة الإنجاز: ${studentPct}%</span>
+          </div>
+          <div style="font-size:12px; color:#686D68; margin-bottom:4px;">المحفوظ تقديراً: ${Math.round(studentAyat)} آية من 6236 آية</div>
+          <div class="progress-container">
+            <div class="progress-bar" style="width: ${studentPct}%;">${studentPct}%</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:20px;">
+          <div style="background:#FAF9F6; padding:15px; border-radius:10px; border:1px solid #E2DDD5;">
+            <label style="color:#C5A059; font-weight:700;">📌 الحفظ الجديد (ما يحفظه الآن):</label>
+            <input type="text" class="editable-cell" value="${student.newSave}" style="background:#FFF; margin-bottom:10px;" onchange="updateStudentField('${student.id}', 'newSave', this.value)">
+            <label>تقييم الحفظ الجديد:</label>
+            <select class="editable-cell" style="background:#FFF; font-weight:700;" onchange="updateStudentField('${student.id}', 'newGrade', this.value)">
+              <option value="ممتاز" ${student.newGrade === 'ممتاز' ? 'selected' : ''}>🌟 ممتاز</option>
+              <option value="جيد جداً" ${student.newGrade === 'جيد جداً' ? 'selected' : ''}>⭐ جيد جداً</option>
+              <option value="جيد" ${student.newGrade === 'جيد' ? 'selected' : ''}>👍 جيد</option>
+              <option value="مقبول" ${student.newGrade === 'مقبول' ? 'selected' : ''}>📝 مقبول</option>
+              <option value="يعاد" ${student.newGrade === 'يعاد' ? 'selected' : ''}>🔄 يعاد</option>
+            </select>
+          </div>
+          <div style="background:#FAF9F6; padding:15px; border-radius:10px; border:1px solid #E2DDD5;">
+            <label style="color:#2980B9; font-weight:700;">🔄 أين توقف في المراجعة؟</label>
+            <input type="text" class="editable-cell" value="${student.reviewStop}" style="background:#FFF; margin-bottom:10px;" onchange="updateStudentField('${student.id}', 'reviewStop', this.value)">
+            <label>تقييم المراجعة:</label>
+            <select class="editable-cell" style="background:#FFF; font-weight:700;" onchange="updateStudentField('${student.id}', 'reviewGrade', this.value)">
+              <option value="ممتاز" ${student.reviewGrade === 'ممتاز' ? 'selected' : ''}>🌟 ممتاز</option>
+              <option value="جيد جداً" ${student.reviewGrade === 'جيد جداً' ? 'selected' : ''}>⭐ جيد جداً</option>
+              <option value="جيد" ${student.reviewGrade === 'جيد' ? 'selected' : ''}>👍 جيد</option>
+              <option value="مقبول" ${student.reviewGrade === 'مقبول' ? 'selected' : ''}>📝 مقبول</option>
+              <option value="يعاد" ${student.reviewGrade === 'يعاد' ? 'selected' : ''}>🔄 يعاد</option>
+            </select>
+          </div>
+        </div>
+
+        <h4 style="color:#5A605C; margin-bottom:5px;">📚 جدول الفهرس الخاص بـ (${student.name}) - الـ 114 سورة:</h4>
+        <div style="overflow-x:auto; max-height:350px; overflow-y:auto; border:1px solid #E2DDD5; border-radius:10px;">
+          <table class="quran-table" style="margin-top:0;">
+            <thead>
+              <tr>
+                <th style="width:10%;">رقم</th>
+                <th style="width:30%;">اسم السورة</th>
+                <th style="width:15%;">الآيات</th>
+                <th style="width:20%;">النوع</th>
+                <th style="width:25%;">حالة التقدم الفردي</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${surahsRowsHTML}
+            </tbody>
+          </table>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function updateStudentField(id, field, val) {
+    const st = studentsList.find(s => s.id === id);
+    if(st) st[field] = val;
+  }
+
+  function updateStudentTeacherAssignment(studentId, newTeacherId) {
+    const st = studentsList.find(s => s.id === studentId);
+    if(st) {
+      st.teacherId = newTeacherId;
+      renderAll();
+    }
+  }
+
+  function updateStudentSurahStatus(studentId, surahIndex, select) {
+    const st = studentsList.find(s => s.id === studentId);
+    if(st) {
+      st.surahs[surahIndex].s = select.value;
+      select.className = `status-select ${select.value === 'done' ? 'status-done' : (select.value === 'review' ? 'status-review' : 'status-pending')}`;
+      renderIndependentStudentTables();
+    }
+  }
+
+  function renderAll() {
+    renderRoleTabs();
+    renderTeachersStudentsTable();
+    renderIndependentStudentTables();
+  }
+
+  window.onload = function() {
+    document.getElementById('dailyMotivation').textContent = motivations[Math.floor(Math.random() * motivations.length)];
+    renderAll();
+    switchRole('teacher1', document.querySelectorAll('.role-btn')[0]);
+  };
+
+  function switchRole(role, btn) {
+    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active-role'));
+    if(btn) btn.classList.add('active-role');
+
+    const supSection = document.getElementById('supervisorEvaluationSection');
+    const supFields = document.querySelectorAll('.supervisor-only-field');
+    const rows = document.querySelectorAll('#teachersStudentsBody tr');
+    const studentCards = document.querySelectorAll('#independentStudentContainer .student-card');
+    const title = document.getElementById('teachersStudentsTitle');
+
+    if(role === 'supervisor') {
+      supSection.style.display = 'block';
+      supFields.forEach(el => el.style.display = '');
+      title.innerText = '👨‍🏫 إدارة المعلمين وطلاب الحلقات (الإشراف الشامل)';
+      rows.forEach(r => r.style.display = '');
+      studentCards.forEach(c => c.style.display = 'block');
+    } else {
+      supSection.style.display = 'none'; // مخفي تماماً في ملف المعلم
+      supFields.forEach(el => el.style.display = 'none');
+      const teacherId = role.replace('teacher', '');
+      const tObj = teachersList.find(t => t.id === teacherId);
+      title.innerText = tObj ? `👨‍🏫 حلقة المعلم: ${tObj.name}` : '👨‍🏫 حلقة المعلم';
+      
+      rows.forEach(r => {
+        if(r.getAttribute('data-teacher-id') === teacherId) {
+          r.style.display = '';
+        } else {
+          r.style.display = 'none';
+        }
+      });
+
+      studentCards.forEach(c => {
+        if(c.getAttribute('data-teacher-id') === teacherId) {
+          c.style.display = 'block';
+        } else {
+          c.style.display = 'none';
+        }
+      });
+    }
+  }
+
+  function addNewTeacherModal() {
+    const name = prompt("أدخل اسم المعلم الجديد:");
+    if(!name) return;
+    const email = prompt("أدخل البريد الإلكتروني للمعلم الجديد:", "teacher@madad-ai.com");
+    const newId = (teachersList.length + 1).toString();
+    
+    teachersList.push({ id: newId, name, email });
+    renderAll();
+    alert(`✨ تم إضافة المعلم (${name}) بنجاح.`);
+  }
+
+  function addNewStudent() {
+    const name = prompt("أدخل اسم الطالب الجديد:");
+    if(!name) return;
+    const email = prompt("أدخل البريد الإلكتروني للطالب:", "student@madad-ai.com");
+    const newId = 's' + (studentsList.length + 1);
+
+    studentsList.push({
+      id: newId,
+      name: name,
+      teacherId: teachersList[0] ? teachersList[0].id : '1',
+      email: email,
+      newSave: 'سورة الفاتحة',
+      newGrade: 'ممتاز',
+      reviewStop: 'البداية',
+      reviewGrade: 'ممتاز',
+      surahs: JSON.parse(JSON.stringify(defaultSurahs))
+    });
+
+    renderAll();
+    alert(`✨ تم إضافة الطالب (${name}) بنجاح وتخصيص ملفه المستقل.`);
+  }
+
+  function deleteStudent(id) {
+    if(confirm("هل أنت متأكد من حذف هذا الطالب؟")) {
+      studentsList = studentsList.filter(s => s.id !== id);
+      renderAll();
+    }
+  }
+
+  async function submitQuranReport() {
+    const btn = document.getElementById('quranBtn'), loading = document.getElementById('quranLoading'), output = document.getElementById('quranOutput');
+    btn.disabled = true; loading.style.display = 'block'; output.style.display = 'none';
+    
+    setTimeout(() => {
+      loading.style.display = 'none';
+      btn.disabled = false;
+      output.innerHTML = `✅ تم اعتماد تقرير المرور الإشرافي بنجاح وإرساله لبريد المعلم المستهدف.`;
+      output.style.display = 'block';
+    }, 1000);
+  }
+</script>
+</body>
+</html>
