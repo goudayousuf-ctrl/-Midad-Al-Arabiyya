@@ -47,7 +47,7 @@ app.add_middleware(
 
 client = genai.Client(api_key="AQ.Ab8RN6LyfvFjy-GXhMor6pcFuw9jrflAl4dKfKMV9oWJCq-tnQ")
 
-DB_NAME = "madad_memory.db"
+DB_NAME = "/tmp/madad_memory.db" if os.environ.get("VERCEL") else "madad_memory.db"
 
 def init_db():
     with sqlite3.connect(DB_NAME) as conn:
