@@ -67,6 +67,7 @@
   <nav>
     <a href="index.html"><span>🏠</span> الرئيسية</a>
     <a href="workspace.html" style="background: #F4EFE6; border-color: #C5A059; color: #C5A059;"><span>📂</span> الأقسام</a>
+    <a href="RobaAlarabiyha.html" style="color: var(--accent-gold); font-weight: 600; background: #FAF8F5; border: 1px solid var(--accent-gold);"><span>🌟</span> أكاديمية رُبى</a>
     <a href="Midad Audio.html" style="color: #008080; font-weight: 600; background: #E6F2F2; border: 1px solid #B3D9D9;"><span>🎙️</span> مِداد الصوتي</a>
     <a href="curriculum.html"><span>📚</span> المناهج</a>
     <a href="generator.html"><span>⚡</span> مختبر التوليد</a>
@@ -256,7 +257,7 @@
   async function updateThinkingPanel() {
     const className = document.getElementById('className').value.trim() || 'عام';
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/class-suggestions/${encodeURIComponent(className)}`);
+      const res = await fetch(`/api/class-suggestions/${encodeURIComponent(className)}`);
       const data = await res.json();
       if(data.status === 'success') {
         document.getElementById('suggestionsWrap').innerHTML = `<b>سياق الذاكرة الاستباقية لمداد:</b> ${data.suggestion}`;
@@ -278,7 +279,7 @@
     container.style.display = 'block';
     
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/shamela/search', {
+      const response = await fetch('/api/shamela/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: query, top_k: 3 })
@@ -320,7 +321,7 @@
     resultSection.style.display = 'none';
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/spellcheck', {
+      const response = await fetch('/api/spellcheck', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -417,7 +418,7 @@
     const effectiveClassName = (generationMode === 'madad') ? targetGrade : document.getElementById('className').value;
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/generate-lesson', {
+      const res = await fetch('/api/generate-lesson', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
