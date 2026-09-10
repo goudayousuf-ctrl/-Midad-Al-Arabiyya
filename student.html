@@ -73,9 +73,7 @@
       <button class="main-tab-btn" onclick="switchMainSupport('human', event)">👨‍🏫 ثانياً: دعم معلمي المؤسسة المشتركة</button>
     </div>
 
-    <!-- ---------------------------------------------------- -->
     <!-- القسم الأول: الدعم القائم على الذكاء الاصطناعي -->
-    <!-- ---------------------------------------------------- -->
     <div id="support-ai-section" class="section-panel active">
       
       <div class="tabs-container">
@@ -121,7 +119,7 @@
         <div id="output-explain" class="output"></div>
       </div>
 
-      <!-- 4. المهارات (محدث بالمادة العلمية والاستراتيجيات المقترحة) -->
+      <!-- 4. المهارات -->
       <div id="tab-skills" class="section-panel">
         <h3 style="font-family:'Rakkas',serif; color:#007A78; font-size:22px; margin-bottom:15px;">ورشة التدريب المتدرج للمهارات اللغوية الأربع</h3>
         <p style="color:#6B6759; font-size:14px; margin-bottom:20px;">اختر المهارة المطلوبة لتطبيق الاستراتيجية العلمية المعتمدة لتطويرها:</p>
@@ -136,22 +134,21 @@
 
         <div style="background:#FAF9F6; border:1px solid #E2DDD5; padding:25px; border-radius:14px; margin-top:20px;">
           
-          <!-- وصف المادة العلمية التوجيهية لكل مهارة -->
           <div id="scientific-desc-استماع" class="scientific-note">
-            <b>المادة العلمية المقترحة:</b> مقاطع صوتية قصيرة (2-3 دقائق) من بودكاست تعليمي باللغة العربية الفصحى (مواضيع علمية مبسطة أو ثقافية).<br>
-            <b>الاستراتيجية:</b> الاستماع النشط وتدوين الكلمات المفتاحية (Cornell Note-taking) على مرحلتين (الفهم العام ثم استخلاص الأفكار).
+            <b>المادة العلمية المقترحة:</b> مقاطع صوتية قصيرة (2-3 دقائق) من بودكاست تعليمي باللغة العربية الفصحى.<br>
+            <b>الاستراتيجية:</b> الاستماع النشط وتدوين الكلمات المفتاحية (Cornell Note-taking).
           </div>
           <div id="scientific-desc-تحدث" class="scientific-note" style="display:none;">
-            <b>المادة العلمية المقترحة:</b> بنك بطاقات تفاعلية يحوي مواضيع واقعية محفزة (مثل: "لو استطعت السفر عبر الزمن...").<br>
-            <b>الاستراتيجية:</b> تقنية "المنصة الدقيقة" (30 ثانية للتفكير + دقيقة للتحدث دون توقف) لتعزيز الطلاقة وتقليل القلق.
+            <b>المادة العلمية المقترحة:</b> بنك بطاقات تفاعلية يحوي مواضيع واقعية محفزة.<br>
+            <b>الاستراتيجية:</b> تقنية "المنصة الدقيقة" (30 ثانية للتفكير + دقيقة للتحدث دون توقف).
           </div>
           <div id="scientific-desc-قراءة" class="scientific-note" style="display:none;">
-            <b>المادة العلمية المقترحة:</b> نصوص سردية ومقالات علمية مبسطة مجهزة بمسرّد للمفردات وأسئلة تفكير ناقد.<br>
+            <b>المادة العلمية المقترحة:</b> نصوص سردية ومقالات علمية مبسطة مجهزة بمسرّد للمفردات.<br>
             <b>الاستراتيجية:</b> "القراءة التبادلية" (التنبؤ، توليد الأسئلة، توضيح الغامض، والتلخيص).
           </div>
           <div id="scientific-desc-كتابة" class="scientific-note" style="display:none;">
-            <b>المادة العلمية المقترحة:</b> قوالب تنظيمية جاهزة (خريطة القصة / جدول المقارنة) مع معايير تقييم ذاتي (Rubric).<br>
-            <b>الستراتيجية:</b> نموذج "الكتابة المتدرجة بالحوسبة الذهنية" (عصف ذهني، مسودة، مراجعة، فالنسخة النهائية).
+            <b>المادة العلمية المقترحة:</b> قوالب تنظيمية جاهزة مع معايير تقييم ذاتي (Rubric).<br>
+            <b>الاستراتيجية:</b> نموذج "الكتابة المتدرجة بالحوسبة الذهنية".
           </div>
 
           <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
@@ -176,9 +173,7 @@
 
     </div>
 
-    <!-- ---------------------------------------------------- -->
     <!-- القسم الثاني: دعم معلمي المؤسسة المشتركة -->
-    <!-- ---------------------------------------------------- -->
     <div id="support-human-section" class="section-panel">
       <h3 style="font-family:'Rakkas',serif; color:#C5A059; font-size:24px; margin-bottom:15px;">👨‍🏫 منصة التواصل مع معلمي المؤسسة المشتركة</h3>
       <p style="color: #6B6759; font-size: 14px; margin-bottom: 25px;">إذا واجهتك مسألة تحتاج إلى تدخل مباشر من معلمي المؤسسة، قم بإرسال استفسارك وسيتم الرد عليك في أقرب وقت.</p>
@@ -236,7 +231,6 @@ function switchSkillType(skillName, cardEl) {
     cardEl.classList.add('active');
     document.getElementById('activeSkillType').value = skillName;
 
-    // إظهار الملاحظة العلمية الخاصة بالمهارة المختارة
     ['استماع', 'تحدث', 'قراءة', 'كتابة'].forEach(s => {
         let noteEl = document.getElementById(`scientific-desc-${s}`);
         if(noteEl) noteEl.style.display = (s === skillName) ? 'block' : 'none';
@@ -273,13 +267,15 @@ async function processStudentRequest(type) {
         });
         const data = await res.json();
         loadingEl.style.display = 'none';
-        if(data.status === 'success') {
+        if(res.ok && data.status === 'success') {
             outputEl.textContent = data.output;
             outputEl.style.display = 'block';
+        } else {
+            alert('خطأ في استجابة الخادم: ' + (data.detail || 'يرجى المحاولة لاحقاً'));
         }
     } catch(err) {
         loadingEl.style.display = 'none';
-        alert('حدث خطأ في الاتصال بالخادم.');
+        alert('تعذر الاتصال بالخادم السحابي.');
     }
 }
 
@@ -294,10 +290,10 @@ async function generateGraduatedSkill() {
     outputEl.style.display = 'none';
 
     let scientificStrategy = "";
-    if(skill === 'استماع') scientificStrategy = "استراتيجية الاستماع النشط وتدوين الكلمات المفتاحية (Cornell Note-taking) عبر مقطع قصير مبسط.";
-    else if(skill === 'تحدث') scientificStrategy = "تقنية المنصة الدقيقة (1-Minute Impromptu Speech) مع طرح أسئلة مفتوحة محفزة للطلاقة.";
-    else if(skill === 'قراءة') scientificStrategy = "استراتيجية القراءة التبادلية (التنبؤ، توليد الأسئلة، توضيح الغامض، والتلخيص) مع مسرد مفردات.";
-    else if(skill === 'كتابة') scientificStrategy = "نموذج الكتابة المتدرجة (عصف ذهني، مسودة أولى، مراجعة، وتدقيق بمعايير تقييم واضحة).";
+    if(skill === 'استماع') scientificStrategy = "استراتيجية الاستماع النشط وتدوين الكلمات المفتاحية (Cornell Note-taking).";
+    else if(skill === 'تحدث') scientificStrategy = "تقنية المنصة الدقيقة (1-Minute Impromptu Speech).";
+    else if(skill === 'قراءة') scientificStrategy = "استراتيجية القراءة التبادلية (التنبؤ، توليد الأسئلة، توضيح الغامض، والتلخيص).";
+    else if(skill === 'كتابة') scientificStrategy = "نموذج الكتابة المتدرجة (عصف ذهني، مسودة، مراجعة).";
 
     try {
         const res = await fetch('/api/generate-from-source', {
@@ -312,13 +308,15 @@ async function generateGraduatedSkill() {
         });
         const data = await res.json();
         loadingEl.style.display = 'none';
-        if(data.status === 'success') {
+        if(res.ok && data.status === 'success') {
             outputEl.textContent = data.output;
             outputEl.style.display = 'block';
+        } else {
+            alert('خطأ في استجابة الخادم: ' + (data.detail || 'يرجى المحاولة لاحقاً'));
         }
     } catch(err) {
         loadingEl.style.display = 'none';
-        alert('حدث خطأ في الاتصال بالخادم.');
+        alert('تعذر الاتصال بالخادم السحابي.');
     }
 }
 
