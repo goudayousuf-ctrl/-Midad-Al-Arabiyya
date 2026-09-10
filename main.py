@@ -1,7 +1,4 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import smtplib
-from email.message import EmailMessage# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os
 import sqlite3
 import time
@@ -23,7 +20,19 @@ from madad_engine import (
     CURRICULUM_LEVELS
 )
 
-# تهيئة حالة المكتبة الشاملة محلياً بشكل آمن لضمان عدم تعطل الخادم
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# تهيئة آمنة لعميل الذكاء الاصطناعي والموسوعة لمنع الانهيار الفوري
+client = genai.Client(api_key="AQ.Ab8RN6LyfvFjy-GXhMor6pcFuw9jrflAl4dKfKMV9oWJCq-tnQ")
+
 SHAMELA_ENABLED = False
 shamela_collection = None
 shamela_model = None
@@ -35,85 +44,74 @@ try:
 except Exception as e:
     print(f"تنبيه: محرك المكتبة الشاملة يعتمد على التخزين الديناميكي والمحلي حالياً: {e}")
 
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-client = genai.Client(api_key="AQ.Ab8RN6LyfvFjy-GXhMor6pcFuw9jrflAl4dKfKMV9oWJCq-tnQ")
-
+# مسار آمن لقاعدة البيانات في بيئة Vercel السحابية (Read-only /tmp fix)
 DB_NAME = "/tmp/madad_memory.db" if os.environ.get("VERCEL") else "madad_memory.db"
 
 def init_db():
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        cursor.execute("CREATE TABLE IF NOT EXISTS lesson_history (id INTEGER PRIMARY KEY AUTOINCREMENT, class_name TEXT, lesson_title TEXT, summary TEXT, created_at TIMESTAMP)")
-        cursor.execute("CREATE TABLE IF NOT EXISTS class_insights (id INTEGER PRIMARY KEY AUTOINCREMENT, class_name TEXT, pattern TEXT, remedial_action TEXT, created_at TIMESTAMP)")
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS vocabulary_bank (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                word TEXT,
-                category TEXT,
-                source_sheet TEXT,
-                unit_domain TEXT
-            )
-        """)
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS curriculum_standards (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                grade_or_domain TEXT,
-                category TEXT,
-                skill_or_topic TEXT,
-                learning_outcome TEXT,
-                indicator_or_example TEXT
-            )
-        """)
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS grammar_bank (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                book_title TEXT,
-                chapter_title TEXT,
-                rule_content TEXT,
-                examples TEXT
-            )
-        """)
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS parsing_bank (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                word_or_structure TEXT,
-                parsing_details TEXT,
-                category TEXT,
-                rule_explanation TEXT
-            )
-        """)
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS linguistic_correctness (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                common_error TEXT,
-                correct_form TEXT,
-                explanation TEXT,
-                category TEXT
-            )
-        """)
-        # جدول الذاكرة التراكمية والتعلم المعتمد (علم ينتفع به)
-        cursor.execute("""
-            CREATE TABLE IF NOT EXISTS madad_learned_knowledge (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                prompt TEXT,
-                approved_response TEXT,
-                audit_notes TEXT,
-                level TEXT,
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-        """)
-        conn.commit()
-
-init_db()
+    try:
+        with sqlite3.connect(DB_NAME) as conn:
+            cursor = conn.cursor()
+            cursor.execute("CREATE TABLE IF NOT EXISTS lesson_history (id INTEGER PRIMARY KEY AUTOINCREMENT, class_name TEXT, lesson_title TEXT, summary TEXT, created_at TIMESTAMP)")
+            cursor.execute("CREATE TABLE IF NOT EXISTS class_insights (id INTEGER PRIMARY KEY AUTOINCREMENT, class_name TEXT, pattern TEXT, remedial_action TEXT, created_at TIMESTAMP)")
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS vocabulary_bank (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    word TEXT,
+                    category TEXT,
+                    source_sheet TEXT,
+                    unit_domain TEXT
+                )
+            """)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS curriculum_standards (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    grade_or_domain TEXT,
+                    category TEXT,
+                    skill_or_topic TEXT,
+                    learning_outcome TEXT,
+                    indicator_or_example TEXT
+                )
+            """)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS grammar_bank (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    book_title TEXT,
+                    chapter_title TEXT,
+                    rule_content TEXT,
+                    examples TEXT
+                )
+            """)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS parsing_bank (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    word_or_structure TEXT,
+                    parsing_details TEXT,
+                    category TEXT,
+                    rule_explanation TEXT
+                )
+            """)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS linguistic_correctness (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    common_error TEXT,
+                    correct_form TEXT,
+                    explanation TEXT,
+                    category TEXT
+                )
+            """)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS madad_learned_knowledge (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    prompt TEXT,
+                    approved_response TEXT,
+                    audit_notes TEXT,
+                    level TEXT,
+                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            conn.commit()
+    except Exception as db_err:
+        print(f"تنبيه في تهيئة قاعدة البيانات: {db_err}")
 
 # --- نماذج البيانات (Pydantic Models) ---
 class LessonRequest(BaseModel):
@@ -203,6 +201,7 @@ def fetch_standards_context(grade_name: str, generation_mode: str = "madad") -> 
     if not grade_name:
         return ""
     try:
+        init_db()
         with sqlite3.connect(DB_NAME) as conn:
             cursor = conn.cursor()
             category_filter = "معايير اللغة العربية للعرب" if generation_mode == "arabic_natives" else "مهارات ومعايير"
@@ -272,44 +271,31 @@ def generate_with_fallback(prompt: str, generation_mode: str = "madad", class_na
 
 @app.post("/api/spellcheck")
 def api_spellcheck_text(req: TTSRequest):
-    """تدقيق وتصحيح النص اللغوي والإملائي وإضافة التشكيل تمهيداً للتوليد الصوتي"""
     try:
         prompt = f"""
         أنت مدقق لغوي خبير ومنظومة الذكاء الاصطناعي 'مداد AI'. قم بمراجعة النص التالي، وتصحيح الأخطاء الإملائية، والهمزات، والتاءات، والتنوين، مع ضبط التشكيل السياقي المناسب لتحويله إلى صوت بشكل صحيح وسلس.
         أرسل النص المُصحح والمشكل فقط دون أي مقدمات أو تعليقات إضافية.
-        
         النص: {req.text}
         """
-        
         chat = client.chats.create(model="gemini-3.6-flash")
         response = chat.send_message(prompt)
         corrected_text = response.text.strip() if response and response.text else req.text
-        
         return {"status": "success", "correctedText": corrected_text}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/tts")
 def api_text_to_speech(req: TTSRequest):
-    """مسار توليد الصوت وتحويل النص المُصحح إلى ملف صوتي"""
     try:
-        # هنا يتم ربط النص المُصحح بمحرك تحويل النص لصوت (TTS API)
-        # يمكنك استبدال الرابط أدناه بالخدمة الفعلية التي ترغب بربطها (مثل ElevenLabs أو Google TTS)
         audio_url = "https://www.w3schools.com/html/horse.mp3"
-        
-        return {
-            "status": "success",
-            "audioUrl": audio_url,
-            "dialect": req.dialect,
-            "voice": req.voice
-        }
+        return {"status": "success", "audioUrl": audio_url, "dialect": req.dialect, "voice": req.voice}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
 
 @app.post("/api/grammar/parse")
 def api_parse_structure(data: ParsingSearchRequest):
     try:
+        init_db()
         with sqlite3.connect(DB_NAME) as conn:
             cursor = conn.cursor()
             cursor.execute(
@@ -321,19 +307,11 @@ def api_parse_structure(data: ParsingSearchRequest):
         results = []
         if rows:
             for r in rows:
-                results.append({
-                    "target": r[0],
-                    "parsing": r[1],
-                    "explanation": r[2]
-                })
+                results.append({"target": r[0], "parsing": r[1], "explanation": r[2]})
         else:
             prompt = f"""أنت خبير النحو والإعراب في 'مداد AI'. قم بإعراب الكلمة أو الجملة التالية إعراباً تاماً ومفصلاً مع التوجيه النحوي: '{data.query}'."""
             ai_parsing = generate_with_fallback(prompt, generation_mode="madad")
-            results.append({
-                "target": data.query,
-                "parsing": ai_parsing,
-                "explanation": "استرجاع وتوليد تحليلي معتمد من عقل مداد"
-            })
+            results.append({"target": data.query, "parsing": ai_parsing, "explanation": "استرجاع وتوليد تحليلي معتمد من عقل مداد"})
             
         return {"status": "success", "results": results}
     except Exception as e:
@@ -342,6 +320,7 @@ def api_parse_structure(data: ParsingSearchRequest):
 @app.post("/api/shamela/search")
 def api_search_shamela(data: ShamelaSearchRequest):
     try:
+        init_db()
         with sqlite3.connect(DB_NAME) as conn:
             cursor = conn.cursor()
             cursor.execute(
@@ -360,26 +339,15 @@ def api_search_shamela(data: ShamelaSearchRequest):
                     "author": "التراث اللغوي المعتمد"
                 })
         else:
-            prompt = f"""أنت خبير التراث والنحو العربي في 'مداد AI'. ابحث في أمهات كتب النحو عن القاعدة أو المفهوم التالي: '{data.query}'.
-            قدم الناتج بدقة على النحو التالي:
-            - نص القاعدة بوضوح.
-            - الشواهد أو الأمثلة الدقيقة.
-            - اسم الكتاب المرجع والمؤلف والباب بدقة تامة للتوثيق الأكاديمي."""
-            
+            prompt = f"""أنت خبير التراث والنحو العربي في 'مداد AI'. ابحث في أمهات كتب النحو عن القاعدة أو المفهوم التالي: '{data.query}'."""
             ai_response = generate_with_fallback(prompt, generation_mode="madad")
-            
             results.append({
                 "text": ai_response,
-                "reference": f"استرجاع ديناميكي موثق من أمهات كتب النحو والتراث عبر مداد AI",
+                "reference": "استرجاع ديناميكي موثق من أمهات كتب النحو والتراث عبر مداد AI",
                 "book_title": "موسوعة مداد التراثية",
                 "author": "تحقيق ذكي موثق"
             })
-            
-        return {
-            "status": "success",
-            "query": data.query,
-            "results": results
-        }
+        return {"status": "success", "query": data.query, "results": results}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -395,31 +363,33 @@ def api_approve_learning(data: FeedbackApprovalRequest):
 def api_analyze_student_performance(data: StudentDiagnosticRequest):
     analyzer = MidaadAnalyzer(data.student_name, data.subject, data.errors)
     report = analyzer.generate_comprehensive_report()
-    return {
-        "status": "success",
-        "diagnostic_report": report
-    }
+    return {"status": "success", "diagnostic_report": report}
 
 @app.get("/api/memory/stats")
 def get_memory_stats():
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM vocabulary_bank")
-        vocab_count = cursor.fetchone()[0]
-        cursor.execute("SELECT COUNT(*) FROM curriculum_standards")
-        standards_count = cursor.fetchone()[0]
-        cursor.execute("SELECT COUNT(*) FROM lesson_history")
-        lessons_count = cursor.fetchone()[0]
-        cursor.execute("SELECT COUNT(*) FROM grammar_bank")
-        grammar_count = cursor.fetchone()[0]
-        cursor.execute("SELECT COUNT(*) FROM parsing_bank")
-        parsing_count = cursor.fetchone()[0]
-        cursor.execute("SELECT COUNT(*) FROM linguistic_correctness")
-        sawab_count = cursor.fetchone()[0]
-        cursor.execute("SELECT COUNT(*) FROM madad_learned_knowledge")
-        learned_count = cursor.fetchone()[0]
-        cursor.execute("SELECT grade_or_domain, COUNT(*) FROM curriculum_standards GROUP BY grade_or_domain LIMIT 15")
-        standards_by_grade = [{"grade": r[0], "count": r[1]} for r in cursor.fetchall()]
+    try:
+        init_db()
+        with sqlite3.connect(DB_NAME) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT COUNT(*) FROM vocabulary_bank")
+            vocab_count = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) FROM curriculum_standards")
+            standards_count = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) FROM lesson_history")
+            lessons_count = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) FROM grammar_bank")
+            grammar_count = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) FROM parsing_bank")
+            parsing_count = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) FROM linguistic_correctness")
+            sawab_count = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) FROM madad_learned_knowledge")
+            learned_count = cursor.fetchone()[0]
+            cursor.execute("SELECT grade_or_domain, COUNT(*) FROM curriculum_standards GROUP BY grade_or_domain LIMIT 15")
+            standards_by_grade = [{"grade": r[0], "count": r[1]} for r in cursor.fetchall()]
+    except Exception:
+        vocab_count = standards_count = lessons_count = grammar_count = parsing_count = sawab_count = learned_count = 0
+        standards_by_grade = []
         
     return {
         "status": "success",
@@ -438,14 +408,14 @@ def get_memory_stats():
 
 @app.get("/api/grammar/bank")
 def get_grammar_bank(q: str = "", limit: int = 30):
+    init_db()
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         query = "SELECT id, book_title, chapter_title, rule_content, examples FROM grammar_bank WHERE 1=1"
         params = []
         if q:
             query += " AND (chapter_title LIKE ? OR rule_content LIKE ?)"
-            params.append(f"%{q}%")
-            params.append(f"%{q}%")
+            params.extend([f"%{q}%", f"%{q}%"])
         query += " LIMIT ?"
         params.append(limit)
         cursor.execute(query, params)
@@ -455,14 +425,14 @@ def get_grammar_bank(q: str = "", limit: int = 30):
 
 @app.get("/api/linguistic/correctness")
 def get_linguistic_correctness(q: str = "", limit: int = 30):
+    init_db()
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         query = "SELECT id, common_error, correct_form, explanation, category FROM linguistic_correctness WHERE 1=1"
         params = []
         if q:
             query += " AND (common_error LIKE ? OR correct_form LIKE ?)"
-            params.append(f"%{q}%")
-            params.append(f"%{q}%")
+            params.extend([f"%{q}%", f"%{q}%"])
         query += " LIMIT ?"
         params.append(limit)
         cursor.execute(query, params)
@@ -472,6 +442,7 @@ def get_linguistic_correctness(q: str = "", limit: int = 30):
 
 @app.post("/api/get-standards")
 def api_get_standards(data: StandardsRequest):
+    init_db()
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         if data.grade:
@@ -494,6 +465,7 @@ def api_get_standards(data: StandardsRequest):
 
 @app.get("/api/vocab/domains")
 def get_vocab_domains(source: str = ""):
+    init_db()
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         if source:
@@ -505,14 +477,14 @@ def get_vocab_domains(source: str = ""):
 
 @app.get("/api/vocab/bank")
 def get_vocabulary_bank(q: str = "", source: str = "", domain: str = "", limit: int = 50):
+    init_db()
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         query = "SELECT id, word, category, source_sheet, unit_domain FROM vocabulary_bank WHERE 1=1"
         params = []
         if q:
             query += " AND (word LIKE ? OR word LIKE ?)"
-            params.append(f"{q}%")
-            params.append(f"%{q}%")
+            params.extend([f"{q}%", f"%{q}%"])
         if source:
             query += " AND source_sheet = ?"
             params.append(source)
@@ -528,63 +500,42 @@ def get_vocabulary_bank(q: str = "", source: str = "", domain: str = "", limit: 
 
 @app.post("/api/generate-lesson")
 def api_generate_lesson(data: LessonRequest):
-    prompt = f"""أنت وكيل 'مداد AI' الخبير في تعليم العربية. حضّر خطة درس دقيقة ومنظمة.
-بيانات الدرس:
-- الفصل أو الصف: {data.class_name}
-- المستوى: {data.level}
-- المدة: {data.duration}
-- عنوان الدرس: {data.lesson_title}"""
+    prompt = f"أنت وكيل 'مداد AI' الخبير في تعليم العربية. حضّر خطة درس دقيقة ومنظمة.\nبيانات الدرس:\n- الفصل أو الصف: {data.class_name}\n- المستوى: {data.level}\n- المدة: {data.duration}\n- عنوان الدرس: {data.lesson_title}"
     output = generate_with_fallback(prompt, generation_mode=data.generation_mode, class_name=data.class_name, custom_source=data.custom_source, level=data.level)
     return {"status": "success", "lesson_plan": output}
 
 @app.post("/api/analyze-students")
 def api_analyze_students(data: AnalysisRequest):
-    prompt = f"""أنت محلل أداء تربوي لمداد AI. حلل أخطاء الطلاب واستخرج الأنماط والتوصيات في أقسام واضحة.
-- الفصل: {data.class_name}
-- ملاحظات الأداء: {data.raw_notes}"""
+    prompt = f"أنت محلل أداء تربوي لمداد AI. حلل أخطاء الطلاب واستخرج الأنماط والتوصيات في أقسام واضحة.\n- الفصل: {data.class_name}\n- ملاحظات الأداء: {data.raw_notes}"
     return {"status": "success", "analysis_report": generate_with_fallback(prompt, generation_mode="madad")}
 
 @app.post("/api/prepare-vocabulary")
 def api_prepare_vocabulary(data: VocabRequest):
-    prompt = f"""أنت خبير إثراء لغوي في 'مداد AI'. استناداً للكلمات ({data.vocab_list}) والمستوى ({data.target_level}):
-قم بعرض النتائج مصنفة بدقة (قسم المفردات، ثم قسم الجمل التوضيحية، ثم الحوارات إن وجدت)."""
+    prompt = f"أنت خبير إثراء لغوي في 'مداد AI'. استناداً للكلمات ({data.vocab_list}) والمستوى ({data.target_level}):\nقم بعرض النتائج مصنفة بدقة."
     output = generate_with_fallback(prompt, generation_mode=data.generation_mode, custom_source=data.custom_source, level=data.target_level)
     return {"status": "success", "vocab_output": output}
 
 @app.post("/api/generate-exercises")
 def api_generate_exercises(data: ExerciseRequest):
-    prompt = f"""أنت خبير تصميم تدريبات لغوية في 'مداد AI'. صمم تدريبات تفاعلية متدرجة للمستوى ({data.target_level}) حول: {data.topic_or_vocab}
-نظم التدريبات في أقسام واضحة (مفردات، تراكيب وجمل، فقرات استيعاب)."""
+    prompt = f"أنت خبير تصميم تدريبات لغوية في 'مداد AI'. صمم تدريبات تفاعلية متدرجة للمستوى ({data.target_level}) حول: {data.topic_or_vocab}"
     output = generate_with_fallback(prompt, generation_mode=data.generation_mode, custom_source=data.custom_source, level=data.target_level)
     return {"status": "success", "exercises_output": output}
 
 @app.post("/api/generate-assessment")
 def api_generate_assessment(data: AssessmentRequest):
-    prompt = f"""أنت خبير التقويم والقياس في 'مداد AI'. أنشئ اختباراً دقيقاً ومفصلاً بناءً على المعايير التالية:
-- موضوع الاختبار: {data.topic}
-- عدد الأسئلة والفقرات: {data.count}
-- مستوى الطلاب: {data.level}
-قم بتوفير نموذج إجابة وتوصيف لقياس الأخطاء في أقسام مرتبة."""
+    prompt = f"أنت خبير التقويم والقياس في 'مداد AI'. أنشئ اختباراً دقيقاً ومفصلاً بناءً على المعايير:\n- الموضوع: {data.topic}\n- العدد: {data.count}\n- المستوى: {data.level}"
     output = generate_with_fallback(prompt, generation_mode=data.generation_mode, custom_source=data.level)
     return {"status": "success", "output": output}
 
 @app.post("/api/develop-curriculum")
 def api_develop_curriculum(data: CurriculumRequest):
-    prompt = f"""أنت خبير تطوير المناهج في 'مداد AI'. قم بتطوير وحدة دراسية متكاملة وفق العناصر التالية:
-- الفئة المستهدفة والعمر: {data.age}
-- الخلفية اللغوية: {data.background}
-- الأهداف الكبرى: {data.goals}
-- عنوان الوحدة: {data.title}
-يجب أن يشتمل المنهج على أقسام منظمة (التهيئة، العرض والمفردات، الجمل التراكيب، الأنشطة والحوارات، التقويم)."""
+    prompt = f"أنت خبير تطوير المناهج في 'مداد AI'. قم بتطوير وحدة دراسية متكاملة:\n- الفئة والعمر: {data.age}\n- الخلفية: {data.background}\n- الأهداف: {data.goals}\n- العنوان: {data.title}"
     output = generate_with_fallback(prompt, generation_mode=data.generation_mode, custom_source=data.custom_source)
     return {"status": "success", "output": output}
 
 @app.post("/api/review-text")
 def api_review_text(data: ReviewRequest):
-    prompt = f"""أنت الباحث اللغوي والشرعي لـ 'مداد AI'. قم بمراجعة وتدقيق النص التالي:
-النص: {data.text}
-نوع المراجعة المطلوبة: {data.review_type}
-قدم تقريراً مفصلاً بالتصحيحات مقسماً إلى جوانب لغوية وإملائية ونحوية."""
+    prompt = f"أنت الباحث اللغوي والشرعي لـ 'مداد AI'. قم بمراجعة وتدقيق النص:\n{data.text}\nنوع المراجعة: {data.review_type}"
     return {"status": "success", "output": generate_with_fallback(prompt, generation_mode="madad")}
 
 @app.post("/api/process-image")
@@ -593,7 +544,7 @@ def api_process_image(data: ImageOCRRequest):
         chat = client.chats.create(model='gemini-3.6-flash')
         response = chat.send_message([
             {"inline_data": {"data": data.image_base64, "mime_type": data.mime_type}},
-            f"أنت نظام استخراج النصوص (OCR) والتدقيق في مداد AI. استخرج النص العربي من هذه الصورة بدقة، وصحح الأخطاء الإملائية. الملاحظات الإضافية: {data.notes}"
+            f"أنت نظام استخراج النصوص (OCR) والتدقيق في مداد AI. استخرج النص العربي من هذه الصورة بدقة. الملاحظات: {data.notes}"
         ])
         return {"status": "success", "output": response.text}
     except Exception as e:
@@ -601,24 +552,21 @@ def api_process_image(data: ImageOCRRequest):
 
 @app.post("/api/generate-from-source")
 def api_generate_from_source(data: SourceGenRequest):
-    prompt = f"""أنت خبير الهندسة اللغوية والتربوية في 'مداد AI'.
-مطلوب منك توليد محتوى تعليمي بناءً على المعايير التالية:
-- مصدر التغذية: {data.source_type}
-- محتوى مصدر التغذية: {data.source_content}
-- نوع المخرج المطلوب: {data.output_type}
-- المواصفات والتوصيفات الاختيارية: {data.details}
-
-قم بصياغة الناتج باللغة العربية الفصحى المشكولة بدقة تامة، مع الالتزام بالتقسيم الهيكلي الواضح (المفردات، الجمل، الفقرات أو الحوارات)."""
+    prompt = f"أنت خبير الهندسة اللغوية والتربوية في 'مداد AI'.\n- مصدر التغذية: {data.source_type}\n- المحتوى: {data.source_content}\n- المخرج المطلوب: {data.output_type}\n- المواصفات: {data.details}"
     output = generate_with_fallback(prompt, generation_mode=data.generation_mode, custom_source=data.source_content)
     return {"status": "success", "output": output}
 
 @app.get("/api/class-suggestions/{class_name}")
 def get_class_suggestions(class_name: str):
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT lesson_title FROM lesson_history WHERE class_name = ? ORDER BY id DESC LIMIT 1", (class_name,))
-        row = cursor.fetchone()
-    suggestion = f"آخر نشاط مسجل لهذا الفصل هو: {row[0]}" if row else "لا توجد سجلات سابقة لهذا الفصل بعد."
+    try:
+        init_db()
+        with sqlite3.connect(DB_NAME) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT lesson_title FROM lesson_history WHERE class_name = ? ORDER BY id DESC LIMIT 1", (class_name,))
+            row = cursor.fetchone()
+        suggestion = f"آخر نشاط مسجل لهذا الفصل هو: {row[0]}" if row else "لا توجد سجلات سابقة لهذا الفصل بعد."
+    except Exception:
+        suggestion = "لا توجد سجلات سابقة لهذا الفصل بعد."
     return {"status": "success", "suggestion": suggestion}
 
 class MessageRequest(BaseModel):
@@ -630,21 +578,11 @@ class MessageRequest(BaseModel):
 @app.post("/api/send-automated-message")
 async def send_automated_message(req: MessageRequest):
     try:
-        if "@" in req.recipient_contact:
-            msg = EmailMessage()
-            msg.set_content(req.custom_message)
-            msg['Subject'] = "تنبيه من منصة مداد AI التعليمية 🌸"
-            msg['From'] = "notifications@madad-ai.com"
-            msg['To'] = req.recipient_contact
-            
-            # يمكنك تفعيل إرسال SMTP الفعلي هنا لاحقاً
-            return {"status": "success", "channel": "email", "recipient": req.recipient_contact}
-        else:
-            return {"status": "success", "channel": "whatsapp", "recipient": req.recipient_contact}
+        return {"status": "success", "channel": "email" if "@" in req.recipient_contact else "whatsapp", "recipient": req.recipient_contact}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-# --- مسارات صفحات الواجهات (HTML Pages) ---
 
+# --- مسارات صفحات الواجهات (HTML Pages) ---
 @app.get("/")
 def serve_index(): return FileResponse("index.html")
 
