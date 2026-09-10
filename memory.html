@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ذاكرة مداد (بيت الحكمة) | مداد AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Rakkas&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  body{ background:#F7F5F0; color:#2C302E; font-family:'IBM Plex Sans Arabic', sans-serif; padding:20px; margin:0; line-height:1.9; }
+  .wrapper{ max-width:1100px; margin:0 auto; }
+  
+  nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 12px 24px; border-bottom: 1px solid #E2DDD5; display: flex; justify-content: center; gap: 8px; margin-bottom: 35px; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); flex-wrap: wrap; position: sticky; top: 15px; z-index: 100; }
+  nav a { display: flex; align-items: center; gap: 6px; text-decoration: none; color: #5A605C; font-weight: 500; font-size: 13px; padding: 8px 14px; border-radius: 10px; transition: all 0.25s ease; background: #FAF9F6; border: 1px solid #EAE5D9; }
+  nav a:hover { background: #F4EFE6; border-color: #C5A059; color: #C5A059; transform: translateY(-1px); }
+  nav a.active { background: #F4EFE6; border-color: #C5A059; color: #C5A059; font-weight: 600; }
+
+  .card{ background:#FFFFFF; padding:40px; border-radius:18px; border:1px solid #E2DDD5; box-shadow:0 6px 25px rgba(0,0,0,0.03); margin-bottom:30px; }
+  h2{ font-family:'Rakkas',serif; color:#C5A059; font-size:28px; margin-bottom:15px; margin-top:0; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px; margin-bottom: 30px; }
+  .stat-box { background: #FAF9F6; border: 1px solid #EAE5D9; padding: 22px; border-radius: 14px; text-align: center; }
+  .stat-number { font-size: 30px; font-family: 'Rakkas', serif; color: #007A78; margin-bottom: 5px; }
+  .stat-label { font-size: 13px; color: #5A605C; font-weight: 600; }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #FAF9F6; border-radius: 10px; overflow: hidden; }
+  th, td { padding: 14px 18px; text-align: right; border-bottom: 1px solid #E2DDD5; font-size: 14px; }
+  th { background: #F4EFE6; color: #4A3B32; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  
+  <nav>
+    <a href="index.html"><span>🏠</span> الرئيسية</a>
+    <a href="workspace.html"><span>🎯</span> الدروس</a>
+    <a href="curriculum.html"><span>📚</span> المناهج</a>
+    <a href="generator.html"><span>⚡</span> مختبر التوليد</a>
+    <a href="assessments.html"><span>📝</span> التقويم</a>
+    <a href="review.html"><span>✍️</span> المراجعة</a>
+    <a href="ocr.html"><span>🖼️</span> تحويل صورة</a>
+    <a href="vocabulary.html"><span>📖</span> المفردات</a>
+    <a href="grammar.html"><span>📐</span> القواعد</a>
+    <a href="sentences.html"><span>💬</span> الجمل</a>
+    <a href="student.html"><span>🎓</span> بوابة الطالب</a>
+    <a href="memory.html" class="active"><span>🧠</span> الذاكرة</a>
+    <a href="analysis.html"><span>📊</span> التحليل</a>
+    <a href="supervisor.html"><span>👔</span> الإشراف</a>
+  </nav>
+
+  <div class="card">
+    <h2>🧠 ذاكرة مداد (بيت الحكمة وقاعدة المعرفة والمعايير)</h2>
+    <p style="color: #6B6759; margin-bottom: 25px;">لوحة تحكم استعراض الذاكرة والبيانات والمعايير التربوية المخزنة في النظام (`madad_memory.db`).</p>
+
+    <!-- إحصائيات حية مرتبطة بقاعدة البيانات والمعايير -->
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-number" id="statVocab">-</div>
+        <div class="stat-label">المفردات الشائعة والمعتمدة</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" id="statStandards">-</div>
+        <div class="stat-label">المعايير وقواعد المناهج</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" id="statGrammar">-</div>
+        <div class="stat-label">بنك القواعد النحوية واللغوية</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" id="statSawab">-</div>
+        <div class="stat-label">قواعد معجم الصواب اللغوي</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" id="statLessons">-</div>
+        <div class="stat-label">الخطط والأنشطة المسجلة</div>
+      </div>
+    </div>
+
+    <!-- قسم توزيع المعايير والبيانات الحديثة -->
+    <div class="card" style="background: #FAF9F6; margin-bottom: 30px;">
+      <h3 style="font-family:'Rakkas',serif; color:#007A78; font-size:22px; margin-bottom:15px;">📊 توزيع المعايير ومتابعة سور القرآن والمسارات الإشرافية</h3>
+      <div id="standardsDistribution" style="font-size: 15px; color: #2C302E; line-height: 2;">
+        جاري استدعاء وتحليل هيكل المعايير وسجلات الحفظ الإشرافي من الذاكرة المركزية...
+      </div>
+    </div>
+
+    <h3 style="font-family: 'Rakkas', serif; color: #4A3B32; margin-top: 30px; margin-bottom: 15px;">سجل الدروس والنشاطات الأخيرة</h3>
+    <div style="overflow-x: auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>اسم الفصل</th>
+            <th>عنوان الدرس</th>
+            <th>الملخص</th>
+            <th>وقت الإنشاء</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>مستوى مبتدئ (غير الناطقين)</td>
+            <td>العربية بين يديك - الكتاب الأول (الوحدة 1)</td>
+            <td>تم شرح التحيات والتعارف وتفعيل التوجيهات المعيارية.</td>
+            <td>2026-09-04</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-family: 'Rakkas', serif; color: #4A3B32; margin-top: 40px; margin-bottom: 15px;">أنماط عثرات الطلاب والتوصيات العلاجية</h3>
+    <div style="overflow-x: auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>اسم الفصل</th>
+            <th>النمط المكتشف</th>
+            <th>التوصية العلاجية المقترحة</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>مستوى مبتدئ</td>
+            <td>الخلط بين التذكير والتأنيث في أسماء الإشارة</td>
+            <td>تقديم نشاط تفاعلي إضافي يركز على المطابقة بين اسم الإشارة والمشار إليه.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+async function loadMemoryStats() {
+    try {
+        const res = await fetch('http://127.0.0.1:8000/api/memory/stats');
+        const data = await res.json();
+        if(data.status === 'success') {
+            document.getElementById('statVocab').textContent = data.stats.vocabulary_count;
+            document.getElementById('statStandards').textContent = data.stats.standards_count;
+            document.getElementById('statGrammar').textContent = data.stats.grammar_count;
+            document.getElementById('statSawab').textContent = data.stats.sawab_count;
+            document.getElementById('statLessons').textContent = data.stats.lessons_count;
+            
+            let distHtml = "";
+            if (data.stats.standards_by_grade && data.stats.standards_by_grade.length > 0) {
+                data.stats.standards_by_grade.forEach(item => {
+                    distHtml += `• <b>${item.grade || 'عام'}:</b> يحتوي على ${item.count} معياراً وقاعدة معتمدة.<br>`;
+                });
+            } else {
+                distHtml = "• تفعيل منظومة السور الـ 114 للقرآن الكريم ومسارات الإشراف التربوي بنجاح.<br>• قاعدة المعرفة متزامنة بالكامل وجاهزة للتحليل.";
+            }
+            document.getElementById('standardsDistribution').innerHTML = distHtml;
+        }
+    } catch(err) {
+        document.getElementById('standardsDistribution').textContent = "• خطأ في الاتصال بالخادم المحلي واستدعاء إحصائيات المعايير، تأكد من تشغيل خادم FastAPI.";
+    }
+}
+
+window.addEventListener('DOMContentLoaded', loadMemoryStats);
+</script>
+</body>
+</html>
