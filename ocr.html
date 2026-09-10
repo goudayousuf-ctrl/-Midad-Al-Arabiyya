@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحويل الصور إلى نص | مداد AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Rakkas&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  body{ background:#F7F5F0; color:#2C302E; font-family:'IBM Plex Sans Arabic', sans-serif; padding:30px; margin:0; line-height:1.9; }
+  .wrapper{ max-width:900px; margin:0 auto; }
+  nav { background:#FFFFFF; padding:20px; border-bottom:2px solid #E2DDD5; display:flex; justify-content:center; gap:12px; margin-bottom:35px; border-radius:16px; box-shadow:0 6px 25px rgba(0,0,0,0.04); flex-wrap:wrap; }
+  nav a { display:flex; flex-direction:column; align-items:center; text-decoration:none; color:#5A605C; font-weight:600; font-size:12px; padding:8px 14px; border-radius:12px; transition:0.3s; background:#FAF9F6; border:1px solid #EAE5D9; }
+  nav a:hover { background:#F4EFE6; transform: translateY(-2px); border-color:#C5A059; color:#C5A059; }
+  nav a.active { background:#F4EFE6; border-color:#C5A059; color:#C5A059; font-weight:700; }
+  .card{ background:#FFFFFF; padding:45px; border-radius:18px; border:1px solid #E2DDD5; box-shadow:0 6px 25px rgba(0,0,0,0.03); margin-bottom:30px; }
+  h2{ font-family:'Rakkas',serif; color:#C5A059; font-size:30px; margin-bottom:15px; margin-top:0; }
+  .field{ margin-bottom:20px; }
+  label{ display:block; margin-bottom:8px; color:#5A605C; font-size:14px; font-weight:600; }
+  input, select, textarea{ width:100%; background:#FAF9F6; border:1px solid #D6D0C4; color:#2C302E; padding:12px 16px; border-radius:12px; font-family:inherit; box-sizing:border-box; font-size:15px; transition:0.3s; }
+  input:focus, select:focus, textarea:focus{ outline:none; border-color:#C5A059; background:#FFF; box-shadow:0 0 0 4px rgba(197,160,89,0.1); }
+  button{ background:#C5A059; color:#FFF; padding:15px 35px; border:none; border-radius:12px; font-weight:600; cursor:pointer; font-size:16px; transition:0.3s; box-shadow:0 4px 15px rgba(197,160,89,0.25); }
+  button:hover{ background:#B38F4E; transform: translateY(-1px); }
+  .output{ margin-top:30px; padding:30px; background:#FAF9F6; border:1px solid #E2DDD5; border-radius:14px; display:none; white-space:pre-wrap; line-height:2.2; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <nav>
+    <a href="index.html">🏠 الرئيسية</a>
+    <a href="workspace.html">🎯 الدروس</a>
+    <a href="curriculum.html">📚 المناهج</a>
+    <a href="review.html">✍️ المراجعة</a>
+    <a href="assessments.html">📝 التقويم</a>
+    <a href="ocr.html" class="active">🖼️ تحويل صورة</a>
+    <a href="vocabulary.html">📖 مفردات</a>
+    <a href="sentences.html">💬 الجمل</a>
+    <a href="analysis.html">📊 التحليل</a>
+    <a href="supervisor.html">👔 الإشراف</a>
+  </nav>
+  <div class="card">
+    <h2>🖼️ تحويل الصورة إلى نص وتدقيقها</h2>
+    <div class="field"><label>اختر صورة الصفحة أو الوثيقة التعليمية</label><input id="imageFile" type="file" accept="image/*"></div>
+    <div class="field"><label>ملاحظات إضافية أو توجيه للذكاء الاصطناعي (اختياري)</label><input id="imageNotes" type="text" value="استخرج النص العربي بدقة وصحح الأخطاء الإملائية الناتجة عن طباعة قديمة"></div>
+    <button id="genBtn" onclick="processImageToText()">استخراج النص وتحليله عبر مداد</button>
+    <div id="loading" style="display:none; color:#C5A059; margin-top:18px; font-weight:600;">جاري تحليل الصورة واستخراج النصوص وتدقيقها...</div>
+    <div id="output" class="output"></div>
+  </div>
+</div>
+<script>
+  async function processImageToText() {
+    const fileInput = document.getElementById('imageFile');
+    const loading = document.getElementById('loading'), output = document.getElementById('output'), btn = document.getElementById('genBtn');
+    if(fileInput.files.length === 0) { alert('الرجاء اختيار صورة أولاً.'); return; }
+    
+    btn.disabled = true; loading.style.display = 'block'; output.style.display = 'none';
+    
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      const base64Data = e.target.result.split(',')[1];
+      const mimeType = file.type;
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/process-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            image_base64: base64Data,
+            mime_type: mimeType,
+            notes: document.getElementById('imageNotes').value
+          })
+        });
+        const data = await res.json();
+        loading.style.display = 'none'; btn.disabled = false;
+        if(data.status === 'success') { output.textContent = data.output; output.style.display = 'block'; }
+      } catch(err) {
+        loading.style.display = 'none'; btn.disabled = false; alert('خطأ في الاتصال بالخادم.');
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+</script>
+</body>
+</html>
